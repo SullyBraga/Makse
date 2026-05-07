@@ -3,6 +3,9 @@ import Credentials from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
+process.env.AUTH_URL = 'https://maksepro.com'
+process.env.NEXTAUTH_URL = 'https://maksepro.com'
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   secret: process.env.AUTH_SECRET || 'MinhaChaveSecretaMakse2026!@',
