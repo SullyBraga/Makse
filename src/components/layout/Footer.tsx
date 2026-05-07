@@ -70,7 +70,6 @@ export default function Footer() {
           <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.25)'}}>
             © 2026 Makse Profissional — SS Cosméticos Profissionais LTDA — CNPJ 47.946.965/0001-35. Todos os direitos reservados.
           </p>
-          <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.18)'}}>Desenvolvido por Catarse</p>
         </div>
       </div>
     </footer>
