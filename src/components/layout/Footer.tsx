@@ -1,0 +1,78 @@
+'use client'
+
+import Link from 'next/link'
+import { Camera, PlayCircle } from 'lucide-react'
+
+export default function Footer() {
+  return (
+    <footer style={{backgroundColor:'var(--navy)',color:'#fff',marginTop:'0',borderRadius:'48px 48px 0 0',overflow:'hidden'}}>
+      <div style={{maxWidth:'72rem',margin:'0 auto',padding:'4rem 2rem 2rem'}}>
+
+        {/* Grid principal */}
+        <div style={{display:'grid',gridTemplateColumns:'1.4fr 1fr 1fr 1.2fr',gap:'3rem',marginBottom:'3rem'}}>
+
+          {/* Brand */}
+          <div>
+            <div style={{marginBottom:'1rem'}}>
+              <span style={{display:'block',fontSize:'1.3rem',fontWeight:300,letterSpacing:'0.25em',fontFamily:'var(--font-cormorant),Georgia,serif'}}>MAKSE</span>
+              <span style={{fontSize:'7px',letterSpacing:'0.4em',color:'var(--gold)',textTransform:'uppercase'}}>— Profissional —</span>
+            </div>
+            <p style={{fontSize:'0.8rem',color:'rgba(255,255,255,0.5)',lineHeight:1.7,maxWidth:'220px'}}>
+              Tecnologia e performance em cosméticos capilares para profissionais exigentes e clientes que buscam resultados de salão.
+            </p>
+            <div style={{display:'flex',gap:'0.875rem',marginTop:'1.5rem'}}>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
+                 onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
+                 onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
+                <Camera size={17}/>
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
+                 onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
+                 onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
+                <PlayCircle size={17}/>
+              </a>
+            </div>
+          </div>
+
+          {/* Navegação */}
+          <div>
+            <h4 style={{fontSize:'0.65rem',letterSpacing:'0.28em',textTransform:'uppercase',color:'var(--gold)',marginBottom:'1.25rem',fontWeight:500}}>Navegação</h4>
+            <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+              {[['Início','/'],['Catálogo Completo','/catalogo'],['Nossas Linhas','/linhas'],['Para Profissionais','/para-profissionais'],['Seja um Distribuidor','/para-profissionais']].map(([l,h]) => (
+                <li key={l}><Link href={h} style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.55)',textDecoration:'none',transition:'color .2s'}}>{l}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Institucional */}
+          <div>
+            <h4 style={{fontSize:'0.65rem',letterSpacing:'0.28em',textTransform:'uppercase',color:'var(--gold)',marginBottom:'1.25rem',fontWeight:500}}>Institucional</h4>
+            <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+              {[['Política de Privacidade','/privacidade'],['Termos de Uso','/termos'],['Trocas e Devoluções','/trocas'],['Fale Conosco','/contato'],['Minha Conta','/conta']].map(([l,h]) => (
+                <li key={l}><Link href={h} style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.55)',textDecoration:'none',transition:'color .2s'}}>{l}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contato */}
+          <div>
+            <h4 style={{fontSize:'0.65rem',letterSpacing:'0.28em',textTransform:'uppercase',color:'var(--gold)',marginBottom:'1.25rem',fontWeight:500}}>Contato</h4>
+            <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:'0.75rem',fontSize:'0.82rem',color:'rgba(255,255,255,0.55)'}}>
+              <li>Av. S. Pedro, 50 — Loteam. Condom. BR</li>
+              <li><a href="https://wa.me/55" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>(xx) xxxxx-xxxx</a></li>
+              <li><a href="mailto:contato@makseprofissional.com.br" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>contato@makseprofissional.com.br</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div style={{borderTop:'1px solid rgba(255,255,255,0.08)',paddingTop:'1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'0.5rem'}}>
+          <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.25)'}}>
+            © 2026 Makse Profissional — SS Cosméticos Profissionais LTDA — CNPJ 47.946.965/0001-35. Todos os direitos reservados.
+          </p>
+          <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.18)'}}>Desenvolvido por Catarse</p>
+        </div>
+      </div>
+    </footer>
+  )
+}
