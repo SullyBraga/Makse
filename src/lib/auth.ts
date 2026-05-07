@@ -21,6 +21,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null
 
         try {
+          // BURLA DE DEBUG (Para isolar se o Prisma/Banco está derrubando a Hostinger)
+          if (credentials.email === 'admin@makse.com.br' && credentials.password === 'admin123') {
+            return {
+              id: 'usr_admin_master',
+              name: 'Administrador Makse',
+              email: 'admin@makse.com.br',
+              role: 'ADMIN',
+            } as any
+          }
+
           const user = await prisma.user.findUnique({
             where: { email: credentials.email as string },
             include: { discountTable: true },
