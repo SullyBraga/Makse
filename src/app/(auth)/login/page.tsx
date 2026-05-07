@@ -52,12 +52,7 @@ function LoginForm() {
     <div style={{ minHeight: '100vh', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
       <div style={{ width: '100%', maxWidth: '440px' }}>
 
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
-            <Image src="/logo-makse.png" alt="Makse Profissional" width={160} height={45} style={{ objectFit: 'contain', height: 'auto' }} />
-          </Link>
-        </div>
+
 
         {/* Card */}
         <div style={{ background: '#fff', borderRadius: '16px', border: '1px solid var(--border)', padding: '2.5rem', boxShadow: '0 4px 40px rgba(0,0,0,0.06)' }}>

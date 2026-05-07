@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Camera, PlayCircle } from 'lucide-react'
+import { Instagram, PlayCircle } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -10,7 +10,7 @@ export default function Footer() {
       <div style={{maxWidth:'72rem',margin:'0 auto',padding:'4rem 2rem 2rem'}}>
 
         {/* Grid principal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
 
           {/* Brand */}
           <div>
@@ -24,7 +24,7 @@ export default function Footer() {
               <a href="https://www.instagram.com/makseconcept/" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
                  onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
                  onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
-                <Camera size={20}/>
+                <Instagram size={20} strokeWidth={1.5} />
               </a>
             </div>
           </div>
