@@ -18,7 +18,17 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth; 
+  font-size: 125%; /* Scales entire site by 25% */
+}
+
+@media (max-width: 768px) {
+  html { font-size: 115%; }
+}
+@media (max-width: 480px) {
+  html { font-size: 110%; }
+}
 
 body {
   font-family: var(--font-dm-sans), system-ui, sans-serif;
