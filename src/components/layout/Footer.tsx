@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Camera, PlayCircle } from 'lucide-react'
 
 export default function Footer() {
@@ -13,9 +14,8 @@ export default function Footer() {
 
           {/* Brand */}
           <div>
-            <div style={{marginBottom:'1rem'}}>
-              <span style={{display:'block',fontSize:'1.3rem',fontWeight:300,letterSpacing:'0.25em',fontFamily:'var(--font-cormorant),Georgia,serif'}}>MAKSE</span>
-              <span style={{fontSize:'7px',letterSpacing:'0.4em',color:'var(--gold)',textTransform:'uppercase'}}>— Profissional —</span>
+            <div style={{marginBottom:'1rem', display: 'flex'}}>
+              <Image src="/logo-makse.png" alt="Makse Profissional" width={130} height={40} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
             </div>
             <p style={{fontSize:'0.8rem',color:'rgba(255,255,255,0.5)',lineHeight:1.7,maxWidth:'220px'}}>
               Tecnologia e performance em cosméticos capilares para profissionais exigentes e clientes que buscam resultados de salão.

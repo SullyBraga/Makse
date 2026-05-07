@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ShoppingBag, User, Menu, X } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useSession, signOut } from 'next-auth/react'
@@ -56,10 +57,9 @@ export default function Header() {
       {/* Main nav */}
       <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
 
-        {/* Logo — sem animação conforme solicitado */}
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', lineHeight: 1.1, gap: '1px' }}>
-          <span style={{ fontSize: '1.35rem', fontWeight: 300, letterSpacing: '0.28em', color: 'var(--navy)', fontFamily: 'var(--font-cormorant),Georgia,serif' }}>MAKSE</span>
-          <span style={{ fontSize: '7px', letterSpacing: '0.4em', color: 'var(--gold)', textTransform: 'uppercase', fontFamily: 'var(--font-dm-sans),sans-serif' }}>— Profissional —</span>
+        {/* Logo */}
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+          <Image src="/logo-makse.png" alt="Makse Profissional" width={120} height={35} style={{ objectFit: 'contain', height: 'auto' }} />
         </Link>
 
         {/* Desktop Nav */}

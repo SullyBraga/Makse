@@ -34,22 +34,17 @@ export default function LinhasPage() {
       {/* Linhas alternadas */}
       <div style={{backgroundColor:'#fff'}}>
         {lines.map((line, i) => (
-          <div key={line.slug} style={{
-            display:'grid',
-            gridTemplateColumns: i % 2 === 0 ? '1fr 1fr' : '1fr 1fr',
-            minHeight:'360px',
-            borderBottom:'1px solid var(--border)',
-          }}>
-            {/* Imagem — alterna lado */}
-            {i % 2 !== 0 && (
-              <div style={{background:line.bg,display:'flex',alignItems:'center',justifyContent:'center',minHeight:'280px'}}>
-                <span style={{fontSize:'5rem',fontWeight:300,color:'rgba(255,183,184,0.35)',fontFamily:'var(--font-cormorant),Georgia,serif'}}>
-                  {line.name.split(' ').pop()}
-                </span>
-              </div>
-            )}
+          <div key={line.slug} className="grid grid-cols-1 md:grid-cols-2 min-h-[360px]" style={{ borderBottom: '1px solid var(--border)' }}>
+            
+            {/* Imagem */}
+            <div className={`flex items-center justify-center min-h-[280px] md:min-h-full ${i % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-1'}`} style={{background:line.bg}}>
+              <span style={{fontSize:'clamp(4rem, 8vw, 6rem)',fontWeight:300,color:'rgba(255,183,184,0.35)',fontFamily:'var(--font-cormorant),Georgia,serif'}}>
+                {line.name.split(' ').pop()}
+              </span>
+            </div>
+
             {/* Texto */}
-            <div style={{display:'flex',alignItems:'center',padding:'3.5rem 4rem'}}>
+            <div className={`flex items-center p-8 md:p-12 lg:p-16 xl:p-20 ${i % 2 === 0 ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}>
               <div>
                 <span className="section-label">{line.subtitle}</span>
                 <h2 style={{fontFamily:'var(--font-cormorant),Georgia,serif',fontSize:'clamp(1.75rem,3vw,2.4rem)',fontWeight:400,color:'var(--navy)',margin:'0.25rem 0 1rem'}}>
@@ -63,14 +58,7 @@ export default function LinhasPage() {
                 </Link>
               </div>
             </div>
-            {/* Imagem lado direito (índice par) */}
-            {i % 2 === 0 && (
-              <div style={{background:line.bg,display:'flex',alignItems:'center',justifyContent:'center',minHeight:'280px'}}>
-                <span style={{fontSize:'5rem',fontWeight:300,color:'rgba(255,183,184,0.35)',fontFamily:'var(--font-cormorant),Georgia,serif'}}>
-                  {line.name.split(' ').pop()}
-                </span>
-              </div>
-            )}
+
           </div>
         ))}
       </div>

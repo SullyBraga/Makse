@@ -1,6 +1,7 @@
 'use client'
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Scissors, ShoppingBag, ArrowRight } from 'lucide-react'
 import { signIn } from 'next-auth/react'
@@ -53,9 +54,8 @@ function LoginForm() {
 
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <Link href="/" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', gap: '2px' }}>
-            <span style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2.25rem', fontWeight: 300, letterSpacing: '0.28em', color: 'var(--navy)' }}>MAKSE</span>
-            <span style={{ fontSize: '8px', letterSpacing: '0.4em', color: 'var(--gold)', textTransform: 'uppercase' }}>— Profissional —</span>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
+            <Image src="/logo-makse.png" alt="Makse Profissional" width={160} height={45} style={{ objectFit: 'contain', height: 'auto' }} />
           </Link>
         </div>
 
