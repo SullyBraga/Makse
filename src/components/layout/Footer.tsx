@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Instagram, PlayCircle } from 'lucide-react'
+import { Camera, PlayCircle } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -24,7 +24,7 @@ export default function Footer() {
               <a href="https://www.instagram.com/makseconcept/" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
                  onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
                  onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
-                <Instagram size={20} strokeWidth={1.5} />
+                <Camera size={20} strokeWidth={1.5} />
               </a>
             </div>
           </div>
