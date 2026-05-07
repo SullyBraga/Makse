@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Camera, PlayCircle } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -10,7 +9,7 @@ export default function Footer() {
       <div style={{maxWidth:'72rem',margin:'0 auto',padding:'4rem 2rem 2rem'}}>
 
         {/* Grid principal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-8 gap-y-12 mb-12">
 
           {/* Brand */}
           <div>
@@ -21,10 +20,10 @@ export default function Footer() {
               Tecnologia e performance em cosméticos capilares para profissionais exigentes e clientes que buscam resultados de salão.
             </p>
             <div style={{display:'flex',gap:'0.875rem',marginTop:'1.5rem'}}>
-              <a href="https://www.instagram.com/makseconcept/" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
+              <a href="https://www.instagram.com/makseconcept/" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex',alignItems:'center',gap:'0.5rem',fontSize:'0.875rem',textDecoration:'none'}}
                  onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
                  onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
-                <Camera size={20} strokeWidth={1.5} />
+                @makseconcept
               </a>
             </div>
           </div>
@@ -53,9 +52,9 @@ export default function Footer() {
           <div>
             <h4 style={{fontSize:'0.65rem',letterSpacing:'0.28em',textTransform:'uppercase',color:'var(--gold)',marginBottom:'1.25rem',fontWeight:500}}>Contato</h4>
             <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:'0.75rem',fontSize:'0.82rem',color:'rgba(255,255,255,0.55)'}}>
-              <li style={{ lineHeight: 1.6 }}>São Gonçalo e São Pedro da Aldeia-RJ</li>
+              <li style={{ lineHeight: 1.6, maxWidth: '250px' }}>São Gonçalo e São Pedro da Aldeia-RJ</li>
               <li><a href="https://wa.me/5522988726778" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>+55 22 98872-6778 (WhatsApp)</a></li>
-              <li><a href="mailto:contato@makseprofissional.com.br" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>contato@makseprofissional.com.br</a></li>
+              <li style={{ wordBreak: 'break-word' }}><a href="mailto:contato@makseprofissional.com.br" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>contato@makseprofissional.com.br</a></li>
             </ul>
           </div>
         </div>
