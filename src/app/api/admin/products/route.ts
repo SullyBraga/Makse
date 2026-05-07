@@ -30,8 +30,8 @@ export async function GET(req: NextRequest) {
   const products = await prisma.product.findMany({
     where: search ? {
       OR: [
-        { name: { contains: search, mode: 'insensitive' } },
-        { sku: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search } },
+        { sku: { contains: search } },
       ],
     } : undefined,
     orderBy: { createdAt: 'desc' },

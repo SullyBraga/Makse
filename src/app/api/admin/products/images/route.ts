@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     // Add to product images array
     const updated = await prisma.product.update({
       where: { id: productId },
-      data: { images: [...product.images, imageUrl] },
+      data: { images: [...(Array.isArray(product.images) ? product.images as string[] : []), imageUrl] },
     })
 
     return NextResponse.json({ url: imageUrl, images: updated.images })
@@ -73,7 +73,7 @@ export async function DELETE(req: NextRequest) {
 
     const updated = await prisma.product.update({
       where: { id: productId },
-      data: { images: product.images.filter(img => img !== imageUrl) },
+      data: { images: (Array.isArray(product.images) ? product.images as string[] : []).filter(img => img !== imageUrl) },
     })
 
     return NextResponse.json({ images: updated.images })

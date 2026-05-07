@@ -12,7 +12,7 @@ export default async function EditarProdutoPage({ params }: { params: Promise<{ 
 
   // Fetch related products data so ProductForm can show them by name
   let relatedProductsData: { id: string; name: string; images: string[] }[] = []
-  if (product.relatedProducts && product.relatedProducts.length > 0) {
+  if (Array.isArray(product.relatedProducts) && product.relatedProducts.length > 0) {
     const relatedProds = await prisma.product.findMany({
       where: { id: { in: product.relatedProducts as string[] } },
       select: { id: true, name: true, images: true },

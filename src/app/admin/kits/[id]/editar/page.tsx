@@ -18,7 +18,7 @@ export default async function EditarKitPage({ params }: { params: Promise<{ id: 
   if (!kit) notFound()
 
   let relatedProductsData: { id: string; name: string; images: string[] }[] = []
-  if (kit.relatedProducts && kit.relatedProducts.length > 0) {
+  if (Array.isArray(kit.relatedProducts) && kit.relatedProducts.length > 0) {
     const rel = await prisma.product.findMany({
       where: { id: { in: kit.relatedProducts as string[] } },
       select: { id: true, name: true, images: true },

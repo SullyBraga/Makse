@@ -80,7 +80,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           {/* LEFT — Gallery */}
           <div className="animate-up">
-            <ProductGallery images={product.images} productName={product.name} />
+            <ProductGallery images={product.images as string[]} productName={product.name} />
           </div>
 
           {/* RIGHT — Info */}
@@ -168,7 +168,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         {/* Kit suggestions — Compre Junto */}
         {kitSuggestions.length > 0 && (
-          <KitSuggestions kits={kitSuggestions} isPro={isPro} discountPct={discountPct} />
+          <KitSuggestions kits={kitSuggestions as any} isPro={isPro} discountPct={discountPct} />
         )}
 
         {/* Related products */}
@@ -191,8 +191,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               {related.map(r => (
                 <Link key={r.id} href={`/produto/${r.slug}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--cream)', transition: 'box-shadow 0.2s, transform 0.2s' }} className="hover-lift">
                   <div style={{ aspectRatio: '1', background: 'var(--cream)', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {r.images?.[0] ? (
-                      <img src={r.images[0]} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    {(r.images as string[])?.[0] ? (
+                      <img src={(r.images as string[])[0]} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
                       <span style={{ fontSize: '3rem', fontWeight: 200, color: 'rgba(255,183,184,0.4)', fontFamily: 'var(--font-cormorant),serif' }}>M</span>
                     )}

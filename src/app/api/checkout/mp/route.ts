@@ -3,11 +3,11 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { MercadoPagoConfig, Preference } from 'mercadopago'
 
-const mp = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-})
-
 export async function POST(req: NextRequest) {
+  const mp = new MercadoPagoConfig({
+    accessToken: process.env.MP_ACCESS_TOKEN || '',
+  })
+
   const session = await auth()
   if (!session) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 

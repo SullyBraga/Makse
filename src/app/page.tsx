@@ -112,7 +112,7 @@ export default async function HomePage() {
                   slug={p.slug}
                   price={p.price}
                   lineName={p.line?.name ?? null}
-                  images={p.images}
+                  images={p.images as string[]}
                   proOnly={p.proOnly}
                   featured
                 />
