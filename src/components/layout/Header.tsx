@@ -47,12 +47,7 @@ export default function Header() {
       boxShadow: scrolled ? '0 1px 24px rgba(0,0,0,0.07)' : 'none',
       backdropFilter: scrolled ? 'blur(12px)' : 'none',
     }}>
-      {/* Topbar */}
-      <div style={{ background: 'var(--navy)', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        <p style={{ fontSize: '0.6rem', letterSpacing: '0.2em', color: 'var(--gold)', textTransform: 'uppercase', margin: 0 }}>
-          Frete grátis acima de R$&nbsp;299 • Parcelamento em até 12x
-        </p>
-      </div>
+
 
       {/* Main nav */}
       <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>

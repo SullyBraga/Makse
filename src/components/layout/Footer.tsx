@@ -10,7 +10,7 @@ export default function Footer() {
       <div style={{maxWidth:'72rem',margin:'0 auto',padding:'4rem 2rem 2rem'}}>
 
         {/* Grid principal */}
-        <div style={{display:'grid',gridTemplateColumns:'1.4fr 1fr 1fr 1.2fr',gap:'3rem',marginBottom:'3rem'}}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
 
           {/* Brand */}
           <div>
@@ -21,15 +21,10 @@ export default function Footer() {
               Tecnologia e performance em cosméticos capilares para profissionais exigentes e clientes que buscam resultados de salão.
             </p>
             <div style={{display:'flex',gap:'0.875rem',marginTop:'1.5rem'}}>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
+              <a href="https://www.instagram.com/makseconcept/" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
                  onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
                  onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
-                <Camera size={17}/>
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex'}}
-                 onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
-                 onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
-                <PlayCircle size={17}/>
+                <Camera size={20}/>
               </a>
             </div>
           </div>
@@ -58,8 +53,8 @@ export default function Footer() {
           <div>
             <h4 style={{fontSize:'0.65rem',letterSpacing:'0.28em',textTransform:'uppercase',color:'var(--gold)',marginBottom:'1.25rem',fontWeight:500}}>Contato</h4>
             <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:'0.75rem',fontSize:'0.82rem',color:'rgba(255,255,255,0.55)'}}>
-              <li>Av. S. Pedro, 50 — Loteam. Condom. BR</li>
-              <li><a href="https://wa.me/55" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>(xx) xxxxx-xxxx</a></li>
+              <li style={{ lineHeight: 1.6 }}>São Gonçalo e São Pedro da Aldeia-RJ</li>
+              <li><a href="https://wa.me/5522988726778" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>+55 22 98872-6778 (WhatsApp)</a></li>
               <li><a href="mailto:contato@makseprofissional.com.br" style={{color:'rgba(255,255,255,0.55)',textDecoration:'none'}}>contato@makseprofissional.com.br</a></li>
             </ul>
           </div>

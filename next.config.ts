@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     localPatterns: [
       { pathname: '/uploads/**' },
     ],
-    unoptimized: process.env.NODE_ENV === 'development',
+    unoptimized: true,
   },
 }
 
