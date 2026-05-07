@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic'
 function LoginForm() {
   const searchParams = useSearchParams()
   const registered = searchParams.get('registered')
-  const redirect = searchParams.get('redirect') || '/'
+  const redirectUrl = searchParams.get('to') || searchParams.get('redirect') || '/'
 
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -40,7 +40,7 @@ function LoginForm() {
         } else if (role === 'VENDEDOR') {
           window.location.href = '/admin/vendas'
         } else {
-          window.location.href = redirect
+          window.location.href = redirectUrl
         }
       }
     } catch {
