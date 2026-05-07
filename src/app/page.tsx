@@ -8,6 +8,8 @@ const S = {
   section: (bg = '#fff') => ({ padding: 'clamp(3rem,6vw,5rem) 0', backgroundColor: bg }) as React.CSSProperties,
 } as const
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const featuredProducts = await prisma.product.findMany({
     where: { active: true, featured: true },

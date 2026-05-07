@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import CatalogoClient from './CatalogoClient'
 
+export const dynamic = 'force-dynamic'
+
 export default async function CatalogoPage() {
   const session = await auth()
   const role = (session?.user as any)?.role ?? 'guest'

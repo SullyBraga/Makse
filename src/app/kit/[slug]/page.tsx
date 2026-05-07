@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import KitPageClient from './KitPageClient'
 
+export const dynamic = 'force-dynamic'
+
 export default async function KitPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const session = await auth()
