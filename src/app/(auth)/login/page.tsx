@@ -6,6 +6,8 @@ import { useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Scissors, ShoppingBag, ArrowRight } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 
+export const dynamic = 'force-dynamic'
+
 function LoginForm() {
   const searchParams = useSearchParams()
   const registered = searchParams.get('registered')
