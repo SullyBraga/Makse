@@ -11,12 +11,17 @@ const S = {
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
-  const featuredProducts = await prisma.product.findMany({
-    where: { active: true, featured: true },
-    include: { line: { select: { name: true, slug: true } } },
-    orderBy: { createdAt: 'desc' },
-    take: 8,
-  })
+  let featuredProducts: any[] = []
+  try {
+    featuredProducts = await prisma.product.findMany({
+      where: { active: true, featured: true },
+      include: { line: { select: { name: true, slug: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+    })
+  } catch (error) {
+    console.error("Database connection error on Home:", error)
+  }
 
   return (
     <div>
