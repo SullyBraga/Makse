@@ -29,18 +29,13 @@ function LoginForm() {
       if (result?.error) {
         setError('E-mail ou senha incorretos. Verifique seus dados.')
       } else {
-        const sessionRes = await fetch('/api/auth/session')
-        const session = await sessionRes.json()
-        const role = session?.user?.role
-        const bust = Date.now()
-        
-        if (role === 'ADMIN') {
-          window.location.href = `/admin?v=${bust}`
-        } else if (role === 'VENDEDOR') {
-          window.location.href = `/admin/vendas?v=${bust}`
+        // Successful login - redirect to admin with cache buster
+        const timestamp = Date.now()
+        if (form.email === 'admin@makse.com.br') {
+          window.location.replace(`/admin?v=${timestamp}`)
         } else {
-          const target = redirect.includes('?') ? `${redirect}&v=${bust}` : `${redirect}?v=${bust}`
-          window.location.href = target
+          const target = redirect.includes('?') ? `${redirect}&v=${timestamp}` : `${redirect}?v=${timestamp}`
+          window.location.replace(target)
         }
       }
     } catch {
