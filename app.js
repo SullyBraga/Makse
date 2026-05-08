@@ -40,11 +40,11 @@ function serveStatic(res, filePath) {
     return true;
 }
 
-// Inicia o servidor Next.js standalone na porta 3001 (interno)
-process.env.PORT = '3001';
+process.env.NODE_ENV = 'production';
+const path = require('path');
 const dir = path.join(__dirname, '.next', 'standalone');
 process.chdir(dir);
-require(path.join(dir, '_server.js'));
+require(path.join(dir, 'server.js'));
 
 // Proxy + static server na porta 3000 (que a Hostinger expõe)
 const { createProxyServer } = require('http-proxy');
