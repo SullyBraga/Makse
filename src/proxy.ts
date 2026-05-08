@@ -45,9 +45,24 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  return NextResponse.next()
+  const response = NextResponse.next()
+
+  // Forçar o servidor a não fazer cache de páginas dinâmicas (Login e Admin)
+  // Isso resolve o bug do JSON (RSC Payload) aparecendo na tela na Hostinger
+  if (
+    pathname.startsWith('/login') || 
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/api/auth')
+  ) {
+    response.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    response.headers.set('Vary', 'Accept')
+  }
+
+  return response
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/conta/:path*'],
+  matcher: ['/admin/:path*', '/conta/:path*', '/login/:path*', '/api/auth/:path*'],
 }
