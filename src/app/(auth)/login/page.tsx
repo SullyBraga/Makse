@@ -6,12 +6,10 @@ import { useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Scissors, ShoppingBag, ArrowRight } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 
-export const dynamic = 'force-dynamic'
-
 function LoginForm() {
   const searchParams = useSearchParams()
   const registered = searchParams.get('registered')
-  const redirectUrl = searchParams.get('to') || searchParams.get('redirect') || '/'
+  const redirect = searchParams.get('redirect') || '/'
 
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -35,14 +33,12 @@ function LoginForm() {
         const sessionRes = await fetch('/api/auth/session')
         const session = await sessionRes.json()
         const role = session?.user?.role
-        const timestamp = Date.now()
         if (role === 'ADMIN') {
-          window.location.href = '/admin?_t=' + timestamp
+          window.location.href = '/admin'
         } else if (role === 'VENDEDOR') {
-          window.location.href = '/admin/vendas?_t=' + timestamp
+          window.location.href = '/admin/vendas'
         } else {
-          const separator = redirectUrl.includes('?') ? '&' : '?'
-          window.location.href = redirectUrl + separator + '_t=' + timestamp
+          window.location.href = redirect
         }
       }
     } catch {

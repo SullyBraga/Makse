@@ -18,7 +18,7 @@ const nav = [
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
   const role = (session?.user as any)?.role
-  if (!session || (role !== 'ADMIN' && role !== 'VENDEDOR')) redirect('/login?to=/admin')
+  if (!session || (role !== 'ADMIN' && role !== 'VENDEDOR')) redirect('/login?redirect=/admin')
   // Vendedores só têm acesso à página de vendas
   const isVendedor = role === 'VENDEDOR'
 
