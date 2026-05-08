@@ -17,18 +17,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
-        // EMERGENCY BYPASS FOR DEBUGGING
-        if (credentials.email === 'admin@makse.com.br' && credentials.password === 'admin123') {
-          console.log("Using emergency bypass for admin")
-          return {
-            id: 'usr_admin_master',
-            name: 'Administrador Makse',
-            email: 'admin@makse.com.br',
-            role: 'ADMIN',
-            discountPct: 0,
-          }
-        }
-
         try {
           const user = await prisma.user.findUnique({
             where: { email: credentials.email as string },
