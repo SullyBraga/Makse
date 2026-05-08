@@ -18,7 +18,21 @@ const nav = [
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
   const role = (session?.user as any)?.role
-  if (!session || (role !== 'ADMIN' && role !== 'VENDEDOR')) redirect('/login?redirect=/admin')
+
+  // Se não houver sessão ou papel autorizado, usamos um redirecionamento HTML puro
+  // Isso evita o bug de exibir JSON na Hostinger
+  if (!session || (role !== 'ADMIN' && role !== 'VENDEDOR')) {
+    return (
+      <html>
+        <head>
+          <meta http-equiv="refresh" content={`0; url=/login?redirect=/admin&v=${Date.now()}`} />
+        </head>
+        <body>
+          <p>Redirecionando...</p>
+        </body>
+      </html>
+    )
+  }
   // Vendedores só têm acesso à página de vendas
   const isVendedor = role === 'VENDEDOR'
 
