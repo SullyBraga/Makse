@@ -44,7 +44,7 @@ function serveStatic(res, filePath) {
 process.env.PORT = '3001';
 const dir = path.join(__dirname, '.next', 'standalone');
 process.chdir(dir);
-require(path.join(dir, 'server.js'));
+require(path.join(dir, '_server.js'));
 
 // Proxy + static server na porta 3000 (que a Hostinger expõe)
 const { createProxyServer } = require('http-proxy');
