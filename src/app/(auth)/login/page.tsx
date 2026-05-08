@@ -35,12 +35,14 @@ function LoginForm() {
         const sessionRes = await fetch('/api/auth/session')
         const session = await sessionRes.json()
         const role = session?.user?.role
+        const timestamp = Date.now()
         if (role === 'ADMIN') {
-          window.location.href = '/admin'
+          window.location.href = '/admin?_t=' + timestamp
         } else if (role === 'VENDEDOR') {
-          window.location.href = '/admin/vendas'
+          window.location.href = '/admin/vendas?_t=' + timestamp
         } else {
-          window.location.href = redirectUrl
+          const separator = redirectUrl.includes('?') ? '&' : '?'
+          window.location.href = redirectUrl + separator + '_t=' + timestamp
         }
       }
     } catch {
