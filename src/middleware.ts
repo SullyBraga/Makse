@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
-export async function proxy(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const token = await getToken({
     req,
     secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
@@ -10,7 +10,6 @@ export async function proxy(req: NextRequest) {
 
   const { pathname } = req.nextUrl
 
-  // Proteger rotas /admin
   if (pathname.startsWith('/admin')) {
     if (!token) {
       const url = new URL('/login', req.url)
@@ -20,7 +19,6 @@ export async function proxy(req: NextRequest) {
 
     const role = token.role as string
 
-    // VENDEDOR: só tem acesso à página e APIs de vendas, produtos e kits
     if (role === 'VENDEDOR') {
       const allowedForVendedor = [
         '/admin/vendas',
@@ -36,7 +34,6 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  // Proteger rotas /conta — exige autenticação
   if (pathname.startsWith('/conta')) {
     if (!token) {
       const url = new URL('/login', req.url)
@@ -47,10 +44,8 @@ export async function proxy(req: NextRequest) {
 
   const response = NextResponse.next()
 
-  // Forçar o servidor a não fazer cache de páginas dinâmicas (Login e Admin)
-  // Isso resolve o bug do JSON (RSC Payload) aparecendo na tela na Hostinger
   if (
-    pathname.startsWith('/login') || 
+    pathname.startsWith('/login') ||
     pathname.startsWith('/admin') ||
     pathname.startsWith('/api/auth')
   ) {
