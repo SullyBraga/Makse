@@ -5,6 +5,13 @@ const http = require('http');
 const fs = require('fs');
 const { parse } = require('url');
 
+// DEBUG - remove depois
+console.log('__dirname:', __dirname);
+console.log('CWD:', process.cwd());
+console.log('STATIC_DIR exists:', fs.existsSync(path.join(__dirname, '.next', 'standalone', '.next', 'static')));
+console.log('STANDALONE exists:', fs.existsSync(path.join(__dirname, '.next', 'standalone')));
+
+
 const STATIC_DIR = path.join(__dirname, '.next', 'standalone', '.next', 'static');
 const PUBLIC_DIR = path.join(__dirname, '.next', 'standalone', 'public');
 
