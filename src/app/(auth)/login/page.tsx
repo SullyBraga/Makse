@@ -140,12 +140,12 @@ function LoginForm() {
               type="submit"
               disabled={loading}
               className="btn-primary"
-              style={{ width: '100%', marginTop: '0.25rem', opacity: loading ? 0.7 : 1, gap: '0.5rem' }}
+              style={{ width: '100%', marginTop: '0.25rem', opacity: loading ? 0.7 : 1, gap: '0.5rem', pointerEvents: loading ? 'none' : 'auto' }}
             >
               {loading ? (
                 <>
                   <span style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
-                  Entrando...
+                  Processando...
                 </>
               ) : (
                 <>Entrar <ArrowRight size={14} /></>
