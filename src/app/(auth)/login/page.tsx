@@ -29,16 +29,18 @@ function LoginForm() {
       if (result?.error) {
         setError('E-mail ou senha incorretos. Verifique seus dados.')
       } else {
-        // Fetch session to determine redirect based on role
         const sessionRes = await fetch('/api/auth/session')
         const session = await sessionRes.json()
         const role = session?.user?.role
+        const bust = Date.now()
+        
         if (role === 'ADMIN') {
-          window.location.href = '/admin'
+          window.location.href = `/admin?v=${bust}`
         } else if (role === 'VENDEDOR') {
-          window.location.href = '/admin/vendas'
+          window.location.href = `/admin/vendas?v=${bust}`
         } else {
-          window.location.href = redirect
+          const target = redirect.includes('?') ? `${redirect}&v=${bust}` : `${redirect}?v=${bust}`
+          window.location.href = target
         }
       }
     } catch {
