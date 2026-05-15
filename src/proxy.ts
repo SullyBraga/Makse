@@ -1,26 +1,23 @@
+import { auth } from '@/lib/auth'
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { getToken } from 'next-auth/jwt'
 
-export async function proxy(req: NextRequest) {
-  const token = await getToken({
-    req,
-    secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? 'MinhaChaveSecretaMakse2026!@',
-  })
-
+// Next-Auth v5: usar `auth()` como proxy para ler o cookie correto.
+// getToken() é API v4 e procura 'next-auth.session-token';
+// auth.js v5 usa 'authjs.session-token' — daí o token sempre era null.
+export const proxy = auth(function (req) {
+  const session = req.auth
   const { pathname } = req.nextUrl
 
-  // Proteger rotas /admin
+  // ── Proteger /admin ───────────────────────────────────────────────────
   if (pathname.startsWith('/admin')) {
-    if (!token) {
+    if (!session) {
       const url = new URL('/login', req.url)
       url.searchParams.set('redirect', pathname)
       return NextResponse.redirect(url)
     }
 
-    const role = token.role as string
+    const role = (session.user as { role?: string })?.role
 
-    // VENDEDOR: só tem acesso à página e APIs de vendas, produtos e kits
     if (role === 'VENDEDOR') {
       const allowedForVendedor = [
         '/admin/vendas',
@@ -36,19 +33,17 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  // Proteger rotas /conta — exige autenticação
+  // ── Proteger /conta ───────────────────────────────────────────────────
   if (pathname.startsWith('/conta')) {
-    if (!token) {
+    if (!session) {
       const url = new URL('/login', req.url)
       url.searchParams.set('redirect', pathname)
       return NextResponse.redirect(url)
     }
   }
 
+  // ── Headers anti-cache ────────────────────────────────────────────────
   const response = NextResponse.next()
-
-  // Forçar o servidor a não fazer cache de páginas dinâmicas (Login e Admin)
-  // Isso resolve o bug do JSON (RSC Payload) aparecendo na tela na Hostinger
   if (
     pathname.startsWith('/login') ||
     pathname.startsWith('/admin') ||
@@ -61,7 +56,7 @@ export async function proxy(req: NextRequest) {
   }
 
   return response
-}
+})
 
 export const config = {
   matcher: ['/admin/:path*', '/conta/:path*', '/login/:path*', '/api/auth/:path*'],
