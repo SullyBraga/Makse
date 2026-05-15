@@ -10,7 +10,7 @@ export default function ParaProfissionaisPage() {
 
       {/* Hero */}
       <section style={{...sec('var(--cream)'), textAlign:'center', position:'relative', overflow:'hidden'}}>
-        <div style={{position:'absolute',top:'-80px',right:'-80px',width:'400px',height:'400px',borderRadius:'50%',background:'radial-gradient(circle,rgba(255,183,184,0.18) 0%,transparent 70%)',pointerEvents:'none'}}/>
+        <div style={{position:'absolute',top:'-80px',right:'-80px',width:'400px',height:'400px',borderRadius:'50%',background:'radial-gradient(circle,rgba(100,116,139,0.08) 0%,transparent 70%)',pointerEvents:'none'}}/>
         <div style={{...C, position:'relative', zIndex:1}}>
           <span className="section-label">Área Exclusiva</span>
           <h1 style={{fontFamily:'var(--font-cormorant),Georgia,serif',fontSize:'clamp(2.5rem,5vw,4rem)',fontWeight:400,color:'var(--navy)',margin:'0.5rem 0 1rem'}}>
@@ -42,7 +42,7 @@ export default function ParaProfissionaisPage() {
                 padding:'2.25rem 1.75rem',border:'1px solid var(--border)',
                 borderRadius:'var(--radius-lg)',background:'#fafafa',
               }}>
-                <div style={{padding:'0.75rem',background:'rgba(255,183,184,0.12)',borderRadius:'50%',color:'var(--gold)',marginBottom:'1rem',display:'flex'}}>
+                <div style={{padding:'0.75rem',background:'rgba(100,116,139,0.08)',borderRadius:'50%',color:'var(--gold)',marginBottom:'1rem',display:'flex'}}>
                   {b.icon}
                 </div>
                 <h3 style={{fontSize:'0.95rem',fontWeight:600,color:'var(--navy)',marginBottom:'0.5rem'}}>{b.title}</h3>

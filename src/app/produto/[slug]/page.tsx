@@ -191,7 +191,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     {(r.images as string[])?.[0] ? (
                       <img src={(r.images as string[])[0]} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
-                      <span style={{ fontSize: '3rem', fontWeight: 200, color: 'rgba(255,183,184,0.4)', fontFamily: 'var(--font-cormorant),serif' }}>M</span>
+                      <span style={{ fontSize: '3rem', fontWeight: 200, color: 'rgba(100,116,139,0.2)', fontFamily: 'var(--font-cormorant),serif' }}>M</span>
                     )}
                   </div>
                   <div style={{ padding: '0.875rem' }}>

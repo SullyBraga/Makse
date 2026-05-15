@@ -28,8 +28,8 @@ export default async function HomePage() {
 
       {/* ── HERO ── */}
       <section style={{ minHeight: 'calc(100vh - 96px)', display: 'flex', alignItems: 'center', backgroundColor: 'var(--cream)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '10%', right: '8%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,183,184,0.22) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '5%', left: '5%', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,183,184,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '10%', right: '8%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(100,116,139,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '5%', left: '5%', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(100,116,139,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ ...S.container, width: '100%', position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: '680px', padding: 'clamp(3rem,8vw,5rem) 0', margin: '0 auto', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <span className="section-label animate-fade" style={{ animationDelay: '0.05s' }}>Cosmética Avançada</span>

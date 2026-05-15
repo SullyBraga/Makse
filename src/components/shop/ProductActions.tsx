@@ -15,7 +15,7 @@ type Props = {
 
 type Particle = { id: number; dx: string; dy: string; color: string; size: number }
 
-const PARTICLE_COLORS = ['#ffb7b8', '#323232', '#ff7b7b', '#fff', '#ffd8d9', '#ff9ea0']
+const PARTICLE_COLORS = ['#64748b', '#1e293b', '#94a3b8', '#fff', '#e2e8f0', '#475569']
 
 export default function ProductActions({ product, variants, basePrice, discountPct, isPro = false }: Props) {
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(variants[0] ?? null)
@@ -41,7 +41,7 @@ export default function ProductActions({ product, variants, basePrice, discountP
   const outOfStock = selectedVariant ? selectedVariant.stock === 0 : false
 
   const burst = useCallback(() => {
-    const colors = ['#ffb7b8', '#ffd8d9', '#ff9ea0', '#fff', '#ffb7b8']
+    const colors = ['#64748b', '#e2e8f0', '#94a3b8', '#fff', '#475569']
     const newParticles: Particle[] = Array.from({ length: 6 }, (_, i) => {
       const angle = (i / 6) * 360 + Math.random() * 20
       const dist = 32 + Math.random() * 20

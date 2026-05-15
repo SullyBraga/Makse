@@ -27,7 +27,7 @@ export async function sendOrderConfirmationEmail(to: string, order: { id: string
       <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto">
         <div style="background:#0d1b2a;padding:24px;text-align:center">
           <h1 style="color:#fff;font-size:22px;margin:0;letter-spacing:4px">MAKSE</h1>
-          <p style="color:#c9a96e;font-size:10px;letter-spacing:3px;margin:4px 0 0">PROFISSIONAL</p>
+          <p style="color:#64748b;font-size:10px;letter-spacing:3px;margin:4px 0 0">PROFISSIONAL</p>
         </div>
         <div style="padding:32px;background:#f8f4ef">
           <h2 style="color:#0d1b2a;font-size:20px;margin:0 0 16px">Pedido confirmado! ✓</h2>
@@ -88,7 +88,7 @@ export async function sendProfessionalApprovalEmail(to: string, name: string) {
         <div style="padding:32px;background:#f8f4ef">
           <h2 style="color:#0d1b2a">Parabéns, ${name}! ✦</h2>
           <p style="color:#6b6b6b;font-size:14px">Sua conta profissional foi aprovada. Agora você tem acesso ao catálogo completo e aos seus descontos exclusivos.</p>
-          <a href="${process.env.NEXTAUTH_URL}/login" style="display:inline-block;background:#c9a96e;color:#fff;padding:12px 28px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-top:20px">
+          <a href="${process.env.NEXTAUTH_URL}/login" style="display:inline-block;background:#1e293b;color:#fff;padding:12px 28px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-top:20px">
             Acessar Minha Conta
           </a>
         </div>

@@ -96,7 +96,7 @@ export default function ProductGallery({ images, productName }: Props) {
         ) : (
           /* Placeholder */
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '7rem', fontWeight: 200, color: 'rgba(255,183,184,0.45)', fontFamily: 'var(--font-cormorant),serif', lineHeight: 1, animation: 'floatY 4s ease-in-out infinite' }}>M</span>
+            <span style={{ fontSize: '7rem', fontWeight: 200, color: 'rgba(100,116,139,0.2)', fontFamily: 'var(--font-cormorant),serif', lineHeight: 1, animation: 'floatY 4s ease-in-out infinite' }}>M</span>
             <span style={{ fontSize: '0.6rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(200,150,152,0.5)' }}>Sem imagem</span>
           </div>
         )}

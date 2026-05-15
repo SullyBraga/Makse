@@ -10,7 +10,7 @@ export default function SobrePage() {
 
       {/* Hero */}
       <section style={{...sec('var(--cream)'), textAlign:'center', position:'relative', overflow:'hidden'}}>
-        <div style={{position:'absolute',top:'-80px',left:'50%',transform:'translateX(-50%)',width:'500px',height:'500px',borderRadius:'50%',background:'radial-gradient(circle,rgba(255,183,184,0.18) 0%,transparent 70%)',pointerEvents:'none'}}/>
+        <div style={{position:'absolute',top:'-80px',left:'50%',transform:'translateX(-50%)',width:'500px',height:'500px',borderRadius:'50%',background:'radial-gradient(circle,rgba(100,116,139,0.08) 0%,transparent 70%)',pointerEvents:'none'}}/>
         <div style={{...C, position:'relative', zIndex:1}}>
           <span className="section-label">Nossa Essência</span>
           <h1 style={{fontFamily:'var(--font-cormorant),Georgia,serif',fontSize:'clamp(2.5rem,5vw,4rem)',fontWeight:400,color:'var(--navy)',margin:'0.5rem 0 1rem'}}>
@@ -44,7 +44,7 @@ export default function SobrePage() {
             {/* Missão */}
             <div style={{background:'#fff',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'2.5rem'}}>
               <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'1.25rem'}}>
-                <div style={{padding:'0.6rem',background:'rgba(255,183,184,0.12)',borderRadius:'50%',color:'var(--gold)',display:'flex'}}>
+                <div style={{padding:'0.6rem',background:'rgba(100,116,139,0.08)',borderRadius:'50%',color:'var(--gold)',display:'flex'}}>
                   <Shield size={18}/>
                 </div>
                 <h2 style={{fontFamily:'var(--font-cormorant),Georgia,serif',fontSize:'1.4rem',fontWeight:400,color:'var(--navy)'}}>Nossa Missão</h2>
@@ -59,7 +59,7 @@ export default function SobrePage() {
             {/* Visão */}
             <div style={{background:'var(--navy)',borderRadius:'var(--radius-lg)',padding:'2.5rem'}}>
               <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'1.25rem'}}>
-                <div style={{padding:'0.6rem',background:'rgba(255,183,184,0.1)',borderRadius:'50%',color:'var(--gold)',display:'flex'}}>
+                <div style={{padding:'0.6rem',background:'rgba(100,116,139,0.06)',borderRadius:'50%',color:'var(--gold)',display:'flex'}}>
                   <BookOpen size={18}/>
                 </div>
                 <h2 style={{fontFamily:'var(--font-cormorant),Georgia,serif',fontSize:'1.4rem',fontWeight:400,color:'#fff'}}>Nossa Visão</h2>
@@ -94,7 +94,7 @@ export default function SobrePage() {
                 padding:'2.25rem 1.75rem',border:'1px solid var(--border)',
                 borderRadius:'var(--radius-lg)',background:'#fafafa',
               }}>
-                <div style={{padding:'0.75rem',background:'rgba(255,183,184,0.12)',borderRadius:'50%',color:'var(--gold)',marginBottom:'1rem',display:'flex'}}>
+                <div style={{padding:'0.75rem',background:'rgba(100,116,139,0.08)',borderRadius:'50%',color:'var(--gold)',marginBottom:'1rem',display:'flex'}}>
                   {v.icon}
                 </div>
                 <h3 style={{fontSize:'0.95rem',fontWeight:600,color:'var(--navy)',marginBottom:'0.5rem'}}>{v.title}</h3>

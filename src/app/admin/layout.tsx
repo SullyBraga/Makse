@@ -113,7 +113,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </div>
 
       <style>{`
-        .admin-nav-item:hover { background: rgba(255,183,184,0.10); color: #fff !important; }
+        .admin-nav-item:hover { background: rgba(100,116,139,0.12); color: #fff !important; }
 
         @media (max-width: 768px) {
           .admin-mobile-header { display: block !important; }

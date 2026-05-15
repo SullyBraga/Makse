@@ -61,7 +61,7 @@ export default async function AdminEstoquePage() {
       {/* Tabela */}
       <div style={{ background: '#fff', border: '1px solid #e8e2da', borderRadius: '14px', overflow: 'hidden' }}>
         <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f0ebe4', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Package size={15} style={{ color: '#c9a96e' }} />
+          <Package size={15} style={{ color: '#64748b' }} />
           <h2 style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0d1b2a' }}>Produtos Cadastrados ({products.length})</h2>
         </div>
 

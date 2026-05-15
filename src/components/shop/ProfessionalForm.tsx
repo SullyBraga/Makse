@@ -26,7 +26,7 @@ export default function ProfessionalForm() {
 
   if (success) return (
     <div className="text-center py-12">
-      <CheckCircle size={48} className="text-[#c9a96e] mx-auto mb-4"/>
+      <CheckCircle size={48} className="text-[#64748b] mx-auto mb-4"/>
       <h3 className="text-xl font-light text-[#0d1b2a] mb-2" style={{fontFamily:'Cormorant Garamond, serif'}}>Cadastro enviado!</h3>
       <p className="text-sm text-[#6b6b6b]">Nossa equipe entrará em contato em até 2 dias úteis.</p>
     </div>

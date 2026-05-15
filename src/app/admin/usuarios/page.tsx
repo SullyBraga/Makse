@@ -186,7 +186,7 @@ export default function AdminUsuariosPage() {
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {pending.map(user => (
-                  <div key={user.id} style={{ background: '#fff', border: '1px solid #ffd8d9', borderLeft: '4px solid var(--gold)', borderRadius: '14px', padding: '1.25rem 1.5rem' }}>
+                  <div key={user.id} style={{ background: '#fff', border: '1px solid var(--border)', borderLeft: '4px solid var(--gold)', borderRadius: '14px', padding: '1.25rem 1.5rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
                       <div>
                         <p style={{ fontWeight: 600, color: 'var(--navy)', marginBottom: '0.2rem' }}>{user.name}</p>

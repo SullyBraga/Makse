@@ -19,7 +19,7 @@ export default function LinhasPage() {
     <div>
       {/* Hero */}
       <section style={{backgroundColor:'var(--cream)',padding:'5rem 0',textAlign:'center',position:'relative',overflow:'hidden'}}>
-        <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'400px',height:'400px',borderRadius:'50%',background:'radial-gradient(circle,rgba(255,183,184,0.2) 0%,transparent 70%)',pointerEvents:'none'}}/>
+        <div style={{position:'absolute',top:'-60px',left:'50%',transform:'translateX(-50%)',width:'400px',height:'400px',borderRadius:'50%',background:'radial-gradient(circle,rgba(100,116,139,0.08) 0%,transparent 70%)',pointerEvents:'none'}}/>
         <div style={{...C, position:'relative', zIndex:1}}>
           <span className="section-label">Portfólio Completo</span>
           <h1 style={{fontFamily:'var(--font-cormorant),Georgia,serif',fontSize:'clamp(2.5rem,5vw,4rem)',fontWeight:400,color:'var(--navy)',margin:'0.5rem 0 1rem'}}>
@@ -38,7 +38,7 @@ export default function LinhasPage() {
             
             {/* Imagem */}
             <div className={`flex items-center justify-center min-h-[280px] md:min-h-full ${i % 2 === 0 ? 'order-1 md:order-2' : 'order-1 md:order-1'}`} style={{background:line.bg}}>
-              <span style={{fontSize:'clamp(4rem, 8vw, 6rem)',fontWeight:300,color:'rgba(255,183,184,0.35)',fontFamily:'var(--font-cormorant),Georgia,serif'}}>
+              <span style={{fontSize:'clamp(4rem, 8vw, 6rem)',fontWeight:300,color:'rgba(100,116,139,0.15)',fontFamily:'var(--font-cormorant),Georgia,serif'}}>
                 {line.name.split(' ').pop()}
               </span>
             </div>
