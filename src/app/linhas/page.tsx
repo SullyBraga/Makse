@@ -44,7 +44,12 @@ export default function LinhasPage() {
             </div>
 
             {/* Texto */}
-            <div className={`flex items-center p-8 md:p-12 lg:p-16 xl:p-20 ${i % 2 === 0 ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}>
+            <div className={`flex items-center ${i % 2 === 0 ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}
+              style={{
+                padding: '2.5rem 2rem',
+                paddingLeft:  i % 2 === 0 ? 'max(2rem, calc((100vw - 72rem) / 2 + 2rem))' : '2.5rem',
+                paddingRight: i % 2 === 1 ? 'max(2rem, calc((100vw - 72rem) / 2 + 2rem))' : '2.5rem',
+              }}>
               <div>
                 <span className="section-label">{line.subtitle}</span>
                 <h2 style={{fontFamily:'var(--font-cormorant),Georgia,serif',fontSize:'clamp(1.75rem,3vw,2.4rem)',fontWeight:400,color:'var(--navy)',margin:'0.25rem 0 1rem'}}>
