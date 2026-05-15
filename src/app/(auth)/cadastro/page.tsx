@@ -1,24 +1,31 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Eye, EyeOff, Scissors, ShoppingBag, ArrowRight, User, MapPin, Phone, AtSign } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight, User, MapPin, Phone, AtSign, Building2 } from 'lucide-react'
 
 type AccountType = 'client' | 'professional'
 
 export default function CadastroPage() {
-  const [accountType, setAccountType] = useState<AccountType>('client')
+  const [accountType, setAccountType] = useState<AccountType | null>(null)
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [form, setForm] = useState({
-    name: '', email: '', password: '', confirm: '',
-    salonName: '', city: '', phone: '', instagram: '',
+    name: '', email: '', phone: '', password: '', confirm: '',
+    // cliente
+    address: '',
+    // profissional
+    salonName: '', city: '', cnpj: '', salonAddress: '', instagram: '',
   })
 
   const update = (key: string, value: string) => setForm(f => ({ ...f, [key]: value }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!accountType) {
+      setError('Selecione o tipo de cadastro.')
+      return
+    }
     if (form.password !== form.confirm) {
       setError('As senhas não coincidem.')
       return
@@ -33,13 +40,18 @@ export default function CadastroPage() {
       const payload: Record<string, string> = {
         name: form.name,
         email: form.email,
+        phone: form.phone,
         password: form.password,
         type: accountType,
+      }
+      if (accountType === 'client') {
+        payload.address = form.address
       }
       if (accountType === 'professional') {
         payload.salonName = form.salonName
         payload.city = form.city
-        payload.phone = form.phone
+        payload.cnpj = form.cnpj
+        payload.salonAddress = form.salonAddress
         payload.instagram = form.instagram
       }
       const res = await fetch('/api/auth/register', {
@@ -65,6 +77,7 @@ export default function CadastroPage() {
   }
 
   const isPro = accountType === 'professional'
+  const isClient = accountType === 'client'
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--cream)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '2rem 1.5rem 4rem' }}>
@@ -79,33 +92,6 @@ export default function CadastroPage() {
           <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.75rem', fontWeight: 400, color: 'var(--navy)', marginTop: '1.5rem' }}>
             Criar conta
           </h1>
-        </div>
-
-        {/* Seletor de tipo de conta */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginBottom: '1.75rem' }}>
-          {([
-            { type: 'client' as AccountType, icon: <ShoppingBag size={18} />, label: 'Cliente Final', desc: 'Produtos selecionados para uso em casa' },
-            { type: 'professional' as AccountType, icon: <Scissors size={18} />, label: 'Profissional', desc: 'Acesso completo + tabela de desconto' },
-          ]).map(item => (
-            <button
-              key={item.type}
-              type="button"
-              onClick={() => setAccountType(item.type)}
-              style={{
-                border: `2px solid ${accountType === item.type ? 'var(--navy)' : 'var(--border)'}`,
-                borderRadius: '14px',
-                padding: '1rem 0.875rem',
-                background: accountType === item.type ? 'var(--navy)' : '#fff',
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.2s',
-              }}
-            >
-              <span style={{ color: accountType === item.type ? 'var(--gold)' : 'var(--text-muted)', display: 'block', marginBottom: '0.4rem' }}>{item.icon}</span>
-              <p style={{ fontSize: '0.8rem', fontWeight: 600, color: accountType === item.type ? '#fff' : 'var(--navy)', marginBottom: '0.2rem' }}>{item.label}</p>
-              <p style={{ fontSize: '0.68rem', color: accountType === item.type ? 'rgba(255,255,255,0.65)' : 'var(--text-muted)', lineHeight: 1.35 }}>{item.desc}</p>
-            </button>
-          ))}
         </div>
 
         {/* Card Formulário */}
@@ -124,7 +110,15 @@ export default function CadastroPage() {
               <label style={labelStyle}>Nome completo</label>
               <div style={{ position: 'relative' }}>
                 <User size={14} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                <input type="text" className="input-field" required placeholder="Seu nome" style={{ paddingLeft: '2.25rem' }} value={form.name} onChange={e => update('name', e.target.value)} />
+                <input type="text" className="input-field" required placeholder="Seu nome completo" style={{ paddingLeft: '2.25rem' }} value={form.name} onChange={e => update('name', e.target.value)} />
+              </div>
+            </div>
+
+            <div>
+              <label style={labelStyle}>Telefone</label>
+              <div style={{ position: 'relative' }}>
+                <Phone size={14} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input type="tel" className="input-field" required placeholder="(00) 00000-0000" style={{ paddingLeft: '2.25rem' }} value={form.phone} onChange={e => update('phone', e.target.value)} />
               </div>
             </div>
 
@@ -149,48 +143,101 @@ export default function CadastroPage() {
               </div>
             </div>
 
-            {/* Campos extras para profissional */}
+            {/* Seletor de tipo — botões pequenos e sutis */}
+            <div>
+              <label style={{ ...labelStyle, marginBottom: '0.6rem' }}>Tipo de cadastro</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                {([
+                  { type: 'client' as AccountType, label: 'Cliente' },
+                  { type: 'professional' as AccountType, label: 'Profissional' },
+                ]).map(item => {
+                  const active = accountType === item.type
+                  return (
+                    <button
+                      key={item.type}
+                      type="button"
+                      onClick={() => setAccountType(item.type)}
+                      style={{
+                        padding: '0.35rem 0.9rem',
+                        borderRadius: '999px',
+                        fontSize: '0.72rem',
+                        fontWeight: active ? 600 : 400,
+                        letterSpacing: '0.08em',
+                        border: `1.5px solid ${active ? 'var(--navy)' : 'var(--border)'}`,
+                        background: active ? 'var(--navy)' : 'transparent',
+                        color: active ? '#fff' : 'var(--text-muted)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Campos extras — Cliente */}
+            {isClient && (
+              <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1rem', marginTop: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+                <p style={sectionLabelStyle}>Endereço de entrega</p>
+                <div>
+                  <label style={labelStyle}>Endereço completo</label>
+                  <div style={{ position: 'relative' }}>
+                    <MapPin size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    <input type="text" className="input-field" placeholder="Rua, número, bairro, cidade, CEP" style={{ paddingLeft: '2.25rem' }} value={form.address} onChange={e => update('address', e.target.value)} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Campos extras — Profissional */}
             {isPro && (
-              <>
-                <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1rem', marginTop: '0.25rem' }}>
-                  <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.875rem' }}>
-                    Dados do Salão
-                  </p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-                    <div>
-                      <label style={labelStyle}>Nome do salão *</label>
-                      <input type="text" className="input-field" required={isPro} placeholder="Studio Beauty Hair" value={form.salonName} onChange={e => update('salonName', e.target.value)} />
+              <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1rem', marginTop: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+                <p style={sectionLabelStyle}>Dados do estabelecimento</p>
+
+                <div>
+                  <label style={labelStyle}>Nome do salão / estabelecimento *</label>
+                  <input type="text" className="input-field" required={isPro} placeholder="Studio Beauty Hair" value={form.salonName} onChange={e => update('salonName', e.target.value)} />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={labelStyle}>CNPJ *</label>
+                    <div style={{ position: 'relative' }}>
+                      <Building2 size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                      <input type="text" className="input-field" required={isPro} placeholder="00.000.000/0001-00" style={{ paddingLeft: '2.25rem' }} value={form.cnpj} onChange={e => update('cnpj', e.target.value)} />
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                      <div>
-                        <label style={labelStyle}>Cidade *</label>
-                        <div style={{ position: 'relative' }}>
-                          <MapPin size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                          <input type="text" className="input-field" required={isPro} placeholder="Rio de Janeiro" style={{ paddingLeft: '2.25rem' }} value={form.city} onChange={e => update('city', e.target.value)} />
-                        </div>
-                      </div>
-                      <div>
-                        <label style={labelStyle}>Telefone *</label>
-                        <div style={{ position: 'relative' }}>
-                          <Phone size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                          <input type="tel" className="input-field" required={isPro} placeholder="(21) 99999-9999" style={{ paddingLeft: '2.25rem' }} value={form.phone} onChange={e => update('phone', e.target.value)} />
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <label style={labelStyle}>Instagram (opcional)</label>
-                      <div style={{ position: 'relative' }}>
-                        <AtSign size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                        <input type="text" className="input-field" placeholder="@seusalao" style={{ paddingLeft: '2.25rem' }} value={form.instagram} onChange={e => update('instagram', e.target.value)} />
-                      </div>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Cidade *</label>
+                    <div style={{ position: 'relative' }}>
+                      <MapPin size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                      <input type="text" className="input-field" required={isPro} placeholder="Rio de Janeiro" style={{ paddingLeft: '2.25rem' }} value={form.city} onChange={e => update('city', e.target.value)} />
                     </div>
                   </div>
                 </div>
 
-                <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '10px', padding: '0.75rem 1rem', fontSize: '0.78rem', color: '#92400e' }}>
-                  <strong>⏳ Aprovação necessária:</strong> Após o cadastro, nossa equipe analisará sua solicitação e entrará em contato em até 48h.
+                <div>
+                  <label style={labelStyle}>Endereço do estabelecimento *</label>
+                  <div style={{ position: 'relative' }}>
+                    <MapPin size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    <input type="text" className="input-field" required={isPro} placeholder="Rua, número, bairro, CEP" style={{ paddingLeft: '2.25rem' }} value={form.salonAddress} onChange={e => update('salonAddress', e.target.value)} />
+                  </div>
                 </div>
-              </>
+
+                <div>
+                  <label style={labelStyle}>Rede social profissional *</label>
+                  <div style={{ position: 'relative' }}>
+                    <AtSign size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    <input type="text" className="input-field" required={isPro} placeholder="@seusalao" style={{ paddingLeft: '2.25rem' }} value={form.instagram} onChange={e => update('instagram', e.target.value)} />
+                  </div>
+                </div>
+
+                <div style={{ background: '#f8fafc', border: '1px solid var(--border)', borderRadius: '10px', padding: '0.75rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+                  <strong style={{ color: 'var(--navy)' }}>Aprovação em até 48h.</strong> Nossa equipe analisará seus dados para liberar o acesso profissional.
+                </div>
+              </div>
             )}
 
             <button
@@ -239,4 +286,13 @@ const labelStyle: React.CSSProperties = {
   color: 'var(--text-muted)',
   fontWeight: 500,
   marginBottom: '0.35rem',
+}
+
+const sectionLabelStyle: React.CSSProperties = {
+  fontSize: '0.65rem',
+  letterSpacing: '0.22em',
+  textTransform: 'uppercase',
+  color: 'var(--gold)',
+  fontWeight: 600,
+  marginBottom: '0.25rem',
 }

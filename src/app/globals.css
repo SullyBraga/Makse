@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --navy:       #323232;
-  --navy-mid:   #181818;
-  --cream:      #fff1f2;
-  --cream-dark: #ffe6e7;
-  --gold:       #ffb7b8;
-  --gold-light: #ffd8d9;
+  /* ── Makse Palette (slate/azul — protótipo aprovado) ── */
+  --navy:       #1e293b;   /* makse-black  */
+  --navy-mid:   #334155;   /* makse-charcoal */
+  --cream:      #f8fafc;   /* makse-light  */
+  --cream-dark: #f1f5f9;   /* makse-gray   */
+  --gold:       #64748b;   /* makse-blue   */
+  --gold-light: #e2e8f0;   /* makse-goldlight */
   --white:      #ffffff;
-  --text:       #323232;
-  --text-muted: #5e5e5e;
-  --border:     #ffd8d9;
+  --text:       #1e293b;
+  --text-muted: #475569;   /* makse-darkgray */
+  --border:     #e2e8f0;
   --radius:     12px;
   --radius-lg:  20px;
   --spring:     cubic-bezier(0.25, 1.1, 0.5, 1);
   --smooth:     cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { 
@@ -184,7 +186,7 @@ h1, h2, h3, h4 {
   cursor: pointer;
   transition: background 0.4s ease, transform 0.35s var(--spring), box-shadow 0.4s ease;
 }
-.btn-gold:hover  { background-color: #ff9ea0; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,183,184,0.4); }
+.btn-gold:hover  { background-color: #475569; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(100,116,139,0.35); }
 .btn-gold:active { transform: scale(0.97); transition: transform 0.1s ease; }
 
 /* Ripple effect on buttons */
@@ -285,7 +287,7 @@ h1, h2, h3, h4 {
 .card-placeholder-letter {
   font-family: var(--font-cormorant), Georgia, serif;
   font-size: 4.5rem; font-weight: 200;
-  color: rgba(255,183,184,0.45); line-height: 1;
+  color: rgba(100,116,139,0.25); line-height: 1;
   animation: floatY 5s ease-in-out infinite;
 }
 
@@ -425,7 +427,7 @@ h1, h2, h3, h4 {
 
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--cream); }
-::-webkit-scrollbar-thumb { background: #ffc4c5; border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
 
 /* ═══════════════════════════════════════════
    RESPONSIVE

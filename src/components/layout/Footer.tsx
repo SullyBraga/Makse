@@ -20,10 +20,10 @@ export default function Footer() {
               Tecnologia e performance em cosméticos capilares para profissionais exigentes e clientes que buscam resultados de salão.
             </p>
             <div style={{display:'flex',gap:'0.875rem',marginTop:'1.5rem'}}>
-              <a href="https://www.instagram.com/makseconcept/" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex',alignItems:'center',gap:'0.5rem',fontSize:'0.875rem',textDecoration:'none'}}
+               <a href="https://www.instagram.com/maksepro/" target="_blank" rel="noreferrer" style={{color:'rgba(255,255,255,0.4)',transition:'color .2s',display:'flex',alignItems:'center',gap:'0.5rem',fontSize:'0.875rem',textDecoration:'none'}}
                  onMouseEnter={e=>(e.currentTarget.style.color='var(--gold)')}
                  onMouseLeave={e=>(e.currentTarget.style.color='rgba(255,255,255,0.4)')}>
-                @makseconcept
+                @maksepro
               </a>
             </div>
           </div>

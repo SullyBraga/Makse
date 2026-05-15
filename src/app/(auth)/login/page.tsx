@@ -3,7 +3,7 @@ import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { Eye, EyeOff, Scissors, ShoppingBag, ArrowRight } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 
 function LoginForm() {
@@ -163,27 +163,11 @@ function LoginForm() {
           </div>
         </div>
 
-        {/* Divisor tipo de cliente */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '1.25rem' }}>
-          {[
-            { icon: <ShoppingBag size={15} />, label: 'Cliente Final', desc: 'Produtos selecionados' },
-            { icon: <Scissors size={15} />, label: 'Profissional', desc: 'Acesso completo + desconto' },
-          ].map(item => (
-            <div key={item.label} style={{ background: '#fff', borderRadius: '12px', border: '1px solid var(--border)', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <span style={{ color: 'var(--gold)' }}>{item.icon}</span>
-              <div>
-                <p style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--navy)', lineHeight: 1.3 }}>{item.label}</p>
-                <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', lineHeight: 1.2 }}>{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
     </div>
+  </div>
   )
 }
 
