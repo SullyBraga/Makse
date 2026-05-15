@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { LayoutDashboard, ShoppingBag, Users, Boxes, Package, Scissors, Layers, ShoppingCart } from 'lucide-react'
@@ -45,9 +46,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Mobile Header */}
       <header style={{ display: 'none' }} className="admin-mobile-header">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', background: 'var(--navy)' }}>
-          <Link href="/admin" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', gap: '1px' }}>
-            <span style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.3rem', fontWeight: 300, letterSpacing: '0.28em', color: '#fff' }}>MAKSE</span>
-            <span style={{ fontSize: '6px', letterSpacing: '0.35em', color: 'var(--gold)', textTransform: 'uppercase' }}>— Admin —</span>
+          <Link href="/admin" style={{ display: 'block', textDecoration: 'none' }}>
+            <Image src="/logo-makse.png" alt="Makse" width={110} height={35} style={{ objectFit: 'contain', height: 'auto', filter: 'brightness(0) invert(1)' }} />
           </Link>
           <AdminMobileToggle />
         </div>
@@ -65,9 +65,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         }}>
           {/* Logo */}
           <div style={{ padding: '1.75rem 1.5rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-            <Link href="/admin" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', gap: '1px' }}>
-              <span style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.4rem', fontWeight: 300, letterSpacing: '0.28em', color: '#fff' }}>MAKSE</span>
-              <span style={{ fontSize: '7px', letterSpacing: '0.4em', color: 'var(--gold)', textTransform: 'uppercase' }}>— Admin —</span>
+            <Link href="/admin" style={{ display: 'block', textDecoration: 'none' }}>
+              <Image src="/logo-makse.png" alt="Makse" width={110} height={35} style={{ objectFit: 'contain', height: 'auto', filter: 'brightness(0) invert(1)' }} />
             </Link>
           </div>
 

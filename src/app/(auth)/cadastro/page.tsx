@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Eye, EyeOff, ArrowRight, User, MapPin, Phone, AtSign, Building2 } from 'lucide-react'
+import Image from 'next/image'
 
 type AccountType = 'client' | 'professional'
 
@@ -85,11 +86,10 @@ export default function CadastroPage() {
 
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '2rem', paddingTop: '1.5rem' }}>
-          <Link href="/" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', gap: '2px' }}>
-            <span style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2.25rem', fontWeight: 300, letterSpacing: '0.28em', color: 'var(--navy)' }}>MAKSE</span>
-            <span style={{ fontSize: '8px', letterSpacing: '0.4em', color: 'var(--gold)', textTransform: 'uppercase' }}>— Profissional —</span>
+          <Link href="/">
+            <Image src="/logo-makse.png" alt="Makse Profissional" width={150} height={48} style={{ objectFit: 'contain', height: 'auto' }} />
           </Link>
-          <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.75rem', fontWeight: 400, color: 'var(--navy)', marginTop: '1.5rem' }}>
+          <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.75rem', fontWeight: 400, color: 'var(--navy)', marginTop: '1.25rem' }}>
             Criar conta
           </h1>
         </div>
