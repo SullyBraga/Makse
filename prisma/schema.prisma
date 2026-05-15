@@ -49,15 +49,17 @@ model User {
 }
 
 model ProfessionalRequest {
-  id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @unique
-  salonName String
-  city      String
-  phone     String
-  instagram String?
-  status    String   @default("PENDING")
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @unique
+  salonName    String
+  city         String
+  phone        String
+  cnpj         String?
+  salonAddress String?
+  instagram    String?
+  status       String   @default("PENDING")
+  createdAt    DateTime @default(now())
 }
 
 model ProductLine {
@@ -83,6 +85,7 @@ model Product {
   weight         String?
   price          Float
   pricePro       Float?
+  priceProDesc   Float?
   priceVendedor  Float?
   images         Json             @default("[]")
   line           ProductLine?     @relation(fields: [lineId], references: [id])

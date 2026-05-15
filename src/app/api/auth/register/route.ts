@@ -5,7 +5,11 @@ import bcrypt from 'bcryptjs'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, password, type, salonName, city, phone, instagram } = body
+    const { name, email, password, phone, type,
+            // cliente
+            address,
+            // profissional
+            salonName, city, cnpj, salonAddress, instagram } = body
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
@@ -19,9 +23,8 @@ export async function POST(req: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 12)
 
     if (type === 'professional') {
-      // Criar usuário com role PENDENTE e solicitar aprovação
-      if (!salonName || !city || !phone) {
-        return NextResponse.json({ error: 'Dados do salão são obrigatórios' }, { status: 400 })
+      if (!salonName || !city || !instagram) {
+        return NextResponse.json({ error: 'Nome do salão, cidade e rede social são obrigatórios.' }, { status: 400 })
       }
 
       const user = await prisma.user.create({
@@ -29,20 +32,19 @@ export async function POST(req: NextRequest) {
       })
 
       await prisma.professionalRequest.create({
-        data: { userId: user.id, salonName, city, phone, instagram: instagram || null },
+        data: {
+          userId:      user.id,
+          salonName,
+          city,
+          phone:       phone || '',
+          cnpj:        cnpj || null,
+          salonAddress: salonAddress || null,
+          instagram:   instagram || null,
+        },
       })
 
       return NextResponse.json(
         { id: user.id, name: user.name, email: user.email, type: 'professional' },
-        { status: 201 }
-      )
-    } else if (type === 'vendedor') {
-      // Criação direta de vendedor — apenas via admin
-      const user = await prisma.user.create({
-        data: { name, email, passwordHash, role: 'VENDEDOR' },
-      })
-      return NextResponse.json(
-        { id: user.id, name: user.name, email: user.email, type: 'vendedor' },
         { status: 201 }
       )
     } else {
@@ -50,6 +52,20 @@ export async function POST(req: NextRequest) {
       const user = await prisma.user.create({
         data: { name, email, passwordHash, role: 'CLIENTE_FINAL' },
       })
+
+      // Salvar endereço se fornecido
+      if (address) {
+        await prisma.address.create({
+          data: {
+            userId:  user.id,
+            street:  address,
+            number:  '',
+            city:    '',
+            state:   '',
+            zipCode: '',
+          },
+        })
+      }
 
       return NextResponse.json(
         { id: user.id, name: user.name, email: user.email, type: 'client' },

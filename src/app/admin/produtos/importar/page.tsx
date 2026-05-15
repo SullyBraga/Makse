@@ -4,23 +4,22 @@ import { useRouter } from 'next/navigation'
 import { Upload, Download, FileSpreadsheet, Check, X, AlertTriangle, RefreshCw, ArrowLeft } from 'lucide-react'
 
 const COLUMNS = [
-  { col: 'nome', req: true, desc: 'Nome do produto' },
-  { col: 'sku', req: false, desc: 'Código SKU único' },
-  { col: 'tipo', req: false, desc: 'Shampoo, Máscara, Pó Descolorante...' },
-  { col: 'gramatura', req: false, desc: '1L, 500g, 1Kg...' },
-  { col: 'linha', req: false, desc: 'Nome exato da linha (ex: Linha Crystal)' },
-  { col: 'descricao', req: false, desc: 'Descrição do produto' },
-  { col: 'ingredientes', req: false, desc: 'Lista de ativos e ingredientes' },
-  { col: 'modo_de_uso', req: false, desc: 'Como aplicar' },
-  { col: 'indicacao', req: false, desc: 'Para que tipo de cabelo' },
-  { col: 'preco', req: true, desc: 'Preço base (ex: 79,90)' },
-  { col: 'preco_pro', req: false, desc: 'Preço profissional (ex: 69,90)' },
-  { col: 'preco_vendedor', req: false, desc: 'Preço do vendedor (ex: 59,90)' },
-  { col: 'estoque', req: false, desc: 'Quantidade em estoque (padrão: 0)' },
-  { col: 'exclusivo_pro', req: false, desc: 'Sim ou Não' },
-  { col: 'destaque', req: false, desc: 'Sim ou Não' },
-  { col: 'ativo', req: false, desc: 'Sim ou Não (padrão: Sim)' },
+  { col: 'Linha',                                           req: false, desc: 'Nome da linha (ex: Linha Crystal)' },
+  { col: 'Nome do Produto',                                 req: true,  desc: 'Nome completo do produto' },
+  { col: 'SKU',                                             req: false, desc: 'Código único do produto' },
+  { col: 'Quantidade',                                      req: false, desc: 'Volume/peso (ex: 1L, 500g, 1Kg)' },
+  { col: 'Ativos',                                          req: false, desc: 'Lista de ativos e ingredientes' },
+  { col: 'Tipo de Produto',                                 req: false, desc: 'Shampoo, Máscara, Pó Descolorante...' },
+  { col: 'Indicação de uso',                                req: false, desc: 'Para que tipo de cabelo/situação' },
+  { col: 'Descrição',                                       req: false, desc: 'Descrição completa do produto' },
+  { col: 'Produtos Relacionados',                           req: false, desc: 'Nomes separados por vírgula ou ponto-e-vírgula' },
+  { col: 'Quantidade em Estoque',                           req: false, desc: 'Quantidade disponível (padrão: 0)' },
+  { col: 'Preço Para Cliente Final',                        req: true,  desc: 'Preço público (ex: 79,90)' },
+  { col: 'Preço Para Profissional',                         req: false, desc: 'Preço padrão para cabeleireiros' },
+  { col: 'Preço de Desconto para Profissional',             req: false, desc: 'Preço promocional para profissionais' },
+  { col: 'Preço para Vendedor/Representante/Distribuidor',  req: false, desc: 'Preço de atacado' },
 ]
+
 
 type PreviewRow = {
   row: number; name: string; sku: string | null; productType: string | null;
