@@ -9,7 +9,7 @@ export default function Footer() {
       <div style={{maxWidth:'72rem',margin:'0 auto',padding:'4rem 2rem 2rem'}}>
 
         {/* Grid principal */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 mb-12">
+        <div className="footer-grid mb-12">
 
           {/* Brand */}
           <div>
@@ -66,6 +66,23 @@ export default function Footer() {
           </p>
         </div>
       </div>
+      <style>{`
+        .footer-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 2rem;
+        }
+        @media (max-width: 900px) {
+          .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 600px) {
+          .footer-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </footer>
   )
 }
