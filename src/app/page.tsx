@@ -28,7 +28,6 @@ export default async function HomePage() {
 
       {/* ── HERO ── */}
       <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', backgroundColor: 'var(--cream)', position: 'relative', overflow: 'hidden' }}>
-        {/* Background Image - Clean and fully visible */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }} className="animate-fade">
           <img
             src="/foto-hero.jpeg"
