@@ -1,14 +1,12 @@
-# Makse Profissional — E-commerce & Área B2B
+# Makse Pro
 
-Este é o repositório da plataforma **Makse Profissional**, um e-commerce completo e sistema integrado sob medida desenvolvido para profissionais de beleza e cosméticos de alta performance.
-
-Desenvolvi este projeto do zero para atender a uma necessidade real do mercado: unificar a venda direta ao consumidor final (B2C) com um fluxo exclusivo, robusto e seguro para salões de beleza e cabeleireiros parceiros (B2B). O resultado é uma aplicação rápida, visualmente elegante e com uma área administrativa completa para gestão de estoque, pedidos, usuários e tabelas de desconto dinâmicas.
+Este é o repositório da plataforma **Makse Pro**, um e-commerce completo e sistema integrado sob medida desenvolvido para profissionais de beleza e cosméticos de alta performance.
 
 ---
 
 ## 🚀 O Projeto
 
-A **Makse Profissional** é uma marca focada em biotecnologia e alta performance capilar. Para refletir essa identidade premium no digital, criei uma interface moderna baseada em uma paleta de cores sóbrias (Slate Blue, Navy e tons Cream), com efeitos visuais fluidos, cabeçalho dinâmico e carregamento instantâneo.
+A **Makse Pro** é uma marca focada em biotecnologia e alta performance capilar. Para refletir essa identidade premium no digital, criei uma interface moderna baseada em uma paleta de cores sóbrias (Slate Blue, Navy e tons Cream), com efeitos visuais fluidos, cabeçalho dinâmico e carregamento instantâneo.
 
 ### Principais Funcionalidades Implementadas:
 
