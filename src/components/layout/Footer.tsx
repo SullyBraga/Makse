@@ -9,7 +9,7 @@ export default function Footer() {
       <div style={{maxWidth:'72rem',margin:'0 auto',padding:'4rem 2rem 2rem'}}>
 
         {/* Grid principal */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-x-8 gap-y-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 mb-12">
 
           {/* Brand */}
           <div>
