@@ -5,8 +5,11 @@ import Image from 'next/image'
 import { ShoppingBag, User, Menu, X } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useSession, signOut } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
+  const pathname = usePathname()
+  const isHome = pathname === '/'
   const { data: session, status } = useSession()
   const role = (session?.user as any)?.role
   const [scrolled, setScrolled] = useState(false)
@@ -42,8 +45,8 @@ export default function Header() {
   return (
     <header style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50,
-      transition: 'background 0.4s ease, box-shadow 0.4s ease',
-      background: 'rgba(255,255,255,0.97)',
+      transition: 'background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease',
+      background: scrolled ? 'rgba(255,255,255,0.95)' : (isHome ? 'transparent' : 'rgba(255,255,255,0.95)'),
       boxShadow: scrolled ? '0 1px 24px rgba(0,0,0,0.07)' : 'none',
       backdropFilter: scrolled ? 'blur(12px)' : 'none',
     }}>
