@@ -27,7 +27,7 @@ export default async function HomePage() {
     <div>
 
       {/* ── HERO ── */}
-      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', backgroundColor: 'var(--cream)', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', backgroundColor: 'var(--cream)', position: 'relative', overflow: 'hidden', paddingTop: '80px', paddingBottom: '40px' }}>
         <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1 }}>
           <img
             src="/foto-hero.jpeg"
@@ -39,8 +39,8 @@ export default async function HomePage() {
           <div
             className="animate-scale"
             style={{
-              maxWidth: '720px',
-              padding: 'clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3.5rem)',
+              maxWidth: '700px',
+              padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2.75rem)',
               margin: '0 auto',
               textAlign: 'center',
               display: 'flex',
@@ -58,12 +58,12 @@ export default async function HomePage() {
             <span className="section-label animate-fade" style={{ animationDelay: '0.15s' }}>Cosmética Avançada</span>
             <h1
               className="animate-up"
-              style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: 'clamp(2.5rem,6vw,4.5rem)', fontWeight: 600, color: 'var(--navy)', lineHeight: 1.06, margin: '0.5rem auto 1.25rem', textAlign: 'center', animationDelay: '0.25s' }}
+              style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: 'clamp(2.25rem,5.5vw,3.75rem)', fontWeight: 600, color: 'var(--navy)', lineHeight: 1.06, margin: '0.5rem auto 1.25rem', textAlign: 'center', animationDelay: '0.25s' }}
             >
               <span style={{ display: 'block' }}>Beleza que se sente</span>
               <span style={{ display: 'block', fontWeight: 400, fontStyle: 'italic', fontSize: '0.92em', color: 'var(--gold)', letterSpacing: '0.03em', marginTop: '0.1rem' }}>no toque</span>
             </h1>
-            <p className="animate-up" style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '2.25rem', maxWidth: '480px', animationDelay: '0.35s' }}>
+            <p className="animate-up" style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '2rem', maxWidth: '480px', animationDelay: '0.35s' }}>
               Fórmulas exclusivas desenvolvidas para profissionais que exigem performance e clientes que buscam transformação real.
             </p>
             <div className="animate-up" style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', justifyContent: 'center', animationDelay: '0.45s' }}>
