@@ -367,12 +367,33 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    let importedProducts: { id: string; name: string; slug: string; sku: string | null }[] = []
+    if (valid.length > 0) {
+      const slugs = valid.map(p => toSlug(p.name))
+      const skus = valid.map(p => p.sku).filter(Boolean) as string[]
+      importedProducts = await prisma.product.findMany({
+        where: {
+          OR: [
+            { slug: { in: slugs } },
+            ...(skus.length > 0 ? [{ sku: { in: skus } }] : [])
+          ]
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          sku: true,
+        }
+      })
+    }
+
     return NextResponse.json({
       success: true,
       created,
       updated,
       skipped,
       errors: errors + parsed.filter(r => r.error).length,
+      products: importedProducts,
     })
   } catch (err) {
     console.error('[products/import POST]', err)

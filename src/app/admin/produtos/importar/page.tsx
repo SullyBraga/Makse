@@ -40,12 +40,31 @@ export default function ImportarProdutosPage() {
   const [error, setError] = useState('')
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
   const [zeroMissingPrices, setZeroMissingPrices] = useState(false)
+  const [rowImages, setRowImages] = useState<Record<number, File[]>>({})
+  const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null)
+
+  const handleAddRowImages = (index: number, files: FileList | null) => {
+    if (!files) return
+    const fileArr = Array.from(files)
+    setRowImages(prev => ({
+      ...prev,
+      [index]: [...(prev[index] || []), ...fileArr]
+    }))
+  }
+
+  const removeRowImage = (index: number, imgIndex: number) => {
+    setRowImages(prev => {
+      const current = prev[index] || []
+      const updated = current.filter((_, idx) => idx !== imgIndex)
+      return { ...prev, [index]: updated }
+    })
+  }
 
   const duplicateCount = preview?.filter(r => r.isDuplicate).length ?? 0
   const hasDuplicates = duplicateCount > 0
 
   const processFile = async (f: File, zeroPrices: boolean) => {
-    setPreview(null); setError(''); setResult(null)
+    setPreview(null); setError(''); setResult(null); setRowImages({}); setUploadProgress(null)
     setLoading(true)
     try {
       const fd = new FormData()
@@ -81,7 +100,7 @@ export default function ImportarProdutosPage() {
 
   const handleImport = async (overwrite = false) => {
     if (!file) return
-    setImporting(true); setError('')
+    setImporting(true); setError(''); setUploadProgress(null)
     try {
       const fd = new FormData()
       fd.append('file', file)
@@ -101,9 +120,54 @@ export default function ImportarProdutosPage() {
         setImporting(false)
         return
       }
+
+      // Envia as fotos vinculadas
+      const rowsToUpload = Object.entries(rowImages).filter(([, files]) => files && files.length > 0)
+      if (rowsToUpload.length > 0 && data.products && Array.isArray(data.products)) {
+        let totalImages = 0
+        for (const [, files] of rowsToUpload) {
+          totalImages += files.length
+        }
+
+        setUploadProgress({ current: 0, total: totalImages })
+
+        for (const [idxStr, files] of rowsToUpload) {
+          const idx = parseInt(idxStr)
+          const rowData = preview?.[idx]
+          if (!rowData) continue
+
+          const matchedProduct = data.products.find((p: { id: string; name: string; slug: string; sku: string | null }) => {
+            if (rowData.sku && p.sku) {
+              return p.sku.toLowerCase() === rowData.sku.toLowerCase()
+            }
+            return p.name.toLowerCase().trim() === rowData.name.toLowerCase().trim()
+          })
+
+          if (matchedProduct) {
+            for (const imgFile of files) {
+              try {
+                const imgFd = new FormData()
+                imgFd.append('file', imgFile)
+                imgFd.append('productId', matchedProduct.id)
+                await fetch('/api/admin/products/images', { method: 'POST', body: imgFd })
+              } catch (imgErr) {
+                console.error(`Erro no upload da imagem para o produto ${matchedProduct.name}:`, imgErr)
+              } finally {
+                setUploadProgress(prev => prev ? { ...prev, current: prev.current + 1 } : null)
+              }
+            }
+          } else {
+            setUploadProgress(prev => prev ? { ...prev, current: prev.current + files.length } : null)
+          }
+        }
+      }
+
+      setRowImages({})
+      setUploadProgress(null)
       setResult(data)
     } catch (err: any) {
       setError(err.message || 'Erro de rede ao processar importação.')
+      setUploadProgress(null)
     } finally {
       setImporting(false)
     }
@@ -164,7 +228,23 @@ export default function ImportarProdutosPage() {
         </>
       )}
 
-      {result ? (
+      {uploadProgress ? (
+        <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '3rem', textAlign: 'center', maxWidth: '480px', margin: '0 auto', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+          <div style={{ width: 60, height: 60, borderRadius: '50%', background: '#fffbeb', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', border: '1px solid #fde68a' }}>
+            <Upload size={28} style={{ color: 'var(--gold)', animation: 'bounce 1s infinite alternate' }} />
+          </div>
+          <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.75rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '0.5rem' }}>Vinculando Fotos</h2>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.5 }}>
+            Aguarde enquanto as imagens são vinculadas aos novos produtos criados.
+          </p>
+          <div style={{ width: '100%', height: '8px', background: 'var(--cream)', borderRadius: '99px', overflow: 'hidden', marginBottom: '0.75rem' }}>
+            <div style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%`, height: '100%', background: 'var(--gold)', transition: 'width 0.3s ease' }} />
+          </div>
+          <p style={{ fontSize: '0.78rem', color: 'var(--navy)', fontWeight: 500 }}>
+            Enviando {uploadProgress.current} de {uploadProgress.total} imagens ({(Math.round((uploadProgress.current / uploadProgress.total) * 100)) || 0}%)
+          </p>
+        </div>
+      ) : result ? (
         <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '3rem', textAlign: 'center', maxWidth: '480px', margin: '0 auto' }}>
           <div style={{ width: 60, height: 60, borderRadius: '50%', background: '#dcfce7', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
             <Check size={28} style={{ color: '#16a34a' }} />
@@ -247,7 +327,7 @@ export default function ImportarProdutosPage() {
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ background: 'var(--cream)', borderBottom: '1px solid var(--border)' }}>
-                        {['Linha', 'Nome', 'SKU', 'Tipo', 'Preço', 'Preço Pro', 'Desc. Pro', 'Estoque', 'Linha Produto', 'Status'].map(h => (
+                        {['Linha', 'Imagens', 'Nome', 'SKU', 'Tipo', 'Preço', 'Preço Pro', 'Desc. Pro', 'Estoque', 'Linha Produto', 'Status'].map(h => (
                           <th key={h} style={{ textAlign: 'left', padding: '0.6rem 1rem', fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                         ))}
                       </tr>
@@ -256,6 +336,40 @@ export default function ImportarProdutosPage() {
                       {preview.slice(0, 50).map((row, i) => (
                         <tr key={i} style={{ borderBottom: '1px solid var(--cream)', background: row.error ? '#fef2f2' : 'transparent' }}>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>{row.row}</td>
+                          <td style={{ padding: '0.6rem 1rem', whiteSpace: 'nowrap' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <label style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '28px', height: '28px', borderRadius: '50%', border: '1px dashed var(--border)', background: '#fff', cursor: 'pointer', color: 'var(--text-muted)', transition: 'all 0.2s' }} title="Adicionar fotos">
+                                <span style={{ fontSize: '1.1rem', marginTop: '-2px', fontWeight: 300 }}>+</span>
+                                <input
+                                  type="file"
+                                  multiple
+                                  accept="image/*"
+                                  style={{ display: 'none' }}
+                                  onChange={e => handleAddRowImages(i, e.target.files)}
+                                />
+                              </label>
+                              <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', maxWidth: '120px' }}>
+                                {(rowImages[i] || []).map((img, imgIdx) => {
+                                  const url = URL.createObjectURL(img)
+                                  return (
+                                    <div key={imgIdx} style={{ position: 'relative', width: '28px', height: '28px', borderRadius: '50%', border: '1px solid var(--border)', overflow: 'hidden', flexShrink: 0 }}>
+                                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                                      <img src={url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Preview" />
+                                      <button
+                                        type="button"
+                                        onClick={() => removeRowImage(i, imgIdx)}
+                                        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s' }}
+                                        onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
+                                        onMouseLeave={e => { e.currentTarget.style.opacity = '0' }}
+                                      >
+                                        <X size={10} />
+                                      </button>
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </div>
+                          </td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)' }}>{row.name || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.72rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{row.sku || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.productType || '—'}</td>
@@ -354,7 +468,10 @@ export default function ImportarProdutosPage() {
           </div>
         </div>
       )}
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+      `}</style>
     </div>
   )
 }

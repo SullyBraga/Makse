@@ -14,11 +14,16 @@ export default function AdminProdutosPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [deletingBulk, setDeletingBulk] = useState(false)
 
   const fetch_ = async () => {
     setLoading(true)
     const res = await fetch('/api/admin/products')
-    if (res.ok) setProducts(await res.json())
+    if (res.ok) {
+      setProducts(await res.json())
+      setSelectedIds([])
+    }
     setLoading(false)
   }
 
@@ -29,7 +34,31 @@ export default function AdminProdutosPage() {
     setDeleting(id)
     await fetch('/api/admin/products', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
     setProducts(prev => prev.filter(p => p.id !== id))
+    setSelectedIds(prev => prev.filter(x => x !== id))
     setDeleting(null)
+  }
+
+  const handleBulkDelete = async () => {
+    if (!confirm(`Excluir permanentemente os ${selectedIds.length} produtos selecionados?`)) return
+    setDeletingBulk(true)
+    try {
+      const res = await fetch('/api/admin/products', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds })
+      })
+      if (res.ok) {
+        setProducts(prev => prev.filter(p => !selectedIds.includes(p.id)))
+        setSelectedIds([])
+      } else {
+        alert('Erro ao excluir produtos')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Erro ao excluir produtos')
+    } finally {
+      setDeletingBulk(false)
+    }
   }
 
   const toggleFeatured = async (id: string, current: boolean) => {
@@ -42,15 +71,52 @@ export default function AdminProdutosPage() {
     (p.sku ?? '').toLowerCase().includes(search.toLowerCase())
   )
 
+  const allSelected = filtered.length > 0 && filtered.every(p => selectedIds.includes(p.id))
+  const someSelected = filtered.some(p => selectedIds.includes(p.id)) && !allSelected
+
+  const handleSelectAll = () => {
+    if (allSelected) {
+      const filteredIds = filtered.map(p => p.id)
+      setSelectedIds(prev => prev.filter(id => !filteredIds.includes(id)))
+    } else {
+      const newSelection = Array.from(new Set([...selectedIds, ...filtered.map(p => p.id)]))
+      setSelectedIds(newSelection)
+    }
+  }
+
+  const handleSelectRow = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    )
+  }
+
   return (
     <div>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2rem', fontWeight: 300, color: 'var(--navy)', marginBottom: '0.2rem' }}>Produtos</h1>
-          <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Gerencie o catálogo completo</p>
-        </div>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        {selectedIds.length > 0 ? (
+          <div>
+            <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2rem', fontWeight: 300, color: 'var(--navy)', marginBottom: '0.2rem' }}>
+              {selectedIds.length} {selectedIds.length === 1 ? 'selecionado' : 'selecionados'}
+            </h1>
+            <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Ações em massa disponíveis</p>
+          </div>
+        ) : (
+          <div>
+            <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2rem', fontWeight: 300, color: 'var(--navy)', marginBottom: '0.2rem' }}>Produtos</h1>
+            <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Gerencie o catálogo completo</p>
+          </div>
+        )}
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          {selectedIds.length > 0 && (
+            <button
+              onClick={handleBulkDelete}
+              disabled={deletingBulk}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', background: '#dc2626', color: '#fff', border: 'none', borderRadius: '99px', fontSize: '0.72rem', fontWeight: 500, cursor: 'pointer', opacity: deletingBulk ? 0.6 : 1 }}
+            >
+              <Trash2 size={13} /> Excluir Selecionados ({selectedIds.length})
+            </button>
+          )}
           <Link href="/admin/produtos/importar" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', color: 'var(--navy)', textDecoration: 'none', fontWeight: 500 }}>
             <Upload size={13} /> Importar Planilha
           </Link>
@@ -93,6 +159,17 @@ export default function AdminProdutosPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: 'var(--cream)', borderBottom: '1px solid var(--border)' }}>
+                  <th style={{ width: '48px', padding: '0.7rem 1.1rem', textAlign: 'center' }}>
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      ref={el => {
+                        if (el) el.indeterminate = someSelected
+                      }}
+                      onChange={handleSelectAll}
+                      style={{ cursor: 'pointer', accentColor: 'var(--navy)' }}
+                    />
+                  </th>
                   {['Produto', 'SKU', 'Linha', 'Tipo', 'Preço', 'Estoque', 'Status', ''].map(h => (
                     <th key={h} style={{ textAlign: 'left', padding: '0.7rem 1.1rem', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
@@ -101,8 +178,17 @@ export default function AdminProdutosPage() {
               <tbody>
                 {filtered.map(p => {
                   const stock = p.variants.reduce((t: number, v: any) => t + v.stock, 0)
+                  const isSelected = selectedIds.includes(p.id)
                   return (
-                    <tr key={p.id} style={{ borderBottom: '1px solid var(--cream)' }}>
+                    <tr key={p.id} style={{ borderBottom: '1px solid var(--cream)', background: isSelected ? '#fafaf9' : 'transparent', transition: 'background 0.2s' }}>
+                      <td style={{ width: '48px', padding: '0.875rem 1.1rem', textAlign: 'center' }}>
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleSelectRow(p.id)}
+                          style={{ cursor: 'pointer', accentColor: 'var(--navy)' }}
+                        />
+                      </td>
                       <td style={{ padding: '0.875rem 1.1rem', maxWidth: '200px' }}>
                         <p style={{ fontSize: '0.84rem', fontWeight: 500, color: 'var(--navy)', lineHeight: 1.3 }}>{p.name}</p>
                         {p.proOnly && <span style={{ fontSize: '0.55rem', background: 'var(--cream)', color: 'var(--navy)', padding: '1px 5px', borderRadius: '99px', letterSpacing: '0.08em', fontWeight: 600 }}>PRO</span>}

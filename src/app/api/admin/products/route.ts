@@ -159,11 +159,20 @@ export async function DELETE(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
 
   try {
-    const { id } = await req.json()
-    if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 })
+    const body = await req.json()
+    const { id, ids } = body
 
-    await prisma.productVariant.deleteMany({ where: { productId: id } })
-    await prisma.product.delete({ where: { id } })
+    if (!id && (!ids || !Array.isArray(ids) || ids.length === 0)) {
+      return NextResponse.json({ error: 'ID ou IDs obrigatórios' }, { status: 400 })
+    }
+
+    const idList = ids && Array.isArray(ids) ? ids : [id]
+
+    await prisma.$transaction(async (tx) => {
+      await tx.productVariant.deleteMany({ where: { productId: { in: idList } } })
+      await tx.product.deleteMany({ where: { id: { in: idList } } })
+    })
+
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[products DELETE]', err)
