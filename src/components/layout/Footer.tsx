@@ -125,6 +125,7 @@ export default function Footer() {
         onClick={handleDialogClick}
         onClose={() => setActivePopup(null)}
         className="policy-dialog"
+        data-lenis-prevent
       >
         <div className="policy-dialog-header">
           <h2 className="policy-dialog-title">

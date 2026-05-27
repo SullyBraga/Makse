@@ -337,6 +337,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
         onClick={handleDialogClick}
         onClose={closeFiltersModal}
         className="filters-dialog"
+        data-lenis-prevent
       >
         <div className="filters-dialog-header">
           <h2 className="filters-dialog-title">Filtrar Produtos</h2>

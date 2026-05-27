@@ -240,6 +240,49 @@ export async function POST(req: NextRequest) {
     let created = 0, updated = 0, skipped = 0, errors = 0
 
     if (valid.length > 0) {
+      // 1. Criar linhas de produtos automaticamente se não existirem
+      const uniqueLineNames = Array.from(new Set(
+        valid
+          .map(p => p.lineName)
+          .filter((name): name is string => !!name && name.trim() !== '')
+      ))
+
+      if (uniqueLineNames.length > 0) {
+        const existingLines = await prisma.productLine.findMany()
+        const existingLinesLower = new Set(existingLines.map(l => l.name.toLowerCase().trim()))
+
+        for (const lineName of uniqueLineNames) {
+          const trimmed = lineName.trim()
+          if (!existingLinesLower.has(trimmed.toLowerCase())) {
+            try {
+              await prisma.productLine.create({
+                data: {
+                  name: trimmed,
+                  slug: toSlug(trimmed),
+                  description: `Produtos da linha ${trimmed}`,
+                }
+              })
+            } catch (errLine) {
+              console.error(`[products/import] Erro ao criar linha automaticamente: ${trimmed}`, errLine)
+            }
+          }
+        }
+      }
+
+      // 2. Recarregar o lineMap com as novas linhas criadas
+      const currentLines = await prisma.productLine.findMany()
+      const lineMap: Record<string, string> = {}
+      for (const l of currentLines) {
+        lineMap[l.name.toLowerCase().trim()] = l.id
+      }
+
+      // 3. Atualizar o lineId de cada produto no array valid de acordo com o novo lineMap
+      for (const p of valid) {
+        if (p.lineName) {
+          p.lineId = lineMap[p.lineName.toLowerCase().trim()] || null
+        }
+      }
+
       const slugs = valid.map(p => toSlug(p.name))
       const skus = valid.map(p => p.sku).filter(Boolean) as string[]
 
@@ -287,6 +330,7 @@ export async function POST(req: NextRequest) {
           proOnly: p.proOnly,
           featured: p.featured,
           active: p.active,
+          lineId: p.lineId,
         }
 
         if (existing && overwrite) {
@@ -370,6 +414,7 @@ export async function POST(req: NextRequest) {
               proOnly: p.proOnly,
               featured: p.featured,
               active: p.active,
+              lineId: p.lineId,
             }
 
             try {
