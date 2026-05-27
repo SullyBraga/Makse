@@ -188,68 +188,190 @@ export async function POST(req: NextRequest) {
     const valid = parsed.filter(r => !r.error && r.name)
     let created = 0, updated = 0, skipped = 0, errors = 0
 
-    for (const p of valid) {
-      const slug = toSlug(p.name)
-      try {
-        const existing = await prisma.product.findFirst({
-          where: { OR: [{ slug }, ...(p.sku ? [{ sku: p.sku }] : [])] },
-          include: { variants: true },
-        })
+    if (valid.length > 0) {
+      const slugs = valid.map(p => toSlug(p.name))
+      const skus = valid.map(p => p.sku).filter(Boolean) as string[]
 
-        if (existing && !overwrite) { skipped++; continue }
+      // Busca todos os produtos existentes de uma única vez (reduz conexão de rede)
+      const existingProducts = await prisma.product.findMany({
+        where: {
+          OR: [
+            { slug: { in: slugs } },
+            ...(skus.length > 0 ? [{ sku: { in: skus } }] : [])
+          ]
+        },
+        include: {
+          variants: true
+        }
+      })
+
+      const existingMapBySlug = new Map(existingProducts.map(p => [p.slug, p]))
+      const existingMapBySku = new Map(existingProducts.filter(p => p.sku).map(p => [p.sku!, p]))
+
+      const operations: any[] = []
+
+      for (const p of valid) {
+        const slug = toSlug(p.name)
+        const existing = existingMapBySlug.get(slug) || (p.sku ? existingMapBySku.get(p.sku) : undefined)
+
+        if (existing && !overwrite) {
+          skipped++
+          continue
+        }
 
         const productData = {
-          name: p.name, slug, sku: p.sku,
+          name: p.name,
+          slug,
+          sku: p.sku,
           description: p.description || p.name,
           ingredients: p.ingredients,
-          usage: p.usage, productType: p.productType, weight: p.weight,
-          price: p.price!, pricePro: p.pricePro,
+          usage: p.usage,
+          productType: p.productType,
+          weight: p.weight,
+          price: p.price!,
+          pricePro: p.pricePro,
           priceProDesc: p.priceProDesc,
           priceVendedor: p.priceVendedor,
           relatedProducts: p.relatedProducts,
-          proOnly: p.proOnly, featured: p.featured, active: p.active,
+          proOnly: p.proOnly,
+          featured: p.featured,
+          active: p.active,
         }
 
         if (existing && overwrite) {
-          await prisma.product.update({
-            where: { id: existing.id },
-            data: productData,
-          })
-          if (existing.variants.length === 1) {
-            await prisma.productVariant.update({
-              where: { id: existing.variants[0].id },
-              data: {
-                price: p.price!, pricePro: p.pricePro,
-                priceVendedor: p.priceVendedor, stock: p.stock,
-              },
+          operations.push(
+            prisma.product.update({
+              where: { id: existing.id },
+              data: productData,
             })
-          }
-          updated++
-        } else {
-          await prisma.product.create({
-            data: {
-              ...productData,
-              lineId: p.lineId, images: [],
-              variants: {
-                create: [{
-                  label: 'Padrão',
+          )
+          if (existing.variants.length === 1) {
+            operations.push(
+              prisma.productVariant.update({
+                where: { id: existing.variants[0].id },
+                data: {
                   price: p.price!,
                   pricePro: p.pricePro,
                   priceVendedor: p.priceVendedor,
                   stock: p.stock,
-                }],
+                },
+              })
+            )
+          }
+          updated++
+        } else if (!existing) {
+          operations.push(
+            prisma.product.create({
+              data: {
+                ...productData,
+                lineId: p.lineId,
+                images: [],
+                variants: {
+                  create: [{
+                    label: 'Padrão',
+                    price: p.price!,
+                    pricePro: p.pricePro,
+                    priceVendedor: p.priceVendedor,
+                    stock: p.stock,
+                  }],
+                },
               },
-            },
-          })
+            })
+          )
           created++
         }
-      } catch {
-        errors++
+      }
+
+      // Executa tudo em lote atômico único ultra-rápido
+      if (operations.length > 0) {
+        try {
+          await prisma.$transaction(operations)
+        } catch (transactionError) {
+          console.error('[products/import] Falha na transação em lote, usando fallback item por item:', transactionError)
+          
+          // Fallback resiliente individual em caso de conflitos de chave única no lote
+          created = 0
+          updated = 0
+          errors = 0
+
+          for (const p of valid) {
+            const slug = toSlug(p.name)
+            const existing = existingMapBySlug.get(slug) || (p.sku ? existingMapBySku.get(p.sku) : undefined)
+
+            if (existing && !overwrite) {
+              continue
+            }
+
+            const productData = {
+              name: p.name,
+              slug,
+              sku: p.sku,
+              description: p.description || p.name,
+              ingredients: p.ingredients,
+              usage: p.usage,
+              productType: p.productType,
+              weight: p.weight,
+              price: p.price!,
+              pricePro: p.pricePro,
+              priceProDesc: p.priceProDesc,
+              priceVendedor: p.priceVendedor,
+              relatedProducts: p.relatedProducts,
+              proOnly: p.proOnly,
+              featured: p.featured,
+              active: p.active,
+            }
+
+            try {
+              if (existing && overwrite) {
+                await prisma.product.update({
+                  where: { id: existing.id },
+                  data: productData,
+                })
+                if (existing.variants.length === 1) {
+                  await prisma.productVariant.update({
+                    where: { id: existing.variants[0].id },
+                    data: {
+                      price: p.price!,
+                      pricePro: p.pricePro,
+                      priceVendedor: p.priceVendedor,
+                      stock: p.stock,
+                    },
+                  })
+                }
+                updated++
+              } else if (!existing) {
+                await prisma.product.create({
+                  data: {
+                    ...productData,
+                    lineId: p.lineId,
+                    images: [],
+                    variants: {
+                      create: [{
+                        label: 'Padrão',
+                        price: p.price!,
+                        pricePro: p.pricePro,
+                        priceVendedor: p.priceVendedor,
+                        stock: p.stock,
+                      }],
+                    },
+                  },
+                })
+                created++
+              }
+            } catch (errItem) {
+              console.error(`[products/import] Erro ao importar produto individual: ${p.name}`, errItem)
+              errors++
+            }
+          }
+        }
       }
     }
 
     return NextResponse.json({
-      success: true, created, updated, skipped,
+      success: true,
+      created,
+      updated,
+      skipped,
       errors: errors + parsed.filter(r => r.error).length,
     })
   } catch (err) {

@@ -24,6 +24,7 @@ const COLUMNS = [
 type PreviewRow = {
   row: number; name: string; sku: string | null; productType: string | null;
   weight: string | null; lineName: string | null; price: number; stock: number;
+  pricePro?: number | null; priceProDesc?: number | null;
   proOnly: boolean; featured: boolean; active: boolean
   isDuplicate: boolean; error: string | null
 }
@@ -180,7 +181,7 @@ export default function ImportarProdutosPage() {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 340px', gap: '1.5rem', alignItems: 'start' }}>
 
           {/* Painel principal */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -246,7 +247,7 @@ export default function ImportarProdutosPage() {
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ background: 'var(--cream)', borderBottom: '1px solid var(--border)' }}>
-                        {['Linha', 'Nome', 'SKU', 'Tipo', 'Preço', 'Estoque', 'Linha Produto', 'Status'].map(h => (
+                        {['Linha', 'Nome', 'SKU', 'Tipo', 'Preço', 'Preço Pro', 'Desc. Pro', 'Estoque', 'Linha Produto', 'Status'].map(h => (
                           <th key={h} style={{ textAlign: 'left', padding: '0.6rem 1rem', fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                         ))}
                       </tr>
@@ -259,6 +260,12 @@ export default function ImportarProdutosPage() {
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.72rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{row.sku || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.productType || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)', whiteSpace: 'nowrap' }}>R$ {typeof row.price !== 'number' || isNaN(row.price) ? '—' : row.price.toFixed(2).replace('.', ',')}</td>
+                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                            {typeof row.pricePro === 'number' && !isNaN(row.pricePro) ? `R$ ${row.pricePro.toFixed(2).replace('.', ',')}` : '—'}
+                          </td>
+                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                            {typeof row.priceProDesc === 'number' && !isNaN(row.priceProDesc) ? `R$ ${row.priceProDesc.toFixed(2).replace('.', ',')}` : '—'}
+                          </td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.stock}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.lineName || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem' }}>
