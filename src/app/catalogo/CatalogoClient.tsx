@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SlidersHorizontal, ShoppingBag, Layers } from 'lucide-react'
 import ProductCard from '@/components/shop/ProductCard'
 import Link from 'next/link'
@@ -26,10 +26,62 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
   const [sort, setSort] = useState<'relevance' | 'asc' | 'desc'>('relevance')
   const [showKitsOnly, setShowKitsOnly] = useState(false)
 
+  // Reactive filters states
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
+  const [selectedWeights, setSelectedWeights] = useState<string[]>([])
+  const [showFiltersPanel, setShowFiltersPanel] = useState(false)
+
+  // Sync with URL query parameter '?linha=slug'
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const linha = params.get('linha')
+      if (linha) {
+        const matchedLine = lines.find(l => l.slug.toLowerCase() === linha.toLowerCase())
+        if (matchedLine) {
+          setActiveLineSlug(matchedLine.slug)
+        }
+      }
+    }
+  }, [lines])
+
+  // Extract unique product types dynamically
+  const productTypes = Array.from(
+    new Set(
+      products
+        .map(p => p.productType)
+        .filter((t): t is string => !!t)
+    )
+  ).sort()
+
+  // Extract unique weights dynamically
+  const weights = Array.from(
+    new Set(
+      products
+        .map(p => p.weight)
+        .filter((w): w is string => !!w)
+    )
+  ).sort()
+
   const filtered = products
     .filter(p => {
-      if (showKitsOnly) return p.isKit
-      if (activeLineSlug) return !p.isKit && p.lineSlug === activeLineSlug
+      // Filter by Line / Kits
+      if (showKitsOnly) {
+        if (!p.isKit) return false
+      } else if (activeLineSlug) {
+        if (p.isKit || p.lineSlug !== activeLineSlug) return false
+      }
+
+      // Filter by Product Type
+      if (selectedTypes.length > 0) {
+        if (!p.productType || !selectedTypes.includes(p.productType)) return false
+      }
+
+      // Filter by Weight / Volumetria
+      if (selectedWeights.length > 0) {
+        if (!p.weight || !selectedWeights.includes(p.weight)) return false
+      }
+
       return true
     })
     .sort((a, b) => {
@@ -90,13 +142,36 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
           )}
         </div>
 
-        {/* Count + sort */}
+        {/* Count + sort + filter */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
             {filtered.length} {showKitsOnly ? 'kit' : 'produto'}{filtered.length !== 1 ? 's' : ''}
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <SlidersHorizontal size={13} style={{ color: 'var(--text-muted)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <button
+              onClick={() => setShowFiltersPanel(!showFiltersPanel)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.4rem',
+                padding: '0.4rem 0.875rem', border: `1px solid ${showFiltersPanel ? 'var(--navy)' : 'var(--cream-dark)'}`,
+                borderRadius: '999px', fontSize: '0.75rem', background: showFiltersPanel ? 'var(--navy)' : '#fff',
+                color: showFiltersPanel ? '#fff' : 'var(--navy)', fontFamily: 'var(--font-dm-sans)',
+                outline: 'none', cursor: 'pointer', transition: 'all 0.2s', fontWeight: 500
+              }}
+            >
+              <SlidersHorizontal size={13} />
+              <span>Filtrar</span>
+              {(selectedTypes.length > 0 || selectedWeights.length > 0) && (
+                <span style={{
+                  background: showFiltersPanel ? '#fff' : 'var(--navy)',
+                  color: showFiltersPanel ? 'var(--navy)' : '#fff',
+                  fontSize: '0.6rem', padding: '1px 5px', borderRadius: '99px', fontWeight: 700,
+                  marginLeft: '0.25rem'
+                }}>
+                  {selectedTypes.length + selectedWeights.length}
+                </span>
+              )}
+            </button>
+
             <select value={sort} onChange={e => setSort(e.target.value as any)}
               style={{ padding: '0.4rem 0.875rem', border: '1px solid var(--cream-dark)', borderRadius: '999px', fontSize: '0.75rem', background: '#fff', fontFamily: 'var(--font-dm-sans)', outline: 'none', cursor: 'pointer', color: 'var(--navy)' }}>
               <option value="relevance">Mais Relevantes</option>
@@ -106,12 +181,116 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
           </div>
         </div>
 
+        {/* Collapsible Filter Panel */}
+        <div style={{
+          maxHeight: showFiltersPanel ? '1000px' : '0',
+          overflow: 'hidden',
+          transition: 'max-height 0.35s ease-in-out',
+          marginBottom: showFiltersPanel ? '1.5rem' : '0',
+        }}>
+          <div style={{
+            background: '#fff', border: '1px solid var(--cream-dark)',
+            borderRadius: '16px', padding: '1.5rem',
+            display: 'flex', flexDirection: 'column', gap: '1.25rem',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
+          }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+              
+              {/* Categoria / Tipo */}
+              {productTypes.length > 0 && (
+                <div>
+                  <h4 style={{ fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.75rem' }}>Tipo de Produto</h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+                    {productTypes.map(type => {
+                      const isSelected = selectedTypes.includes(type)
+                      return (
+                        <button
+                          key={type}
+                          onClick={() => {
+                            setSelectedTypes(prev =>
+                              isSelected ? prev.filter(t => t !== type) : [...prev, type]
+                            )
+                          }}
+                          style={{
+                            padding: '0.35rem 0.75rem', fontSize: '0.72rem', borderRadius: '8px',
+                            background: isSelected ? 'var(--cream-dark)' : '#f3f4f6',
+                            color: isSelected ? 'var(--navy)' : 'var(--text-muted)',
+                            border: `1px solid ${isSelected ? 'var(--gold)' : 'transparent'}`,
+                            cursor: 'pointer', transition: 'all 0.15s', fontWeight: isSelected ? 600 : 400
+                          }}
+                        >
+                          {type}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Volumetria / Peso */}
+              {weights.length > 0 && (
+                <div>
+                  <h4 style={{ fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.75rem' }}>Volumetria / Peso</h4>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+                    {weights.map(weight => {
+                      const isSelected = selectedWeights.includes(weight)
+                      return (
+                        <button
+                          key={weight}
+                          onClick={() => {
+                            setSelectedWeights(prev =>
+                              isSelected ? prev.filter(w => w !== weight) : [...prev, weight]
+                            )
+                          }}
+                          style={{
+                            padding: '0.35rem 0.75rem', fontSize: '0.72rem', borderRadius: '8px',
+                            background: isSelected ? 'var(--cream-dark)' : '#f3f4f6',
+                            color: isSelected ? 'var(--navy)' : 'var(--text-muted)',
+                            border: `1px solid ${isSelected ? 'var(--gold)' : 'transparent'}`,
+                            cursor: 'pointer', transition: 'all 0.15s', fontWeight: isSelected ? 600 : 400
+                          }}
+                        >
+                          {weight}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* Ações adicionais do painel de filtros */}
+            {(selectedTypes.length > 0 || selectedWeights.length > 0) && (
+              <div style={{ borderTop: '1px solid var(--cream-dark)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => {
+                    setSelectedTypes([])
+                    setSelectedWeights([])
+                  }}
+                  style={{
+                    background: 'none', border: 'none', color: '#dc2626', fontSize: '0.72rem',
+                    fontWeight: 600, cursor: 'pointer', textDecoration: 'underline'
+                  }}
+                >
+                  Limpar Filtros Selecionados
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Grid */}
         {filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '5rem 1rem' }}>
             <ShoppingBag size={40} style={{ color: 'var(--cream-dark)', margin: '0 auto 1rem', display: 'block' }} />
             <p style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Nenhum item encontrado.</p>
-            <button onClick={() => { setActiveLineSlug(null); setShowKitsOnly(false) }} style={{ marginTop: '1rem', fontSize: '0.75rem', color: 'var(--navy)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Limpar filtros</button>
+            <button onClick={() => {
+              setActiveLineSlug(null)
+              setShowKitsOnly(false)
+              setSelectedTypes([])
+              setSelectedWeights([])
+            }} style={{ marginTop: '1rem', fontSize: '0.75rem', color: 'var(--navy)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>Limpar filtros</button>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem' }}>
