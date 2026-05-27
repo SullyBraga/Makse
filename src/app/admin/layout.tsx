@@ -5,16 +5,6 @@ import { auth } from '@/lib/auth'
 import AdminMobileToggle from '@/components/admin/AdminMobileToggle'
 import AdminContainer from '@/components/admin/AdminContainer'
 
-const nav = [
-  { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={15} /> },
-  { label: 'Pedidos', href: '/admin/pedidos', icon: <ShoppingBag size={15} /> },
-  { label: 'Produtos', href: '/admin/produtos', icon: <Package size={15} /> },
-  { label: 'Kits', href: '/admin/kits', icon: <Layers size={15} /> },
-  { label: 'Usuários', href: '/admin/usuarios', icon: <Users size={15} /> },
-  { label: 'Estoque', href: '/admin/estoque', icon: <Boxes size={15} /> },
-  { label: 'Vendas', href: '/admin/vendas', icon: <ShoppingCart size={15} /> },
-]
-
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
   const role = (session?.user as any)?.role
