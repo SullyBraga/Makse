@@ -46,27 +46,59 @@ export default function ImportarProdutosPage() {
     setFile(f); setPreview(null); setError(''); setResult(null)
     if (!f) return
     setLoading(true)
-    const fd = new FormData()
-    fd.append('file', f)
-    fd.append('preview', 'true')
-    const res = await fetch('/api/admin/products/import', { method: 'POST', body: fd })
-    const data = await res.json()
-    if (!res.ok) { setError(data.error || 'Erro ao ler arquivo'); setLoading(false); return }
-    setPreview(data.rows)
-    setLoading(false)
+    try {
+      const fd = new FormData()
+      fd.append('file', f)
+      fd.append('preview', 'true')
+      const res = await fetch('/api/admin/products/import', { method: 'POST', body: fd })
+      
+      let data
+      try {
+        data = await res.json()
+      } catch {
+        throw new Error('O servidor retornou uma resposta inválida. Verifique se o arquivo está no formato correto.')
+      }
+
+      if (!res.ok) {
+        setError(data.error || 'Erro ao ler arquivo')
+        setLoading(false)
+        return
+      }
+      setPreview(data.rows)
+    } catch (err: any) {
+      setError(err.message || 'Erro de conexão ou formato de arquivo inválido.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleImport = async (overwrite = false) => {
     if (!file) return
     setImporting(true); setError('')
-    const fd = new FormData()
-    fd.append('file', file)
-    if (overwrite) fd.append('overwrite', 'true')
-    const res = await fetch('/api/admin/products/import', { method: 'POST', body: fd })
-    const data = await res.json()
-    if (!res.ok) { setError(data.error || 'Erro ao importar'); setImporting(false); return }
-    setResult(data)
-    setImporting(false)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      if (overwrite) fd.append('overwrite', 'true')
+      const res = await fetch('/api/admin/products/import', { method: 'POST', body: fd })
+      
+      let data
+      try {
+        data = await res.json()
+      } catch {
+        throw new Error('Falha catastrófica ao importar. O servidor não respondeu com dados válidos.')
+      }
+
+      if (!res.ok) {
+        setError(data.error || 'Erro ao importar')
+        setImporting(false)
+        return
+      }
+      setResult(data)
+    } catch (err: any) {
+      setError(err.message || 'Erro de rede ao processar importação.')
+    } finally {
+      setImporting(false)
+    }
   }
 
   const onClickImport = () => {
@@ -200,7 +232,7 @@ export default function ImportarProdutosPage() {
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)' }}>{row.name || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.72rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{row.sku || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.productType || '—'}</td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)', whiteSpace: 'nowrap' }}>R$ {isNaN(row.price) ? '—' : row.price.toFixed(2).replace('.', ',')}</td>
+                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)', whiteSpace: 'nowrap' }}>R$ {typeof row.price !== 'number' || isNaN(row.price) ? '—' : row.price.toFixed(2).replace('.', ',')}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.stock}</td>
                           <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.lineName || '—'}</td>
                           <td style={{ padding: '0.6rem 1rem' }}>
@@ -249,19 +281,22 @@ export default function ImportarProdutosPage() {
 
             {/* Estrutura das colunas */}
             <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem' }}>
-              <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '1rem' }}>Estrutura das Colunas</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '0.5rem' }}>Estrutura das Colunas</h2>
+              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '1rem', lineHeight: 1.5 }}>
+                Role a lista abaixo para conferir o formato esperado de cada coluna da sua planilha:
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', maxHeight: '320px', overflowY: 'auto', paddingRight: '0.25rem' }}>
                 {COLUMNS.map(c => (
-                  <div key={c.col} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem', padding: '0.5rem 0', borderBottom: '1px solid var(--cream)' }}>
-                    <code style={{ fontSize: '0.65rem', background: 'var(--cream)', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace', color: 'var(--navy)', flexShrink: 0, marginTop: '1px' }}>
-                      {c.col}
-                    </code>
-                    <div>
-                      <span style={{ fontSize: '0.62rem', color: c.req ? '#dc2626' : 'var(--text-muted)', fontWeight: c.req ? 700 : 400, letterSpacing: '0.05em', display: 'block', marginBottom: '1px' }}>
-                        {c.req ? '* Obrigatório' : 'Opcional'}
+                  <div key={c.col} style={{ padding: '0.625rem 0', borderBottom: '1px solid var(--cream)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                      <code style={{ fontSize: '0.65rem', background: 'var(--cream)', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace', color: 'var(--navy)', wordBreak: 'break-all' }}>
+                        {c.col}
+                      </code>
+                      <span style={{ fontSize: '0.58rem', color: c.req ? '#dc2626' : 'var(--text-muted)', fontWeight: c.req ? 700 : 400, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                        {c.req ? 'Obrigatório' : 'Opcional'}
                       </span>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{c.desc}</span>
                     </div>
+                    <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>{c.desc}</p>
                   </div>
                 ))}
               </div>
