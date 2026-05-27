@@ -25,8 +25,8 @@ type PreviewRow = {
   row: number; name: string; sku: string | null; productType: string | null;
   weight: string | null; lineName: string | null; price: number; stock: number;
   pricePro?: number | null; priceProDesc?: number | null;
-  proOnly: boolean; featured: boolean; active: boolean
-  isDuplicate: boolean; error: string | null
+  proOnly: boolean; featured: boolean; active: boolean;
+  isDuplicate: boolean; error: string | null; description?: string
 }
 
 export default function ImportarProdutosPage() {
@@ -57,6 +57,34 @@ export default function ImportarProdutosPage() {
       const current = prev[index] || []
       const updated = current.filter((_, idx) => idx !== imgIndex)
       return { ...prev, [index]: updated }
+    })
+  }
+
+  const handleEditCell = (index: number, field: string, value: any) => {
+    setPreview(prev => {
+      if (!prev) return null
+      const updated = [...prev]
+      const row = { ...updated[index] }
+
+      if (field === 'price') {
+        row.price = parseFloat(value)
+        row.error = isNaN(row.price) ? 'Preço (Cliente Final) inválido' : !String(value).trim() ? 'Preço obrigatório' : null
+      } else if (field === 'pricePro') {
+        row.pricePro = value === '' ? null : parseFloat(value)
+      } else if (field === 'priceProDesc') {
+        row.priceProDesc = value === '' ? null : parseFloat(value)
+      } else if (field === 'stock') {
+        row.stock = parseInt(value) || 0
+      } else {
+        (row as any)[field] = value
+      }
+
+      if (field === 'name') {
+        row.error = !String(value).trim() ? 'Nome obrigatório' : null
+      }
+
+      updated[index] = row
+      return updated
     })
   }
 
@@ -99,14 +127,19 @@ export default function ImportarProdutosPage() {
   }
 
   const handleImport = async (overwrite = false) => {
-    if (!file) return
+    if (!preview) return
     setImporting(true); setError(''); setUploadProgress(null)
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      if (overwrite) fd.append('overwrite', 'true')
-      if (zeroMissingPrices) fd.append('zeroMissingPrices', 'true')
-      const res = await fetch('/api/admin/products/import', { method: 'POST', body: fd })
+      const payload = {
+        products: preview.filter(r => !r.error),
+        overwrite,
+      }
+
+      const res = await fetch('/api/admin/products/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
       
       let data
       try {
@@ -327,7 +360,7 @@ export default function ImportarProdutosPage() {
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ background: 'var(--cream)', borderBottom: '1px solid var(--border)' }}>
-                        {['Linha', 'Imagens', 'Nome', 'SKU', 'Tipo', 'Preço', 'Preço Pro', 'Desc. Pro', 'Estoque', 'Linha Produto', 'Status'].map(h => (
+                        {['Linha', 'Imagens', 'Nome', 'Descrição', 'SKU', 'Tipo', 'Preço', 'Preço Pro', 'Desc. Pro', 'Estoque', 'Linha Produto', 'Status'].map(h => (
                           <th key={h} style={{ textAlign: 'left', padding: '0.6rem 1rem', fontSize: '0.58rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                         ))}
                       </tr>
@@ -370,18 +403,102 @@ export default function ImportarProdutosPage() {
                               </div>
                             </div>
                           </td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)' }}>{row.name || '—'}</td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.72rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>{row.sku || '—'}</td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.productType || '—'}</td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)', whiteSpace: 'nowrap' }}>R$ {typeof row.price !== 'number' || isNaN(row.price) ? '—' : row.price.toFixed(2).replace('.', ',')}</td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                            {typeof row.pricePro === 'number' && !isNaN(row.pricePro) ? `R$ ${row.pricePro.toFixed(2).replace('.', ',')}` : '—'}
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '180px' }}>
+                            <input
+                              type="text"
+                              value={row.name}
+                              onChange={e => handleEditCell(i, 'name', e.target.value)}
+                              className="editable-input"
+                              style={{ fontWeight: 500, color: 'var(--navy)' }}
+                            />
                           </td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                            {typeof row.priceProDesc === 'number' && !isNaN(row.priceProDesc) ? `R$ ${row.priceProDesc.toFixed(2).replace('.', ',')}` : '—'}
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '200px' }}>
+                            <input
+                              type="text"
+                              value={row.description || ''}
+                              onChange={e => handleEditCell(i, 'description', e.target.value)}
+                              placeholder="Sem descrição"
+                              className="editable-input"
+                              style={{ color: 'var(--text-muted)' }}
+                            />
                           </td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.stock}</td>
-                          <td style={{ padding: '0.6rem 1rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>{row.lineName || '—'}</td>
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '100px' }}>
+                            <input
+                              type="text"
+                              value={row.sku || ''}
+                              onChange={e => handleEditCell(i, 'sku', e.target.value)}
+                              placeholder="—"
+                              className="editable-input"
+                              style={{ fontFamily: 'monospace', color: 'var(--text-muted)' }}
+                            />
+                          </td>
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '120px' }}>
+                            <input
+                              type="text"
+                              value={row.productType || ''}
+                              onChange={e => handleEditCell(i, 'productType', e.target.value)}
+                              placeholder="—"
+                              className="editable-input"
+                              style={{ color: 'var(--text-muted)' }}
+                            />
+                          </td>
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '100px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }}>
+                              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>R$</span>
+                              <input
+                                type="text"
+                                value={isNaN(row.price) ? '' : row.price}
+                                onChange={e => handleEditCell(i, 'price', e.target.value)}
+                                className="editable-input"
+                                style={{ fontWeight: 500, color: 'var(--navy)' }}
+                              />
+                            </div>
+                          </td>
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '100px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }}>
+                              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>R$</span>
+                              <input
+                                type="text"
+                                value={row.pricePro == null || isNaN(row.pricePro) ? '' : row.pricePro}
+                                onChange={e => handleEditCell(i, 'pricePro', e.target.value)}
+                                placeholder="—"
+                                className="editable-input"
+                                style={{ color: 'var(--text-muted)' }}
+                              />
+                            </div>
+                          </td>
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '100px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }}>
+                              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>R$</span>
+                              <input
+                                type="text"
+                                value={row.priceProDesc == null || isNaN(row.priceProDesc) ? '' : row.priceProDesc}
+                                onChange={e => handleEditCell(i, 'priceProDesc', e.target.value)}
+                                placeholder="—"
+                                className="editable-input"
+                                style={{ color: 'var(--text-muted)' }}
+                              />
+                            </div>
+                          </td>
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '80px' }}>
+                            <input
+                              type="number"
+                              value={row.stock}
+                              onChange={e => handleEditCell(i, 'stock', e.target.value)}
+                              className="editable-input"
+                              style={{ color: 'var(--text-muted)' }}
+                            />
+                          </td>
+                          <td style={{ padding: '0.3rem 0.5rem', minWidth: '140px' }}>
+                            <input
+                              type="text"
+                              value={row.lineName || ''}
+                              onChange={e => handleEditCell(i, 'lineName', e.target.value)}
+                              placeholder="—"
+                              className="editable-input"
+                              style={{ color: 'var(--text-muted)' }}
+                            />
+                          </td>
                           <td style={{ padding: '0.6rem 1rem' }}>
                             {row.error ? (
                               <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.65rem', color: '#dc2626', fontWeight: 500 }}>
@@ -471,6 +588,27 @@ export default function ImportarProdutosPage() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+        .editable-input {
+          width: 100%;
+          padding: 0.3rem 0.4rem;
+          border: 1px solid transparent;
+          background: transparent;
+          font-family: inherit;
+          font-size: 0.8rem;
+          color: inherit;
+          outline: none;
+          border-radius: 6px;
+          transition: all 0.2s;
+        }
+        .editable-input:hover {
+          border-color: var(--border);
+          background: #fafaf9;
+        }
+        .editable-input:focus {
+          border-color: var(--gold);
+          background: #fff;
+          box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
       `}</style>
     </div>
   )

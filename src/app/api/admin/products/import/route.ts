@@ -64,91 +64,142 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
 
   try {
-    const formData = await req.formData()
-    const file = formData.get('file') as File | null
-    const previewOnly = formData.get('preview') === 'true'
-    const overwrite = formData.get('overwrite') === 'true'
-    const zeroMissingPrices = formData.get('zeroMissingPrices') === 'true'
+    const contentType = req.headers.get('content-type') || ''
+    let parsed: any[] = []
+    let previewOnly = false
+    let overwrite = false
+    let zeroMissingPrices = false
 
-    if (!file) return NextResponse.json({ error: 'Arquivo não enviado' }, { status: 400 })
+    if (contentType.includes('application/json')) {
+      const body = await req.json()
+      const productsPayload = body.products || []
+      overwrite = body.overwrite === true
+      
+      const lines = await prisma.productLine.findMany()
+      const lineMap: Record<string, string> = {}
+      for (const l of lines) lineMap[l.name.toLowerCase()] = l.id
 
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const workbook = XLSX.read(buffer, { type: 'buffer' })
-    const sheet = workbook.Sheets[workbook.SheetNames[0]]
-    const rows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: '' })
+      parsed = productsPayload.map((p: any, i: number) => {
+        const relRaw = Array.isArray(p.relatedProducts)
+          ? p.relatedProducts
+          : String(p.relatedProducts || '').trim()
+            ? String(p.relatedProducts).split(/[;,]/).map((s: string) => s.trim()).filter(Boolean)
+            : []
 
-    if (rows.length === 0) return NextResponse.json({ error: 'Planilha vazia' }, { status: 400 })
+        return {
+          row: p.row || (i + 2),
+          name: String(p.name || '').trim(),
+          sku: String(p.sku || '').trim() || null,
+          productType: String(p.productType || '').trim() || null,
+          weight: String(p.weight || '').trim() || null,
+          lineName: String(p.lineName || '').trim() || null,
+          lineId: p.lineId || (p.lineName ? (lineMap[p.lineName.toLowerCase().trim()] || null) : null),
+          description: String(p.description || '').trim(),
+          ingredients: p.ingredients || null,
+          usage: p.usage || null,
+          relatedProducts: relRaw,
+          price: p.price != null && !isNaN(parseFloat(String(p.price))) ? parseFloat(String(p.price)) : null,
+          pricePro: p.pricePro != null && !isNaN(parseFloat(String(p.pricePro))) ? parseFloat(String(p.pricePro)) : null,
+          priceProDesc: p.priceProDesc != null && !isNaN(parseFloat(String(p.priceProDesc))) ? parseFloat(String(p.priceProDesc)) : null,
+          priceVendedor: p.priceVendedor != null && !isNaN(parseFloat(String(p.priceVendedor))) ? parseFloat(String(p.priceVendedor)) : null,
+          stock: parseInt(String(p.stock || '0')) || 0,
+          proOnly: p.proOnly === true,
+          featured: p.featured === true,
+          active: p.active !== false,
+          isDuplicate: false,
+          error: !String(p.name || '').trim()
+            ? 'Nome obrigatório'
+            : p.price == null || isNaN(parseFloat(String(p.price)))
+            ? 'Preço (Cliente Final) inválido'
+            : null,
+        }
+      })
+    } else {
+      const formData = await req.formData()
+      const file = formData.get('file') as File | null
+      previewOnly = formData.get('preview') === 'true'
+      overwrite = formData.get('overwrite') === 'true'
+      zeroMissingPrices = formData.get('zeroMissingPrices') === 'true'
 
-    // Normaliza as chaves usando o COL_MAP
-    const normalized = rows.map(row => {
-      const out: Record<string, any> = {}
-      for (const [key, val] of Object.entries(row)) {
-        const normKey = normalizeKey(key)
-        const mappedKey = COL_MAP[normKey] ?? normKey // usa mapeamento ou mantém normalizado
-        out[mappedKey] = val
+      if (!file) return NextResponse.json({ error: 'Arquivo não enviado' }, { status: 400 })
+
+      const buffer = Buffer.from(await file.arrayBuffer())
+      const workbook = XLSX.read(buffer, { type: 'buffer' })
+      const sheet = workbook.Sheets[workbook.SheetNames[0]]
+      const rows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: '' })
+
+      if (rows.length === 0) return NextResponse.json({ error: 'Planilha vazia' }, { status: 400 })
+
+      // Normaliza as chaves usando o COL_MAP
+      const normalized = rows.map(row => {
+        const out: Record<string, any> = {}
+        for (const [key, val] of Object.entries(row)) {
+          const normKey = normalizeKey(key)
+          const mappedKey = COL_MAP[normKey] ?? normKey // usa mapeamento ou mantém normalizado
+          out[mappedKey] = val
+        }
+        return out
+      })
+
+      const firstRow = normalized[0]
+      const hasName = 'nome' in firstRow
+      const hasPrice = 'preco' in firstRow
+      if (!hasName || !hasPrice) {
+        return NextResponse.json({
+          error: `Colunas obrigatórias não encontradas. Esperado: "Nome do Produto" e "Preço Para Cliente Final". Encontrado: ${Object.keys(firstRow).join(', ')}`,
+        }, { status: 400 })
       }
-      return out
-    })
 
-    const firstRow = normalized[0]
-    const hasName = 'nome' in firstRow
-    const hasPrice = 'preco' in firstRow
-    if (!hasName || !hasPrice) {
-      return NextResponse.json({
-        error: `Colunas obrigatórias não encontradas. Esperado: "Nome do Produto" e "Preço Para Cliente Final". Encontrado: ${Object.keys(firstRow).join(', ')}`,
-      }, { status: 400 })
+      const lines = await prisma.productLine.findMany()
+      const lineMap: Record<string, string> = {}
+      for (const l of lines) lineMap[l.name.toLowerCase()] = l.id
+
+      function parsePrice(val: any): number | null {
+        if (!val && val !== 0) return null
+        const n = parseFloat(String(val).replace(',', '.').replace(/[^0-9.]/g, ''))
+        return isNaN(n) ? null : n
+      }
+
+      parsed = normalized.map((row, i) => {
+        let price = parsePrice(row.preco)
+        if (zeroMissingPrices && price === null) {
+          price = 0
+        }
+
+        const relRaw = String(row.produtos_relacionados || '').trim()
+        const relatedProducts = relRaw
+          ? relRaw.split(/[;,]/).map((s: string) => s.trim()).filter(Boolean)
+          : []
+
+        return {
+          row: i + 2,
+          name: String(row.nome || '').trim(),
+          sku: String(row.sku || '').trim() || null,
+          productType: String(row.tipo || '').trim() || null,
+          weight: String(row.gramatura || '').trim() || null,
+          lineName: String(row.linha || '').trim() || null,
+          lineId: lineMap[String(row.linha || '').toLowerCase().trim()] ?? null,
+          description: String(row.descricao || '').trim(),
+          ingredients: String(row.ingredientes || '').trim() || null,
+          usage: String(row.indicacao || '').trim() || null,
+          relatedProducts,
+          price,
+          pricePro: parsePrice(row.preco_pro),
+          priceProDesc: parsePrice(row.preco_pro_desc),
+          priceVendedor: parsePrice(row.preco_vendedor),
+          stock: parseInt(String(row.estoque || '0')) || 0,
+          proOnly: false,
+          featured: false,
+          active: true,
+          isDuplicate: false,
+          error: !String(row.nome || '').trim()
+            ? 'Nome obrigatório'
+            : price === null
+            ? 'Preço (Cliente Final) inválido'
+            : null,
+        }
+      })
     }
-
-    const lines = await prisma.productLine.findMany()
-    const lineMap: Record<string, string> = {}
-    for (const l of lines) lineMap[l.name.toLowerCase()] = l.id
-
-    function parsePrice(val: any): number | null {
-      if (!val && val !== 0) return null
-      const n = parseFloat(String(val).replace(',', '.').replace(/[^0-9.]/g, ''))
-      return isNaN(n) ? null : n
-    }
-
-    const parsed = normalized.map((row, i) => {
-      let price = parsePrice(row.preco)
-      if (zeroMissingPrices && price === null) {
-        price = 0
-      }
-
-      const relRaw = String(row.produtos_relacionados || '').trim()
-      const relatedProducts = relRaw
-        ? relRaw.split(/[;,]/).map((s: string) => s.trim()).filter(Boolean)
-        : []
-
-      return {
-        row: i + 2,
-        name: String(row.nome || '').trim(),
-        sku: String(row.sku || '').trim() || null,
-        productType: String(row.tipo || '').trim() || null,
-        weight: String(row.gramatura || '').trim() || null,
-        lineName: String(row.linha || '').trim() || null,
-        lineId: lineMap[String(row.linha || '').toLowerCase().trim()] ?? null,
-        description: String(row.descricao || '').trim(),
-        ingredients: String(row.ingredientes || '').trim() || null,
-        usage: String(row.indicacao || '').trim() || null,
-        relatedProducts,
-        price,
-        pricePro: parsePrice(row.preco_pro),
-        priceProDesc: parsePrice(row.preco_pro_desc),
-        priceVendedor: parsePrice(row.preco_vendedor),
-        stock: parseInt(String(row.estoque || '0')) || 0,
-        // proOnly é sempre false na importação — o admin define depois
-        proOnly: false,
-        featured: false,
-        active: true,
-        isDuplicate: false,
-        error: !String(row.nome || '').trim()
-          ? 'Nome obrigatório'
-          : price === null
-          ? 'Preço (Cliente Final) inválido'
-          : null,
-      }
-    })
 
     if (previewOnly) {
       const slugs = parsed.filter(r => !r.error).map(r => toSlug(r.name))
