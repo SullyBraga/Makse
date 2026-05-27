@@ -38,18 +38,19 @@ export default function ImportarProdutosPage() {
   const [result, setResult] = useState<{ created: number; updated: number; skipped: number; errors: number } | null>(null)
   const [error, setError] = useState('')
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
+  const [zeroMissingPrices, setZeroMissingPrices] = useState(false)
 
   const duplicateCount = preview?.filter(r => r.isDuplicate).length ?? 0
   const hasDuplicates = duplicateCount > 0
 
-  const handleFile = async (f: File) => {
-    setFile(f); setPreview(null); setError(''); setResult(null)
-    if (!f) return
+  const processFile = async (f: File, zeroPrices: boolean) => {
+    setPreview(null); setError(''); setResult(null)
     setLoading(true)
     try {
       const fd = new FormData()
       fd.append('file', f)
       fd.append('preview', 'true')
+      if (zeroPrices) fd.append('zeroMissingPrices', 'true')
       const res = await fetch('/api/admin/products/import', { method: 'POST', body: fd })
       
       let data
@@ -72,6 +73,11 @@ export default function ImportarProdutosPage() {
     }
   }
 
+  const handleFile = (f: File) => {
+    setFile(f)
+    if (f) processFile(f, zeroMissingPrices)
+  }
+
   const handleImport = async (overwrite = false) => {
     if (!file) return
     setImporting(true); setError('')
@@ -79,6 +85,7 @@ export default function ImportarProdutosPage() {
       const fd = new FormData()
       fd.append('file', file)
       if (overwrite) fd.append('overwrite', 'true')
+      if (zeroMissingPrices) fd.append('zeroMissingPrices', 'true')
       const res = await fetch('/api/admin/products/import', { method: 'POST', body: fd })
       
       let data
@@ -179,6 +186,25 @@ export default function ImportarProdutosPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
             {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '0.875rem 1.25rem', fontSize: '0.84rem', color: '#dc2626' }}>{error}</div>}
+
+            {/* Checkbox de Importação Zerada */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1rem 1.25rem', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
+              <input
+                type="checkbox"
+                id="zeroMissingPrices"
+                checked={zeroMissingPrices}
+                onChange={e => {
+                  setZeroMissingPrices(e.target.checked)
+                  if (file) {
+                    processFile(file, e.target.checked)
+                  }
+                }}
+                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--navy)' }}
+              />
+              <label htmlFor="zeroMissingPrices" style={{ fontSize: '0.8rem', color: 'var(--navy)', cursor: 'pointer', fontWeight: 500, userSelect: 'none' }}>
+                Importar produtos sem preço com valor zerado (R$ 0,00) em vez de ignorar
+              </label>
+            </div>
 
             {/* Upload zone */}
             <div

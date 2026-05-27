@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
     const file = formData.get('file') as File | null
     const previewOnly = formData.get('preview') === 'true'
     const overwrite = formData.get('overwrite') === 'true'
+    const zeroMissingPrices = formData.get('zeroMissingPrices') === 'true'
 
     if (!file) return NextResponse.json({ error: 'Arquivo não enviado' }, { status: 400 })
 
@@ -109,7 +110,11 @@ export async function POST(req: NextRequest) {
     }
 
     const parsed = normalized.map((row, i) => {
-      const price = parsePrice(row.preco)
+      let price = parsePrice(row.preco)
+      if (zeroMissingPrices && price === null) {
+        price = 0
+      }
+
       const relRaw = String(row.produtos_relacionados || '').trim()
       const relatedProducts = relRaw
         ? relRaw.split(/[;,]/).map((s: string) => s.trim()).filter(Boolean)
@@ -139,7 +144,7 @@ export async function POST(req: NextRequest) {
         isDuplicate: false,
         error: !String(row.nome || '').trim()
           ? 'Nome obrigatório'
-          : price == null
+          : price === null
           ? 'Preço (Cliente Final) inválido'
           : null,
       }
