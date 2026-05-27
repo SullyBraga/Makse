@@ -331,7 +331,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
         )}
       </div>
 
-      {/* Premium Glassmorphic Filters Pop-up Dialog */}
+      {/* Premium Minimalist Filters Pop-up Dialog */}
       <dialog
         ref={filtersDialogRef}
         onClick={handleDialogClick}
@@ -355,13 +355,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
                   setTempLineSlug(null)
                   setTempKitsOnly(false)
                 }}
-                style={{
-                  padding: '0.4rem 0.9rem', fontSize: '0.72rem', borderRadius: '8px',
-                  background: !tempLineSlug && !tempKitsOnly ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
-                  color: !tempLineSlug && !tempKitsOnly ? 'var(--navy)' : '#fff',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  cursor: 'pointer', transition: 'all 0.15s', fontWeight: !tempLineSlug && !tempKitsOnly ? 600 : 400
-                }}
+                className={`filter-pill ${!tempLineSlug && !tempKitsOnly ? 'active' : ''}`}
               >
                 Todas as Linhas
               </button>
@@ -374,13 +368,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
                       setTempLineSlug(l.slug)
                       setTempKitsOnly(false)
                     }}
-                    style={{
-                      padding: '0.4rem 0.9rem', fontSize: '0.72rem', borderRadius: '8px',
-                      background: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
-                      color: isSelected ? 'var(--navy)' : '#fff',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      cursor: 'pointer', transition: 'all 0.15s', fontWeight: isSelected ? 600 : 400
-                    }}
+                    className={`filter-pill ${isSelected ? 'active' : ''}`}
                   >
                     {l.name}
                   </button>
@@ -392,13 +380,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
                     setTempKitsOnly(true)
                     setTempLineSlug(null)
                   }}
-                  style={{
-                    padding: '0.4rem 0.9rem', fontSize: '0.72rem', borderRadius: '8px',
-                    background: tempKitsOnly ? '#7c3aed' : 'rgba(255,255,255,0.06)',
-                    color: '#fff',
-                    border: `1px solid ${tempKitsOnly ? '#7c3aed' : 'rgba(255,255,255,0.1)'}`,
-                    cursor: 'pointer', transition: 'all 0.15s', fontWeight: tempKitsOnly ? 600 : 400
-                  }}
+                  className={`filter-pill ${tempKitsOnly ? 'active' : ''}`}
                 >
                   Kits ({kitCount})
                 </button>
@@ -421,13 +403,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
                           isSelected ? prev.filter(t => t !== type) : [...prev, type]
                         )
                       }}
-                      style={{
-                        padding: '0.4rem 0.9rem', fontSize: '0.72rem', borderRadius: '8px',
-                        background: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
-                        color: isSelected ? 'var(--navy)' : '#fff',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        cursor: 'pointer', transition: 'all 0.15s', fontWeight: isSelected ? 600 : 400
-                      }}
+                      className={`filter-pill ${isSelected ? 'active' : ''}`}
                     >
                       {type}
                     </button>
@@ -452,13 +428,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
                           isSelected ? prev.filter(w => w !== weight) : [...prev, weight]
                         )
                       }}
-                      style={{
-                        padding: '0.4rem 0.9rem', fontSize: '0.72rem', borderRadius: '8px',
-                        background: isSelected ? 'var(--gold)' : 'rgba(255,255,255,0.06)',
-                        color: isSelected ? 'var(--navy)' : '#fff',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        cursor: 'pointer', transition: 'all 0.15s', fontWeight: isSelected ? 600 : 400
-                      }}
+                      className={`filter-pill ${isSelected ? 'active' : ''}`}
                     >
                       {weight}
                     </button>
@@ -478,18 +448,17 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
               setTempSelectedWeights([])
             }}
             style={{
-              background: 'none', border: 'none', color: '#fca5a5', fontSize: '0.75rem',
-              fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', padding: 0
+              background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '0.75rem',
+              fontWeight: 500, cursor: 'pointer', textDecoration: 'underline', padding: 0
             }}
           >
             Limpar Filtros
           </button>
           <button
             onClick={applyFilters}
+            className="btn-primary"
             style={{
-              padding: '0.5rem 1.75rem', background: 'var(--gold)', color: 'var(--navy)',
-              border: 'none', borderRadius: '99px', fontSize: '0.78rem', fontWeight: 700,
-              cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'var(--font-dm-sans)'
+              padding: '0.55rem 2rem', fontSize: '0.7rem',
             }}
           >
             Aplicar Filtros
@@ -498,24 +467,22 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
       </dialog>
 
       <style>{`
-        /* Responsive Glassmorphic Dialog Styles */
+        /* Clean & Premium Minimalist Dialog Styles */
         .filters-dialog {
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          border-radius: 24px;
-          background: rgba(13, 27, 42, 0.9);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          color: #fff;
-          max-width: 540px;
+          border: 1px solid var(--cream-dark);
+          border-radius: 20px;
+          background: #ffffff;
+          color: var(--navy);
+          max-width: 500px;
           width: calc(100% - 2rem);
-          padding: 2rem;
-          box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+          padding: 1.75rem 2rem;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.08);
           outline: none;
           font-family: var(--font-dm-sans), sans-serif;
           overflow: hidden;
           display: none;
           flex-direction: column;
-          max-height: 85vh;
+          max-height: 80vh;
           position: fixed;
           top: 50%;
           left: 50%;
@@ -528,33 +495,33 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
           display: flex;
         }
         .filters-dialog::backdrop {
-          background: rgba(10, 20, 30, 0.65);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
+          background: rgba(13, 27, 42, 0.4);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
         }
         .filters-dialog-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 1.5rem;
-          padding-bottom: 1rem;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
+          margin-bottom: 1.25rem;
+          padding-bottom: 0.875rem;
+          border-bottom: 1px solid var(--border);
           flex-shrink: 0;
         }
         .filters-dialog-title {
           font-family: var(--font-cormorant), Cormorant Garamond, serif;
-          font-size: 1.8rem;
-          color: var(--gold);
-          font-weight: 300;
+          font-size: 1.6rem;
+          color: var(--navy);
+          font-weight: 400;
           margin: 0;
         }
         .filters-dialog-close {
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: #fff;
+          background: rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(0, 0, 0, 0.06);
+          color: var(--navy);
           cursor: pointer;
-          width: 32px;
-          height: 32px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -562,19 +529,19 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
           transition: all 0.2s;
         }
         .filters-dialog-close:hover {
-          background: var(--gold);
-          border-color: var(--gold);
-          color: var(--navy);
+          background: var(--navy);
+          border-color: var(--navy);
+          color: #fff;
           transform: rotate(90deg);
         }
         .filters-dialog-content {
           overflow-y: auto;
+          max-height: 45vh;
           padding-right: 0.5rem;
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 1.25rem;
           text-align: left;
-          flex: 1;
         }
         .filters-dialog-content::-webkit-scrollbar {
           width: 5px;
@@ -583,25 +550,49 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
           background: transparent;
         }
         .filters-dialog-content::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.15);
+          background: var(--border);
           border-radius: 99px;
         }
         .filters-dialog-section-title {
           font-size: 0.65rem;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: var(--gold);
+          color: var(--navy);
+          opacity: 0.5;
           font-weight: 600;
-          margin-bottom: 0.75rem;
+          margin-top: 0.5rem;
+          margin-bottom: 0.6rem;
         }
         .filters-dialog-footer {
-          border-top: 1px solid rgba(255,255,255,0.08);
-          padding-top: 1.25rem;
-          margin-top: 1.5rem;
+          border-top: 1px solid var(--border);
+          padding-top: 1rem;
+          margin-top: 1.25rem;
           display: flex;
           justify-content: space-between;
           align-items: center;
           flex-shrink: 0;
+        }
+        .filter-pill {
+          padding: 0.4rem 0.9rem;
+          font-size: 0.72rem;
+          border-radius: 8px;
+          background: var(--cream);
+          color: var(--navy);
+          border: 1px solid var(--border);
+          cursor: pointer;
+          transition: all 0.15s ease;
+          font-weight: 400;
+          font-family: var(--font-dm-sans), sans-serif;
+        }
+        .filter-pill:hover {
+          background: var(--cream-dark);
+          border-color: var(--cream-dark);
+        }
+        .filter-pill.active {
+          background: var(--navy);
+          color: #fff;
+          border-color: var(--navy);
+          font-weight: 600;
         }
       `}</style>
     </div>
