@@ -79,10 +79,10 @@ export default async function AdminPedidosPage() {
               </div>
 
               {/* Body */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0', borderBottom: '1px solid #f0ebe4' }}>
+              <div className="pedido-details-grid">
 
                 {/* Cliente */}
-                <div style={{ padding: '1rem 1.375rem', borderRight: '1px solid #f0ebe4' }}>
+                <div className="pedido-col">
                   <p style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9b8f88', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                     <User size={9} /> Cliente
                   </p>
@@ -95,7 +95,7 @@ export default async function AdminPedidosPage() {
                 </div>
 
                 {/* Venda / Pagamento */}
-                <div style={{ padding: '1rem 1.375rem', borderRight: '1px solid #f0ebe4' }}>
+                <div className="pedido-col">
                   <p style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9b8f88', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                     <Store size={9} /> Venda
                   </p>
@@ -116,7 +116,7 @@ export default async function AdminPedidosPage() {
                 </div>
 
                 {/* Itens */}
-                <div style={{ padding: '1rem 1.375rem' }}>
+                <div className="pedido-col">
                   <p style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9b8f88', fontWeight: 600, marginBottom: '0.5rem' }}>
                     Itens ({order.items.length})
                   </p>
@@ -144,6 +144,33 @@ export default async function AdminPedidosPage() {
           )
         })}
       </div>
+      <style>{`
+        .pedido-details-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 0;
+          border-bottom: 1px solid #f0ebe4;
+        }
+        .pedido-col {
+          padding: 1rem 1.375rem;
+          border-right: 1px solid #f0ebe4;
+        }
+        .pedido-col:last-child {
+          border-right: none;
+        }
+        @media (max-width: 768px) {
+          .pedido-details-grid {
+            grid-template-columns: 1fr;
+          }
+          .pedido-col {
+            border-right: none !important;
+            border-bottom: 1px solid #f0ebe4;
+          }
+          .pedido-col:last-child {
+            border-bottom: none;
+          }
+        }
+      `}</style>
     </div>
   )
 }

@@ -55,7 +55,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* KPI Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }} className="stagger animate-up">
+      <div className="dashboard-kpi-grid stagger animate-up">
         {kpis.map(card => (
           <div key={card.label} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.375rem' }} className="hover-lift animate-up">
             <div style={{ width: 36, height: 36, borderRadius: '10px', background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.125rem' }}>
@@ -80,7 +80,7 @@ export default async function AdminDashboard() {
       )}
 
       {/* Two columns */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+      <div className="dashboard-two-cols">
         {/* Pedidos recentes */}
         <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }} className="animate-up">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.375rem', borderBottom: '1px solid var(--cream)' }}>
@@ -97,7 +97,7 @@ export default async function AdminDashboard() {
             return (
               <div key={order.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1.375rem', borderBottom: '1px solid var(--cream)' }}>
                 <div>
-                  <p style={{ fontSize: '0.82rem', fontWeight: 500, color: 'var(--navy)' }}>{order.user.name}</p>
+                  <p style={{ fontSize: '0.82', fontWeight: 500, color: 'var(--navy)' }}>{order.user.name}</p>
                   <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>R$ {order.total.toFixed(2).replace('.', ',')}</p>
                 </div>
                 <span style={{ fontSize: '0.62rem', padding: '0.25rem 0.625rem', borderRadius: '99px', background: s.bg, color: s.color, fontWeight: 600 }}>{s.label}</span>
@@ -127,6 +127,34 @@ export default async function AdminDashboard() {
           ))}
         </div>
       </div>
+
+      <style>{`
+        .dashboard-kpi-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1rem;
+        }
+        .dashboard-two-cols {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.25rem;
+        }
+
+        @media (max-width: 1024px) {
+          .dashboard-kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 640px) {
+          .dashboard-kpi-grid {
+            grid-template-columns: 1fr;
+          }
+          .dashboard-two-cols {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   )
 }

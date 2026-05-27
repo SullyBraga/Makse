@@ -48,6 +48,24 @@ export default function AdminContainer({
     localStorage.setItem('admin_sidebar_collapsed', String(nextState))
   }
 
+  const closeSidebarMobile = () => {
+    const sidebar = document.getElementById('admin-sidebar')
+    const overlay = document.getElementById('admin-overlay')
+    sidebar?.classList.remove('open')
+    overlay?.classList.remove('show')
+    window.dispatchEvent(new Event('close-admin-sidebar'))
+  }
+
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      closeSidebarMobile()
+    }
+  }
+
+  const handleOverlayClick = () => {
+    closeSidebarMobile()
+  }
+
   // Evita layout shift na montagem inicial exibindo a sidebar padrão de 210px
   const sidebarWidth = mounted && isCollapsed ? '70px' : '210px'
 
@@ -65,9 +83,9 @@ export default function AdminContainer({
         {/* Logo */}
         <div style={{ padding: mounted && isCollapsed ? '1.75rem 0.5rem 1.5rem' : '1.75rem 1.5rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: '88px' }}>
           {mounted && isCollapsed ? (
-            <Link href="/admin" style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.6rem', fontWeight: 600, color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.05em' }}>M</Link>
+            <Link href="/admin" onClick={handleLinkClick} style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.6rem', fontWeight: 600, color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.05em' }}>M</Link>
           ) : (
-            <Link href="/admin" style={{ display: 'block', textDecoration: 'none' }}>
+            <Link href="/admin" onClick={handleLinkClick} style={{ display: 'block', textDecoration: 'none' }}>
               <Image src="/logo-makse.png" alt="Makse" width={110} height={35} style={{ objectFit: 'contain', height: 'auto', filter: 'brightness(0) invert(1)' }} />
             </Link>
           )}
@@ -103,6 +121,7 @@ export default function AdminContainer({
               key={item.href}
               href={item.href}
               className="admin-nav-item"
+              onClick={handleLinkClick}
               title={mounted && isCollapsed ? item.label : undefined}
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: mounted && isCollapsed ? 'center' : 'flex-start',
@@ -121,7 +140,7 @@ export default function AdminContainer({
 
         {/* Rodapé da Sidebar */}
         <div style={{ padding: '1rem 0.5rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: mounted && isCollapsed ? 'center' : 'stretch' }}>
-          <Link href="/" title={mounted && isCollapsed ? 'Ver site' : undefined} style={{ display: 'flex', alignItems: 'center', justifyContent: mounted && isCollapsed ? 'center' : 'flex-start', gap: mounted && isCollapsed ? '0' : '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '10px', fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>
+          <Link href="/" onClick={handleLinkClick} title={mounted && isCollapsed ? 'Ver site' : undefined} style={{ display: 'flex', alignItems: 'center', justifyContent: mounted && isCollapsed ? 'center' : 'flex-start', gap: mounted && isCollapsed ? '0' : '0.5rem', padding: '0.5rem 0.75rem', borderRadius: '10px', fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>
             <Scissors size={13} style={{ color: 'var(--gold)' }} />
             {!(mounted && isCollapsed) && 'Ver site'}
           </Link>
@@ -143,7 +162,7 @@ export default function AdminContainer({
       </aside>
 
       {/* Overlay for mobile */}
-      <div id="admin-overlay" style={{ display: 'none', position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 39 }} className="admin-overlay" />
+      <div id="admin-overlay" onClick={handleOverlayClick} style={{ display: 'none', position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 39 }} className="admin-overlay" />
 
       {/* Content */}
       <main style={{ marginLeft: sidebarWidth, flex: 1, padding: 'clamp(1.5rem,3vw,2.5rem)', minHeight: '100vh', transition: 'margin-left 0.3s cubic-bezier(0.22,1,0.36,1)' }} className="admin-content">
@@ -157,7 +176,7 @@ export default function AdminContainer({
         @media (max-width: 768px) {
           #admin-sidebar { transform: translateX(-100%) !important; width: 210px !important; }
           #admin-sidebar.open { transform: translateX(0) !important; }
-          .admin-content { margin-left: 0 !important; padding-top: 1.5rem !important; }
+          .admin-content { margin-left: 0 !important; padding-top: calc(56px + 1.5rem) !important; }
           .admin-overlay.show { display: block !important; }
           .sidebar-toggle-btn { display: none !important; }
         }

@@ -294,7 +294,7 @@ export default function ImportarProdutosPage() {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 340px', gap: '1.5rem', alignItems: 'start' }}>
+        <div className="importar-layout-grid">
 
           {/* Painel principal */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -529,7 +529,7 @@ export default function ImportarProdutosPage() {
           </div>
 
           {/* Painel lateral */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'sticky', top: '1.5rem' }}>
+          <div className="importar-sidebar-container">
 
             {/* Template download */}
             <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem' }}>
@@ -586,6 +586,27 @@ export default function ImportarProdutosPage() {
         </div>
       )}
       <style>{`
+        .importar-layout-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 340px;
+          gap: 1.5rem;
+          align-items: start;
+        }
+        .importar-sidebar-container {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+          position: sticky;
+          top: 1.5rem;
+        }
+        @media (max-width: 1024px) {
+          .importar-layout-grid {
+            grid-template-columns: 1fr;
+          }
+          .importar-sidebar-container {
+            position: static !important;
+          }
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
         .editable-input {

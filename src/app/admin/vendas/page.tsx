@@ -138,7 +138,7 @@ export default function VendasPage() {
 
       {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '0.875rem 1.25rem', fontSize: '0.84rem', color: '#dc2626', marginBottom: '1.5rem' }}>{error}</div>}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="vendas-layout-grid">
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
@@ -283,7 +283,7 @@ export default function VendasPage() {
         </div>
 
         {/* Cart sidebar */}
-        <div style={{ position: 'sticky', top: '1.5rem' }}>
+        <div className="cart-sidebar-container" style={{ position: 'sticky', top: '1.5rem' }}>
           <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>
             <div style={{ padding: '1rem 1.375rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <ShoppingCart size={14} style={{ color: 'var(--gold)' }} />
@@ -353,7 +353,23 @@ export default function VendasPage() {
           </div>
         </div>
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        .vendas-layout-grid {
+          display: grid;
+          grid-template-columns: 1fr 380px;
+          gap: 1.5rem;
+          align-items: start;
+        }
+        @media (max-width: 1024px) {
+          .vendas-layout-grid {
+            grid-template-columns: 1fr;
+          }
+          .cart-sidebar-container {
+            position: static !important;
+          }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   )
 }

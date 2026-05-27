@@ -129,7 +129,7 @@ export default function ImportarKitsPage() {
           </button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
+        <div className="importar-layout-grid">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '0.875rem 1.25rem', fontSize: '0.84rem', color: '#dc2626' }}>{error}</div>}
 
@@ -236,7 +236,7 @@ export default function ImportarKitsPage() {
           </div>
 
           {/* Sidebar */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'sticky', top: '1.5rem' }}>
+          <div className="importar-sidebar-container">
             <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem' }}>
               <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '0.875rem' }}>Modelo de Planilha</h2>
               <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '1rem', lineHeight: 1.6 }}>
@@ -283,7 +283,30 @@ export default function ImportarKitsPage() {
           </div>
         </div>
       )}
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        .importar-layout-grid {
+          display: grid;
+          grid-template-columns: 1fr 340px;
+          gap: 1.5rem;
+          align-items: start;
+        }
+        .importar-sidebar-container {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+          position: sticky;
+          top: 1.5rem;
+        }
+        @media (max-width: 1024px) {
+          .importar-layout-grid {
+            grid-template-columns: 1fr;
+          }
+          .importar-sidebar-container {
+            position: static !important;
+          }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   )
 }

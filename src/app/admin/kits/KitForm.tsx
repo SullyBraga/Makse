@@ -175,21 +175,21 @@ export default function KitForm({ kitId, defaultValues }: Props) {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="kit-form-grid">
         {/* Main form */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
           {/* Dados básicos */}
           <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem' }}>
             <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '1.25rem' }}>Dados do Kit</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem', marginBottom: '1rem' }}>
+            <div className="kit-basic-grid">
               <div>
                 <label style={labelStyle}>Nome *</label>
                 <input style={fieldStyle} value={name} onChange={e => setName(e.target.value)} placeholder="Ex: Kit Nutrição Completa" />
               </div>
               <div>
                 <label style={labelStyle}>SKU</label>
-                <input style={{ ...fieldStyle, width: '140px' }} value={sku} onChange={e => setSku(e.target.value)} placeholder="KIT-001" />
+                <input style={fieldStyle} value={sku} onChange={e => setSku(e.target.value)} placeholder="KIT-001" />
               </div>
             </div>
             <div>
@@ -201,7 +201,7 @@ export default function KitForm({ kitId, defaultValues }: Props) {
           {/* Preços */}
           <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem' }}>
             <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '1.25rem' }}>Preços</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+            <div className="kit-prices-grid">
               <div>
                 <label style={labelStyle}>Preço Cliente Final *</label>
                 <div style={{ position: 'relative' }}>
@@ -362,7 +362,7 @@ export default function KitForm({ kitId, defaultValues }: Props) {
         </div>
 
         {/* Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', position: 'sticky', top: '1.5rem' }}>
+        <div className="kit-sidebar-container">
           {/* Visibilidade */}
           <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem' }}>
             <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '1.25rem' }}>Visibilidade</h2>
@@ -454,7 +454,54 @@ export default function KitForm({ kitId, defaultValues }: Props) {
           </button>
         </div>
       </div>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        .kit-form-grid {
+          display: grid;
+          grid-template-columns: 1fr 340px;
+          gap: 1.5rem;
+          align-items: start;
+        }
+        .kit-basic-grid {
+          display: grid;
+          grid-template-columns: 1fr 140px;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        .kit-prices-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 1rem;
+        }
+        .kit-sidebar-container {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+          position: sticky;
+          top: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+          .kit-form-grid {
+            grid-template-columns: 1fr;
+          }
+          .kit-sidebar-container {
+            position: static !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .kit-prices-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .kit-basic-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   )
 }
