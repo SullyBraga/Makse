@@ -81,7 +81,7 @@ export default function AdminContainer({
         transition: 'width 0.3s cubic-bezier(0.22,1,0.36,1), transform 0.3s cubic-bezier(0.22,1,0.36,1)',
       }}>
         {/* Logo */}
-        <div style={{ padding: mounted && isCollapsed ? '1.75rem 0.5rem 1.5rem' : '1.75rem 1.5rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: '88px' }}>
+        <div className="sidebar-logo-container" style={{ padding: mounted && isCollapsed ? '1.75rem 0.5rem 1.5rem' : '1.75rem 1.5rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', minHeight: '88px' }}>
           {mounted && isCollapsed ? (
             <Link href="/admin" onClick={handleLinkClick} style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.6rem', fontWeight: 600, color: 'var(--gold)', textDecoration: 'none', letterSpacing: '0.05em' }}>M</Link>
           ) : (
@@ -174,8 +174,13 @@ export default function AdminContainer({
         .sidebar-toggle-btn:hover { background: #cbd5e1 !important; color: var(--navy) !important; transform: translateY(-50%) scale(1.08) !important; }
 
         @media (max-width: 768px) {
-          #admin-sidebar { transform: translateX(-100%) !important; width: 210px !important; }
+          #admin-sidebar { 
+            transform: translateX(-100%) !important; 
+            width: 210px !important; 
+            top: 56px !important;
+          }
           #admin-sidebar.open { transform: translateX(0) !important; }
+          .sidebar-logo-container { display: none !important; }
           .admin-content { margin-left: 0 !important; padding-top: calc(56px + 1.5rem) !important; }
           .admin-overlay.show { display: block !important; }
           .sidebar-toggle-btn { display: none !important; }
