@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { SlidersHorizontal, ShoppingBag, Layers, X } from 'lucide-react'
+import { SlidersHorizontal, ShoppingBag, Layers, X, Search } from 'lucide-react'
 import ProductCard from '@/components/shop/ProductCard'
 import Link from 'next/link'
 
@@ -10,6 +10,7 @@ type Item = {
   proOnly: boolean; featured: boolean; images: string[]
   lineName: string | null; lineSlug: string | null; totalStock: number
   isKit: boolean
+  description?: string | null
 }
 type Line = { id: string; name: string; slug: string }
 
@@ -25,6 +26,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
   const [activeLineSlug, setActiveLineSlug] = useState<string | null>(null)
   const [sort, setSort] = useState<'relevance' | 'asc' | 'desc'>('relevance')
   const [showKitsOnly, setShowKitsOnly] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Active filters states
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
@@ -105,6 +107,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
     setTempKitsOnly(false)
     setTempSelectedTypes([])
     setTempSelectedWeights([])
+    setSearchQuery('')
   }
 
   const handleDialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
@@ -115,6 +118,16 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
 
   const filtered = products
     .filter(p => {
+      // Filter by Search Query
+      if (searchQuery.trim() !== '') {
+        const query = searchQuery.toLowerCase().trim()
+        const matchesName = p.name.toLowerCase().includes(query)
+        const matchesDesc = (p.description || p.name).toLowerCase().includes(query)
+        const matchesLine = (p.lineName || '').toLowerCase().includes(query)
+        const matchesType = (p.productType || '').toLowerCase().includes(query)
+        if (!matchesName && !matchesDesc && !matchesLine && !matchesType) return false
+      }
+
       // Filter by Line / Kits
       if (showKitsOnly) {
         if (!p.isKit) return false
@@ -164,6 +177,43 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
 
       {/* Filters + Grid */}
       <div style={{ maxWidth: '72rem', margin: '0 auto', padding: 'clamp(1.5rem,4vw,2.5rem) 1.5rem' }}>
+
+        {/* Barra de Pesquisa */}
+        <div style={{ marginBottom: '1.75rem', position: 'relative' }}>
+          <input
+            type="text"
+            placeholder="Pesquisar por produto, linha, tipo..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '0.75rem 1rem 0.75rem 2.6rem',
+              border: '1px solid var(--cream-dark)',
+              borderRadius: '14px',
+              fontSize: '0.875rem',
+              outline: 'none',
+              background: '#fff',
+              color: 'var(--navy)',
+              fontFamily: 'var(--font-dm-sans), sans-serif',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+              transition: 'all 0.2s ease',
+            }}
+            className="search-input"
+          />
+          <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+          {searchQuery.trim() !== '' && (
+            <button
+              onClick={() => setSearchQuery('')}
+              style={{
+                position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
+                display: 'flex', alignItems: 'center', padding: 0
+              }}
+            >
+              <X size={15} />
+            </button>
+          )}
+        </div>
 
         {/* Count + sort + filter button */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -594,6 +644,10 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
           color: #fff;
           border-color: var(--navy);
           font-weight: 600;
+        }
+        .search-input:focus {
+          border-color: var(--navy) !important;
+          box-shadow: 0 4px 15px rgba(13, 27, 42, 0.06) !important;
         }
       `}</style>
     </div>

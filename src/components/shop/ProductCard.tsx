@@ -106,9 +106,14 @@ export default function ProductCard({
             </span>
           </div>
         ) : (
-          <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--navy)' }}>
-            R$ {displayPrice.toFixed(2).replace('.', ',')}
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+            <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--navy)', margin: 0 }}>
+              R$ {displayPrice.toFixed(2).replace('.', ',')}
+            </p>
+            {proOnly && (
+              <span style={{ fontSize: '0.55rem', color: 'var(--gold)', background: 'var(--navy)', padding: '2px 6px', borderRadius: '4px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>PRO</span>
+            )}
+          </div>
         )}
       </div>
     </div>

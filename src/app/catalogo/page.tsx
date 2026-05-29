@@ -14,7 +14,6 @@ export default async function CatalogoPage() {
     prisma.product.findMany({
       where: {
         active: true,
-        ...(isPro ? {} : { proOnly: false, price: { gt: 0 } }),
       },
       include: {
         line: { select: { name: true, slug: true } },
@@ -39,7 +38,7 @@ export default async function CatalogoPage() {
     id: p.id,
     name: p.name,
     slug: p.slug,
-    price: isPro && p.pricePro ? p.pricePro : p.price,
+    price: (isPro && p.pricePro) ? p.pricePro : (p.price > 0 ? p.price : (p.pricePro ?? p.price)),
     productType: p.productType,
     weight: p.weight,
     proOnly: p.proOnly,
@@ -49,6 +48,7 @@ export default async function CatalogoPage() {
     lineSlug: p.line?.slug ?? null,
     totalStock: p.variants.reduce((t, v) => t + v.stock, 0),
     isKit: false as const,
+    description: p.description,
   }))
 
   const serializedKits = kits.map(k => ({
@@ -65,6 +65,7 @@ export default async function CatalogoPage() {
     lineSlug: null,
     totalStock: 99, // kits are virtual — no direct stock check here
     isKit: true as const,
+    description: k.description ?? '',
   }))
 
   return (
