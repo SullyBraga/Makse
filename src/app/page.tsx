@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowRight, Leaf, Star, Shield } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import ProductCard from '@/components/shop/ProductCard'
+import HeroSection from '@/components/shop/HeroSection'
 
 const S = {
   container: { maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem' } as React.CSSProperties,
@@ -27,52 +28,7 @@ export default async function HomePage() {
     <div>
 
       {/* ── HERO ── */}
-      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', backgroundColor: 'var(--cream)', position: 'relative', overflow: 'hidden', paddingTop: '80px', paddingBottom: '40px' }}>
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 1 }}>
-          <img
-            src="/foto-hero.jpeg"
-            alt="Makse Cosmética Avançada"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', opacity: 1, filter: 'none' }}
-          />
-        </div>
-        <div style={{ ...S.container, width: '100%', position: 'relative', zIndex: 2, padding: '1rem' }}>
-          <div
-            className="animate-scale"
-            style={{
-              maxWidth: '700px',
-              padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2.75rem)',
-              margin: '0 auto',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.65)',
-              backdropFilter: 'blur(16px) saturate(120%)',
-              WebkitBackdropFilter: 'blur(16px) saturate(120%)',
-              border: '1px solid rgba(255, 255, 255, 0.4)',
-              borderRadius: '28px',
-              boxShadow: '0 30px 60px -15px rgba(30, 41, 59, 0.08)',
-              animationDelay: '0.05s'
-            }}
-          >
-            <span className="section-label animate-fade" style={{ animationDelay: '0.15s' }}>Cosmética Avançada</span>
-            <h1
-              className="animate-up"
-              style={{ fontFamily: 'var(--font-playfair), Georgia, serif', fontSize: 'clamp(2.25rem,5.5vw,3.75rem)', fontWeight: 600, color: 'var(--navy)', lineHeight: 1.06, margin: '0.5rem auto 1.25rem', textAlign: 'center', animationDelay: '0.25s' }}
-            >
-              <span style={{ display: 'block' }}>Beleza que se sente</span>
-              <span style={{ display: 'block', fontWeight: 400, fontStyle: 'italic', fontSize: '0.92em', color: 'var(--gold)', letterSpacing: '0.03em', marginTop: '0.1rem' }}>no toque</span>
-            </h1>
-            <p className="animate-up" style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: '2rem', maxWidth: '480px', animationDelay: '0.35s' }}>
-              Fórmulas exclusivas desenvolvidas para profissionais que exigem performance e clientes que buscam transformação real.
-            </p>
-            <div className="animate-up" style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', justifyContent: 'center', animationDelay: '0.45s' }}>
-              <Link href="/catalogo" className="btn-primary">Explorar Coleção</Link>
-              <Link href="/cadastro" className="btn-outline">Cadastro Pro</Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* ── DIFERENCIAIS ── */}
       <section style={S.section('#fff')}>
