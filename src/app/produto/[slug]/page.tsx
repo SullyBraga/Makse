@@ -25,7 +25,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   })
 
   if (!product) notFound()
-  if (product.proOnly && !isPro) notFound()
 
   // Related products from same line
   const related = product.lineId
@@ -112,13 +111,68 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </p>
 
             {/* Actions (price, variants, add, shipping) */}
-            <ProductActions
-              product={{ id: product.id, name: product.name, slug: product.slug, proOnly: product.proOnly }}
-              variants={product.variants}
-              basePrice={product.price}
-              discountPct={discountPct}
-              isPro={isPro}
-            />
+            {(product.proOnly || product.price <= 0) && !isPro ? (
+              <div style={{
+                background: 'var(--cream)',
+                border: '1.5px solid var(--cream-dark)',
+                borderRadius: '20px',
+                padding: '1.75rem 2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.25rem',
+                alignItems: 'center',
+                textAlign: 'center',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
+              }}>
+                <Scissors size={28} style={{ color: 'var(--gold)' }} />
+                <div>
+                  <h4 style={{
+                    fontFamily: 'var(--font-cormorant), serif',
+                    fontSize: '1.2rem',
+                    fontWeight: 600,
+                    color: 'var(--navy)',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    margin: '0 0 0.5rem'
+                  }}>
+                    Uso Exclusivo Profissional
+                  </h4>
+                  <p style={{
+                    fontSize: '0.8rem',
+                    color: 'var(--text-muted)',
+                    lineHeight: 1.6,
+                    margin: 0,
+                    maxWidth: '340px'
+                  }}>
+                    Este produto é formulado para alta performance técnica e possui venda restrita a cabeleireiras e profissionais cadastrados.
+                  </p>
+                </div>
+                
+                <div style={{ width: '100%', height: '1px', background: 'var(--cream-dark)', opacity: 0.5 }} />
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--navy)', fontWeight: 500, margin: 0 }}>
+                    Para ver os preços e comprar:
+                  </p>
+                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <Link href={`/login?redirect=/produto/${product.slug}`} className="btn-primary" style={{ padding: '0.65rem 1.5rem', fontSize: '0.68rem', flex: 1, minWidth: '140px' }}>
+                      Fazer Login
+                    </Link>
+                    <Link href="/cadastro" className="btn-outline" style={{ padding: '0.65rem 1.5rem', fontSize: '0.68rem', flex: 1, minWidth: '140px' }}>
+                      Criar Conta Pro
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <ProductActions
+                product={{ id: product.id, name: product.name, slug: product.slug, proOnly: product.proOnly }}
+                variants={product.variants}
+                basePrice={product.price}
+                discountPct={discountPct}
+                isPro={isPro}
+              />
+            )}
 
             {/* Key specs */}
             <div style={{ background: '#fff', borderRadius: '16px', border: '1px solid var(--cream)', overflow: 'hidden' }}>

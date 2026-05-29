@@ -14,7 +14,7 @@ export default async function CatalogoPage() {
     prisma.product.findMany({
       where: {
         active: true,
-        ...(isPro ? {} : { proOnly: false }),
+        ...(isPro ? {} : { proOnly: false, price: { gt: 0 } }),
       },
       include: {
         line: { select: { name: true, slug: true } },

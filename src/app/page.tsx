@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight, Leaf, Star, Shield } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
+import { auth } from '@/lib/auth'
 import ProductCard from '@/components/shop/ProductCard'
 import HeroSection from '@/components/shop/HeroSection'
 
@@ -12,10 +13,18 @@ const S = {
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
+  const session = await auth()
+  const role = (session?.user as any)?.role ?? 'guest'
+  const isPro = role === 'CABELEIREIRA' || role === 'ADMIN'
+
   let featuredProducts: any[] = []
   try {
     featuredProducts = await prisma.product.findMany({
-      where: { active: true, featured: true },
+      where: {
+        active: true,
+        featured: true,
+        ...(isPro ? {} : { proOnly: false, price: { gt: 0 } }),
+      },
       include: { line: { select: { name: true, slug: true } } },
       orderBy: { createdAt: 'desc' },
       take: 8,
