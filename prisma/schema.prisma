@@ -77,10 +77,10 @@ model Product {
   name           String
   slug           String           @unique
   sku            String?          @unique
-  description    String
-  ingredients    String?
-  howToUse       String?
-  usage          String?
+  description    String           @db.Text
+  ingredients    String?          @db.Text
+  howToUse       String?          @db.Text
+  usage          String?          @db.Text
   productType    String?
   weight         String?
   price          Float
