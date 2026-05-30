@@ -239,22 +239,32 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               )}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem' }}>
-              {related.map(r => (
-                <Link key={r.id} href={`/produto/${r.slug}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--cream)', transition: 'box-shadow 0.2s, transform 0.2s' }} className="hover-lift">
-                  <div style={{ aspectRatio: '1', background: 'var(--cream)', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {(r.images as string[])?.[0] ? (
-                      <img src={(r.images as string[])[0]} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                      <span style={{ fontSize: '3rem', fontWeight: 200, color: 'rgba(100,116,139,0.2)', fontFamily: 'var(--font-cormorant),serif' }}>M</span>
-                    )}
-                  </div>
-                  <div style={{ padding: '0.875rem' }}>
-                    {r.line && <p style={{ fontSize: '0.57rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '0.25rem' }}>{r.productType ?? r.line.name}</p>}
-                    <p style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)', lineHeight: 1.35, marginBottom: '0.4rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.name}</p>
-                    <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--navy)' }}>R$ {r.price.toFixed(2).replace('.', ',')}</p>
-                  </div>
-                </Link>
-              ))}
+              {related.map(r => {
+                const rPrice = (isPro && r.pricePro) ? r.pricePro : (r.price > 0 ? r.price : (r.pricePro ?? r.price))
+                return (
+                  <Link key={r.id} href={`/produto/${r.slug}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--cream)', transition: 'box-shadow 0.2s, transform 0.2s' }} className="hover-lift">
+                    <div style={{ aspectRatio: '1', background: 'var(--cream)', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {(r.images as string[])?.[0] ? (
+                        <img src={(r.images as string[])[0]} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <span style={{ fontSize: '3rem', fontWeight: 200, color: 'rgba(100,116,139,0.2)', fontFamily: 'var(--font-cormorant),serif' }}>M</span>
+                      )}
+                    </div>
+                    <div style={{ padding: '0.875rem' }}>
+                      {r.line && <p style={{ fontSize: '0.57rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '0.25rem' }}>{r.productType ?? r.line.name}</p>}
+                      <p style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--navy)', lineHeight: 1.35, marginBottom: '0.4rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.name}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                        <p style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--navy)', margin: 0 }}>
+                          R$ {rPrice.toFixed(2).replace('.', ',')}
+                        </p>
+                        {r.proOnly && (
+                          <span style={{ fontSize: '0.55rem', color: 'var(--gold)', background: 'var(--navy)', padding: '2px 6px', borderRadius: '4px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>PRO</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
           </div>
         )}

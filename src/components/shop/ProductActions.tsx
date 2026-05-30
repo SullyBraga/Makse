@@ -94,7 +94,7 @@ export default function ProductActions({ product, variants, basePrice, discountP
       {/* Price */}
       <div>
         {/* Show strikethrough client price when pro user sees pro price */}
-        {isPro && selectedVariant?.pricePro != null && (
+        {isPro && selectedVariant?.pricePro != null && !product.proOnly && (
           <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.1rem' }}>
             <span style={{ fontSize: '0.6rem', background: '#ede9fe', color: '#7c3aed', padding: '1px 6px', borderRadius: '99px', fontWeight: 600, marginRight: '0.4rem' }}>PRO</span>
             Preço público: R$ {originalClientPrice.toFixed(2).replace('.', ',')}
