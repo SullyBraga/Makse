@@ -96,6 +96,20 @@ export async function POST(req: NextRequest) {
             ? String(p.relatedProducts).split(/[;,]/).map((s: string) => s.trim()).filter(Boolean)
             : []
 
+        let price = p.price != null && !isNaN(parseFloat(String(p.price))) ? parseFloat(String(p.price)) : null
+        const pricePro = p.pricePro != null && !isNaN(parseFloat(String(p.pricePro))) ? parseFloat(String(p.pricePro)) : null
+        const priceProDesc = p.priceProDesc != null && !isNaN(parseFloat(String(p.priceProDesc))) ? parseFloat(String(p.priceProDesc)) : null
+        const priceVendedor = p.priceVendedor != null && !isNaN(parseFloat(String(p.priceVendedor))) ? parseFloat(String(p.priceVendedor)) : null
+
+        let proOnly = parseBoolean(p.proOnly)
+        if (price === null && pricePro !== null) {
+          proOnly = true
+        }
+
+        if (proOnly && price === null) {
+          price = 0
+        }
+
         return {
           row: p.row || (i + 2),
           name: String(p.name || '').trim(),
@@ -108,18 +122,18 @@ export async function POST(req: NextRequest) {
           ingredients: p.ingredients || null,
           usage: p.usage || null,
           relatedProducts: relRaw,
-          price: p.price != null && !isNaN(parseFloat(String(p.price))) ? parseFloat(String(p.price)) : null,
-          pricePro: p.pricePro != null && !isNaN(parseFloat(String(p.pricePro))) ? parseFloat(String(p.pricePro)) : null,
-          priceProDesc: p.priceProDesc != null && !isNaN(parseFloat(String(p.priceProDesc))) ? parseFloat(String(p.priceProDesc)) : null,
-          priceVendedor: p.priceVendedor != null && !isNaN(parseFloat(String(p.priceVendedor))) ? parseFloat(String(p.priceVendedor)) : null,
+          price,
+          pricePro,
+          priceProDesc,
+          priceVendedor,
           stock: parseInt(String(p.stock || '0')) || 0,
-          proOnly: parseBoolean(p.proOnly),
+          proOnly,
           featured: p.featured === true,
           active: p.active !== false,
           isDuplicate: false,
           error: !String(p.name || '').trim()
             ? 'Nome obrigatório'
-            : p.price == null || isNaN(parseFloat(String(p.price)))
+            : (price === null && !proOnly)
             ? 'Preço (Cliente Final) inválido'
             : null,
         }
@@ -181,6 +195,21 @@ export async function POST(req: NextRequest) {
           ? relRaw.split(/[;,]/).map((s: string) => s.trim()).filter(Boolean)
           : []
 
+        const pricePro = parsePrice(row.preco_pro)
+        const priceProDesc = parsePrice(row.preco_pro_desc)
+        const priceVendedor = parsePrice(row.preco_vendedor)
+
+        // Automatically set proOnly to true if price is null/empty but pricePro is present!
+        let proOnly = parseBoolean(row.proOnly)
+        if (price === null && pricePro !== null) {
+          proOnly = true
+        }
+
+        // If it is professional-only and final price is not defined, default to 0 to satisfy DB schema
+        if (proOnly && price === null) {
+          price = 0
+        }
+
         return {
           row: i + 2,
           name: String(row.nome || '').trim(),
@@ -194,17 +223,17 @@ export async function POST(req: NextRequest) {
           usage: String(row.indicacao || '').trim() || null,
           relatedProducts,
           price,
-          pricePro: parsePrice(row.preco_pro),
-          priceProDesc: parsePrice(row.preco_pro_desc),
-          priceVendedor: parsePrice(row.preco_vendedor),
+          pricePro,
+          priceProDesc,
+          priceVendedor,
           stock: parseInt(String(row.estoque || '0')) || 0,
-          proOnly: parseBoolean(row.proOnly),
+          proOnly,
           featured: false,
           active: true,
           isDuplicate: false,
           error: !String(row.nome || '').trim()
             ? 'Nome obrigatório'
-            : price === null
+            : (price === null && !proOnly) // final price is mandatory only if NOT proOnly
             ? 'Preço (Cliente Final) inválido'
             : null,
         }
