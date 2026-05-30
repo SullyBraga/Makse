@@ -18,6 +18,7 @@ const COLUMNS = [
   { col: 'Preço Para Profissional',                         req: false, desc: 'Preço padrão para cabeleireiros' },
   { col: 'Preço de Desconto para Profissional',             req: false, desc: 'Preço promocional para profissionais' },
   { col: 'Preço para Vendedor/Representante/Distribuidor',  req: false, desc: 'Preço de atacado' },
+  { col: 'Exclusivo Profissional',                          req: false, desc: 'Preencher com "Sim" para tornar o produto visível apenas para profissionais' },
 ]
 
 

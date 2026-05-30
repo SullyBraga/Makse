@@ -4,14 +4,83 @@ import { ArrowRight } from 'lucide-react'
 const C = { maxWidth:'72rem', margin:'0 auto', padding:'0 2rem' } as React.CSSProperties
 
 const lines = [
-  { slug:'crystal', name:'Linha Crystal', subtitle:'O Segredo da Loira Perfeita', desc:'Descoloração precisa, matização intensa e proteção máxima da fibra. Criada para profissionais que não aceitam menos que o resultado perfeito em cada processo de iluminação.', bg:'#fff1f2' },
-  { slug:'diamond', name:'Linha Diamond', subtitle:'Liso, Espelhado & Elegante', desc:'Transformação plena com disciplina e brilho intenso. Para fios que exigem controle absoluto sem abrir mão da saúde capilar.', bg:'#fff8f8' },
-  { slug:'perfect-repair', name:'Perfect Repair', subtitle:'Reconstrução de Alto Impacto', desc:'O sistema mais completo de reconstrução capilar do mercado. Repara, sela e protege cada fio — do córtex à cutícula.', bg:'#fff1f2' },
-  { slug:'bora-extrato', name:'Borá Extrato', subtitle:'Poder da Natureza Concentrado', desc:'Extratos botânicos de alta performance para tratamentos nutritivos e regeneradores que respeitam a natureza dos fios.', bg:'#fff8f8' },
-  { slug:'mr-detox', name:'Mr. Detox', subtitle:'Limpeza Profunda & Renovação', desc:'Remove resíduos de produto, excesso de oleosidade e impurezas sem agredir o couro cabeludo.', bg:'#fff1f2' },
-  { slug:'makse-ox', name:'Makse Ox', subtitle:'Oxidantes de Precisão', desc:'Oxidantes formulados para garantir coloração uniforme, cobertura total de brancos e máxima proteção durante processos químicos.', bg:'#fff8f8' },
-  { slug:'meus-cachos', name:'Meus Cachos', subtitle:'Definição & Hidratação', desc:'Linha desenvolvida para potencializar e celebrar a beleza dos cachos — do tipo 2 ao 4. Definição real, sem ressecamento.', bg:'#fff1f2' },
-  { slug:'finalizacao', name:'Finalização', subtitle:'O Toque Final Perfeito', desc:'Protetores térmicos, óleos finalizadores e cremes para finalização que garantem o resultado do salão em casa.', bg:'#fff8f8' },
+  {
+    slug: 'diamond',
+    name: 'Linha Diamond',
+    subtitle: 'Purificação e Alinhamento Luxuoso dos Fios',
+    desc: 'Esta linha é voltada para o preparo e alisamento capilar. Ela inicia com uma limpeza profunda que purifica o couro cabeludo, remove resíduos e controla a oleosidade sem ressecar. Em seguida, os retexturizadores promovem um alinhamento capilar de alto padrão, redução drástica de frizz, proteção térmica e brilho espelhado deslumbrante, mantendo o movimento natural dos fios e oferecendo matização específica para os tons loiros.',
+    bg: '#fff8f8'
+  },
+  {
+    slug: 'mk-detox',
+    name: 'Linha MK Detox',
+    subtitle: 'Desintoxicação Profunda e Renovação Capilar',
+    desc: 'Desenvolvida para remover metais pesados, poluentes e acúmulos químicos que opacam e prejudicam a saúde capilar. Promove uma desintoxicação profunda da fibra e do couro cabeludo, restaurando a leveza, a maciez e o brilho dos fios, além de deixar o ambiente capilar totalmente saudável e preparado para absorver novos nutrientes.',
+    bg: '#fff1f2'
+  },
+  {
+    slug: 'perfect-repair',
+    name: 'Linha Perfect Repair',
+    subtitle: 'Reparação Intensiva e Fortalecimento Estrutural',
+    desc: 'A solução ideal para fios severamente danificados, quebradiços e com porosidade química. Atua diretamente no córtex e na cutícula do cabelo, repondo a massa perdida, restaurando as pontes capilares e devolvendo a resistência e a elasticidade desde a lavagem. Além disso, sela as cutículas e blinda os fios contra o calor de ferramentas térmicas e agressões externas.',
+    bg: '#fff8f8'
+  },
+  {
+    slug: 'hidrosystem',
+    name: 'Linha HidroSystem',
+    subtitle: 'Hidratação Profunda e Nutrição Lipídica',
+    desc: 'Destinada a combater o ressecamento crônico através da combinação rica de óleos nobres de Argan, Amêndoas e Quinoa. Limpa suavemente enquanto trata os fios, garantindo uma dose exata de emoliência e retenção hídrica perfeita dentro da fibra. O resultado são cabelos extremamente macios, iluminados, super maleáveis e livres de frizz.',
+    bg: '#fff1f2'
+  },
+  {
+    slug: 'nutribalance',
+    name: 'Linha NutriBalance',
+    subtitle: 'Nutrição de Alta Performance e Leveza',
+    desc: 'Desenvolvida para cabelos sedentos que precisam de reposição rápida de lipídios sem pesar na raiz. Restaura a barreira protetora do cabelo através de ativos como Manteiga de Cupuaçu e Ceramidas, enquanto previne a quebra e traz uma potente ação antioxidante. Proporciona vitalidade, brilho radiante e um toque aveludado com movimento solto.',
+    bg: '#fff8f8'
+  },
+  {
+    slug: 'crystal',
+    name: 'Linha Crystal',
+    subtitle: 'Clareamento Seguro e Matização Premium',
+    desc: 'Voltada exclusivamente para as necessidades dos cabelos loiros e processos de descoloração. Garante a abertura de tons com máxima segurança, protegendo a elasticidade e a estrutura da fibra capilar para evitar a quebra durante o clareamento. Também atua na neutralização de oxidações e tons amarelados indesejados, promovendo um loiro platinado iluminado, uniforme e altamente revitalizado.',
+    bg: '#fff1f2'
+  },
+  {
+    slug: 'makse-ox',
+    name: 'Makse OX',
+    subtitle: 'Revelação de Cor com Proteção Estrutural',
+    desc: 'Linha de águas oxigenadas com fórmula estabilizada e enriquecida para preservar a integridade da fibra capilar durante os processos químicos de descoloração e coloração. Garante cores vibrantes, uniformes e duradouras enquanto mantém os fios altamente protegidos.',
+    bg: '#fff8f8'
+  },
+  {
+    slug: 'meus-cachos',
+    name: 'Linha Meus Cachos',
+    subtitle: 'Modelagem Perfeita e Nutrição de Alta Durabilidade',
+    desc: 'Criada para atender às necessidades específicas dos cabelos crespos e cacheados, fortalecendo os fios curvos e selando suas cutículas. Retém a umidade natural do cabelo, controla o volume e disciplina o frizz, garantindo alta fixação com flexibilidade. Proporciona cachos perfeitamente modelados, macios e com brilho espelhado, assegurando day afters incríveis sem aspect rígido.',
+    bg: '#fff1f2'
+  },
+  {
+    slug: 'finish',
+    name: 'Linha Finish',
+    subtitle: 'Finalização de Luxo e Proteção Diária',
+    desc: 'Composta por finalizadores e óleos de alta performance que oferecem um toque de puro luxo e manutenção diária. Nutre instantaneamente, sela pontas duplas, elimina o frizz e facilita o desembaraço sem pesar nos fios. Cria uma barreira protetora completa contra o calor excessivo de secadores e chapinhas, além de defender o cabelo contra agressões ambientais.',
+    bg: '#fff8f8'
+  },
+  {
+    slug: 'essence',
+    name: 'Linha Essence',
+    subtitle: 'Perfumaria Capilar Premium e Sofisticação',
+    desc: 'A assinatura final de elegância para o cuidado diário dos cabelos. Desenvolvida para neutralizar odores indesejados do cotidiano, como fumaça e poluição, deixando um rastro de fragrância premium de alta durabilidade. Além de perfumar, proporciona brilho extra e toque sedoso para selar qualquer visual.',
+    bg: '#fff1f2'
+  },
+  {
+    slug: 'bioforce',
+    name: 'Linha BioForce',
+    subtitle: 'Regeneração Capilar e Blindagem Anti-Quebra',
+    desc: 'Uma linha de reconstrução pós-química desenvolvida para restaurar cabelos severamente fragilizados e sensibilizados. Auxilia no crescimento saudável e melhora a elasticidade da fibra capilar. Através da tecnologia Anti-Breaking e 20X Defense, cria uma blindagem estrutural sobre os fios, reduzindo drasticamente a quebra e protegendo contra agressões mecânicas, térmicas e ambientais.',
+    bg: '#fff8f8'
+  }
 ]
 
 export default function LinhasPage() {

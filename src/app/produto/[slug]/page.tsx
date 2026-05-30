@@ -194,13 +194,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   </div>
                 </div>
               )}
-              {(product.weight || product.productType || product.sku) && (
+              {(product.weight || product.productType) && (
                 <div style={{ display: 'flex', gap: '0.875rem', padding: '1rem 1.25rem' }}>
                   <Ruler size={16} style={{ color: 'var(--gold)', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <p style={{ fontSize: '0.62rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.2rem' }}>Especificações</p>
                     <p style={{ fontSize: '0.82rem', color: 'var(--navy)', lineHeight: 1.5 }}>
-                      {[product.weight && `Volume: ${product.weight}`, product.productType && `Tipo: ${product.productType}`, product.sku && `SKU: ${product.sku}`].filter(Boolean).join(' | ')}
+                      {[product.weight && `Volume: ${product.weight}`, product.productType && `Tipo: ${product.productType}`].filter(Boolean).join(' | ')}
                     </p>
                   </div>
                 </div>

@@ -13,6 +13,12 @@ function toSlug(str: string) {
   return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 
+function parseBoolean(val: any): boolean {
+  if (!val) return false
+  const s = String(val).toLowerCase().trim()
+  return s === 'true' || s === 'sim' || s === 'yes' || s === '1' || s === 's' || s === 'x'
+}
+
 // Nomes EXATOS das colunas da planilha do cliente
 // A normalização converte acentos + espaços para snake_case para o lookup
 const EXACT_HEADERS = [
@@ -30,25 +36,29 @@ const EXACT_HEADERS = [
   'Preço Para Profissional',
   'Preço de Desconto para Profissional',
   'Preço para Vendedor/Representante/Distribuidor',
-]
-
-// Mapeamento: chave normalizada → campo interno
-const COL_MAP: Record<string, string> = {
-  'linha':                                         'linha',
-  'nome_do_produto':                               'nome',
-  'sku':                                           'sku',
-  'quantidade':                                    'gramatura',      // peso/volume (500g, 1L)
-  'ativos':                                        'ingredientes',
-  'tipo_de_produto':                               'tipo',
-  'indicacao_de_uso':                              'indicacao',
-  'descricao':                                     'descricao',
-  'produtos_relacionados':                         'produtos_relacionados',
-  'quantidade_em_estoque':                         'estoque',
-  'preco_para_cliente_final':                      'preco',
-  'preco_para_profissional':                       'preco_pro',
-  'preco_de_desconto_para_profissional':           'preco_pro_desc',
-  'preco_para_vendedor/representante/distribuidor':'preco_vendedor',
-}
+  'Exclusivo Profissional',
+ ]
+ 
+ // Mapeamento: chave normalizada → campo interno
+ const COL_MAP: Record<string, string> = {
+   'linha':                                         'linha',
+   'nome_do_produto':                               'nome',
+   'sku':                                           'sku',
+   'quantidade':                                    'gramatura',      // peso/volume (500g, 1L)
+   'ativos':                                        'ingredientes',
+   'tipo_de_produto':                               'tipo',
+   'indicacao_de_uso':                              'indicacao',
+   'descricao':                                     'descricao',
+   'produtos_relacionados':                         'produtos_relacionados',
+   'quantidade_em_estoque':                         'estoque',
+   'preco_para_cliente_final':                      'preco',
+   'preco_para_profissional':                       'preco_pro',
+   'preco_de_desconto_para_profissional':           'preco_pro_desc',
+   'preco_para_vendedor/representante/distribuidor':'preco_vendedor',
+   'exclusivo_profissional':                        'proOnly',
+   'profissional':                                  'proOnly',
+   'exclusivo_para_profissionais':                  'proOnly',
+ }
 
 function normalizeKey(key: string): string {
   return key
@@ -103,7 +113,7 @@ export async function POST(req: NextRequest) {
           priceProDesc: p.priceProDesc != null && !isNaN(parseFloat(String(p.priceProDesc))) ? parseFloat(String(p.priceProDesc)) : null,
           priceVendedor: p.priceVendedor != null && !isNaN(parseFloat(String(p.priceVendedor))) ? parseFloat(String(p.priceVendedor)) : null,
           stock: parseInt(String(p.stock || '0')) || 0,
-          proOnly: p.proOnly === true,
+          proOnly: parseBoolean(p.proOnly),
           featured: p.featured === true,
           active: p.active !== false,
           isDuplicate: false,
@@ -188,7 +198,7 @@ export async function POST(req: NextRequest) {
           priceProDesc: parsePrice(row.preco_pro_desc),
           priceVendedor: parsePrice(row.preco_vendedor),
           stock: parseInt(String(row.estoque || '0')) || 0,
-          proOnly: false,
+          proOnly: parseBoolean(row.proOnly),
           featured: false,
           active: true,
           isDuplicate: false,
@@ -465,6 +475,60 @@ export async function POST(req: NextRequest) {
 
     let importedProducts: { id: string; name: string; slug: string; sku: string | null }[] = []
     if (valid.length > 0) {
+      // 1. Buscar todos os produtos do banco (incluindo os recém-criados) para obter o mapeamento Nome/SKU -> ID
+      const allDbProducts = await prisma.product.findMany({
+        select: { id: true, name: true, sku: true }
+      })
+
+      const nameToId: Record<string, string> = {}
+      const skuToId: Record<string, string> = {}
+
+      for (const p of allDbProducts) {
+        nameToId[p.name.toLowerCase().trim()] = p.id
+        if (p.sku) {
+          skuToId[p.sku.toLowerCase().trim()] = p.id
+        }
+      }
+
+      // 2. Para cada produto importado que possua relacionados, resolver para IDs e atualizar no banco
+      const updatePromises = []
+      for (const p of valid) {
+        if (p.relatedProducts && p.relatedProducts.length > 0) {
+          const resolvedIds = p.relatedProducts
+            .map((nameOrSku: string) => {
+              const clean = nameOrSku.toLowerCase().trim()
+              return skuToId[clean] || nameToId[clean] || null
+            })
+            .filter((id: string | null): id is string => !!id)
+
+          if (resolvedIds.length > 0) {
+            // Encontra o ID do produto que foi criado/atualizado
+            const cleanName = p.name.toLowerCase().trim()
+            const productId = p.sku 
+              ? (skuToId[p.sku.toLowerCase().trim()] || nameToId[cleanName])
+              : nameToId[cleanName]
+
+            if (productId) {
+              updatePromises.push(
+                prisma.product.update({
+                  where: { id: productId },
+                  data: { relatedProducts: resolvedIds }
+                })
+              )
+            }
+          }
+        }
+      }
+
+      if (updatePromises.length > 0) {
+        try {
+          await Promise.all(updatePromises)
+          console.log(`[products/import] Sucesso ao resolver e associar ${updatePromises.length} produtos relacionados!`)
+        } catch (errResolve) {
+          console.error('[products/import] Erro ao resolver produtos relacionados:', errResolve)
+        }
+      }
+
       const slugs = valid.map(p => toSlug(p.name))
       const skus = valid.map(p => p.sku).filter(Boolean) as string[]
       importedProducts = await prisma.product.findMany({
