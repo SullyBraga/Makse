@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { writeFile, mkdir, unlink } from 'fs/promises'
+import { saveUploadedFile, deleteUploadedFile } from '@/lib/upload'
 import path from 'path'
 
 async function requireAdmin() {
@@ -25,18 +25,11 @@ export async function POST(req: NextRequest) {
     const product = await prisma.product.findFirst({ where: { id: productId } })
     if (!product) return NextResponse.json({ error: 'Produto não encontrado' }, { status: 404 })
 
-    // Save file to public/uploads/products/{productId}/
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'products', productId)
-    await mkdir(uploadDir, { recursive: true })
-
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
     const filename = `${Date.now()}.${ext}`
-    const filepath = path.join(uploadDir, filename)
-
-    const buffer = Buffer.from(await file.arrayBuffer())
-    await writeFile(filepath, buffer)
-
-    const imageUrl = `/uploads/products/${productId}/${filename}`
+    
+    // Save image persistently using helper
+    const imageUrl = await saveUploadedFile(file, `products/${productId}`, filename)
 
     // Add to product images array
     const updated = await prisma.product.update({
@@ -63,13 +56,8 @@ export async function DELETE(req: NextRequest) {
     const product = await prisma.product.findFirst({ where: { id: productId } })
     if (!product) return NextResponse.json({ error: 'Produto não encontrado' }, { status: 404 })
 
-    // Remove file from disk
-    try {
-      const filepath = path.join(process.cwd(), 'public', imageUrl)
-      await unlink(filepath)
-    } catch {
-      // File may not exist, ignore
-    }
+    // Remove file persistently using helper
+    await deleteUploadedFile(imageUrl)
 
     const updated = await prisma.product.update({
       where: { id: productId },

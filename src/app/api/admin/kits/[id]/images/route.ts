@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { writeFile, mkdir, unlink } from 'fs/promises'
+import { saveUploadedFile, deleteUploadedFile } from '@/lib/upload'
 import path from 'path'
 
 async function requireAdmin() {
@@ -26,17 +26,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const kit = await prisma.kit.findUnique({ where: { id } })
     if (!kit) return NextResponse.json({ error: 'Kit não encontrado' }, { status: 404 })
 
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'kits', id)
-    await mkdir(uploadDir, { recursive: true })
-
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
     const filename = `${Date.now()}.${ext}`
-    const filepath = path.join(uploadDir, filename)
 
-    const buffer = Buffer.from(await file.arrayBuffer())
-    await writeFile(filepath, buffer)
-
-    const imageUrl = `/uploads/kits/${id}/${filename}`
+    // Save image persistently using helper
+    const imageUrl = await saveUploadedFile(file, `kits/${id}`, filename)
 
     const updated = await prisma.kit.update({
       where: { id },
@@ -64,9 +58,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const kit = await prisma.kit.findUnique({ where: { id } })
     if (!kit) return NextResponse.json({ error: 'Kit não encontrado' }, { status: 404 })
 
-    try {
-      await unlink(path.join(process.cwd(), 'public', url))
-    } catch { /* ignore */ }
+    // Remove file persistently using helper
+    await deleteUploadedFile(url)
 
     const updated = await prisma.kit.update({
       where: { id },
