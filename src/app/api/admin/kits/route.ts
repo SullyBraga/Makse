@@ -151,11 +151,40 @@ export async function DELETE(req: NextRequest) {
     const { id } = await req.json()
     if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 })
 
-    await prisma.kitItem.deleteMany({ where: { kitId: id } })
-    await prisma.kit.delete({ where: { id } })
-    return NextResponse.json({ success: true })
+    let deactivated = false
+
+    try {
+      // Tenta excluir permanentemente em transação (itens do kit primeiro, depois o kit)
+      await prisma.$transaction(async (tx) => {
+        await tx.kitItem.deleteMany({ where: { kitId: id } })
+        await tx.kit.delete({ where: { id } })
+      })
+    } catch (err: any) {
+      const isConstraintError = 
+        err.code === 'P2003' || 
+        String(err).includes('foreign key') || 
+        String(err).includes('constraint') || 
+        String(err).includes('P2003')
+
+      if (isConstraintError) {
+        // Se já tiver histórico de vendas, apenas desativa o kit do catálogo
+        await prisma.kit.update({
+          where: { id },
+          data: { active: false },
+        })
+        deactivated = true
+      } else {
+        throw err
+      }
+    }
+
+    return NextResponse.json({ 
+      success: true,
+      message: deactivated ? 'Kit desativado devido a histórico de vendas.' : 'Kit excluído permanentemente.',
+      deactivated
+    })
   } catch (err) {
     console.error('[kits DELETE]', err)
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro interno ao processar exclusão' }, { status: 500 })
   }
 }

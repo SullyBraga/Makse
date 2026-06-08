@@ -168,14 +168,46 @@ export async function DELETE(req: NextRequest) {
 
     const idList = ids && Array.isArray(ids) ? ids : [id]
 
-    await prisma.$transaction(async (tx) => {
-      await tx.productVariant.deleteMany({ where: { productId: { in: idList } } })
-      await tx.product.deleteMany({ where: { id: { in: idList } } })
-    })
+    let deleted = 0
+    let deactivated = 0
 
-    return NextResponse.json({ success: true })
+    for (const prodId of idList) {
+      try {
+        // Tenta excluir permanentemente em transação (variantes primeiro, depois o produto)
+        await prisma.$transaction(async (tx) => {
+          await tx.productVariant.deleteMany({ where: { productId: prodId } })
+          await tx.product.delete({ where: { id: prodId } })
+        })
+        deleted++
+      } catch (err: any) {
+        // Se falhar devido a chave estrangeira (P2003) ou outro erro de relacionamento, desativa o produto
+        const isConstraintError = 
+          err.code === 'P2003' || 
+          String(err).includes('foreign key') || 
+          String(err).includes('constraint') || 
+          String(err).includes('P2003')
+
+        if (isConstraintError) {
+          await prisma.product.update({
+            where: { id: prodId },
+            data: { active: false },
+          })
+          deactivated++
+        } else {
+          // Se for outro tipo de erro inesperado, relança
+          throw err
+        }
+      }
+    }
+
+    return NextResponse.json({ 
+      success: true,
+      message: `Exclusão processada. ${deleted} produto(s) excluído(s) permanentemente e ${deactivated} produto(s) desativado(s) devido a histórico de vendas.`,
+      deleted,
+      deactivated
+    })
   } catch (err) {
     console.error('[products DELETE]', err)
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro interno ao processar exclusão' }, { status: 500 })
   }
 }
