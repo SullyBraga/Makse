@@ -11,6 +11,10 @@ function parseProductWeight(weightStr: string | null): number {
   if (cleaned.includes('g') || cleaned.includes('ml')) {
     return num / 1000
   }
+  // Se não possuir unidade (ex: "300" ou "500"), mas for um número de 10 ou mais, assume gramas
+  if (num >= 10) {
+    return num / 1000
+  }
   return num
 }
 
