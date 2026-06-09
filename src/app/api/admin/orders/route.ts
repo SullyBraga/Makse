@@ -27,7 +27,17 @@ export async function PATCH(req: NextRequest) {
     const data: Record<string, any> = { status }
     if (trackingCode !== undefined) data.trackingCode = trackingCode || null
 
-    await prisma.order.update({ where: { id: orderId }, data })
+    const updated = await prisma.order.update({ where: { id: orderId }, data })
+
+    if (updated.status === 'PAGO' && !updated.trackingCode) {
+      try {
+        const { generateShippingLabel } = await import('@/lib/shipping')
+        await generateShippingLabel(orderId)
+      } catch (shipErr) {
+        console.error('[admin/orders PATCH] Erro ao gerar etiqueta de envio:', shipErr)
+      }
+    }
+
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[admin/orders PATCH]', err)

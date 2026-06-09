@@ -25,12 +25,12 @@ export async function POST(req: NextRequest) {
       else if (mpStatus === 'pending' || mpStatus === 'in_process') newStatus = 'AGUARDANDO_PAGAMENTO'
 
       if (newStatus) {
-        await prisma.order.updateMany({
+        await prisma.order.update({
           where: { id: orderId },
           data: { status: newStatus as any },
         })
 
-        // If paid, deduct stock
+        // If paid, deduct stock and generate shipping label
         if (newStatus === 'PAGO') {
           const order = await prisma.order.findUnique({
             where: { id: orderId },
@@ -56,6 +56,14 @@ export async function POST(req: NextRequest) {
                 })
               }
             }
+          }
+
+          // Gerar código de rastreamento automaticamente
+          try {
+            const { generateShippingLabel } = await import('@/lib/shipping')
+            await generateShippingLabel(orderId)
+          } catch (shipErr) {
+            console.error('[mp-webhook] Erro ao gerar etiqueta de envio:', shipErr)
           }
         }
       }

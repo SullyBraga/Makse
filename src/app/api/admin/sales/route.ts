@@ -107,6 +107,14 @@ export async function POST(req: NextRequest) {
       return created
     })
 
+    // Gerar código de rastreamento automaticamente para a venda manual (status é PAGO)
+    try {
+      const { generateShippingLabel } = await import('@/lib/shipping')
+      await generateShippingLabel(order.id)
+    } catch (shipErr) {
+      console.error('[sales POST] Erro ao gerar etiqueta de envio:', shipErr)
+    }
+
     return NextResponse.json(order, { status: 201 })
   } catch (err) {
     console.error('[sales POST]', err)

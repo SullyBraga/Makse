@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ChevronDown, Truck } from 'lucide-react'
 
 const STATUS_OPTIONS = [
@@ -17,6 +18,7 @@ type Props = {
 }
 
 export default function UpdateOrderStatus({ orderId, currentStatus }: Props) {
+  const router = useRouter()
   const [status, setStatus] = useState(currentStatus)
   const [tracking, setTracking] = useState('')
   const [loading, setLoading] = useState(false)
@@ -32,6 +34,7 @@ export default function UpdateOrderStatus({ orderId, currentStatus }: Props) {
         body: JSON.stringify({ orderId, status, trackingCode: tracking || undefined }),
       })
       setSaved(true)
+      router.refresh()
       setTimeout(() => setSaved(false), 2500)
     } finally {
       setLoading(false)

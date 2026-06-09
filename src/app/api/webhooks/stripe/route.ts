@@ -69,6 +69,14 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Gerar código de rastreamento automaticamente
+    try {
+      const { generateShippingLabel } = await import('@/lib/shipping')
+      await generateShippingLabel(order.id)
+    } catch (shipErr) {
+      console.error('[stripe-webhook] Erro ao gerar etiqueta de envio:', shipErr)
+    }
+
     // TODO: Chamar API do Bling para baixa no estoque
     // await updateBlingStock(lineItems.data)
 
