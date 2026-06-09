@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
       return sum + (w * (item.quantity || 1))
     }, 0)
 
+    console.log(`[shipping API] Calculando frete para o CEP ${zipCode}. Itens recebidos:`, JSON.stringify(items), `| Peso total calculado: ${totalWeight} Kg`)
+
     const isInternational = country && country.toLowerCase().trim() !== 'brasil'
 
     if (isInternational) {
