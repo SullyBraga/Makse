@@ -24,10 +24,127 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'Status inválido' }, { status: 400 })
     }
 
+    const orderBefore = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true }
+    })
+
+    if (!orderBefore) {
+      return NextResponse.json({ error: 'Pedido não encontrado' }, { status: 404 })
+    }
+
     const data: Record<string, any> = { status }
     if (trackingCode !== undefined) data.trackingCode = trackingCode || null
 
     const updated = await prisma.order.update({ where: { id: orderId }, data })
+
+    // Controle de estoque baseado nas transições de estado
+    const wasPaid = ['PAGO', 'EM_SEPARACAO', 'ENVIADO', 'ENTREGUE'].includes(orderBefore.status)
+    const isPaid = ['PAGO', 'EM_SEPARACAO', 'ENVIADO', 'ENTREGUE'].includes(status)
+
+    // Caso 1: Passou de não-pago para pago -> Deduzir estoque
+    if (!wasPaid && isPaid) {
+      for (const item of orderBefore.items) {
+        let targetVariantId = item.variantId
+        if (!targetVariantId && item.productId) {
+          const firstVariant = await prisma.productVariant.findFirst({
+            where: { productId: item.productId },
+            orderBy: { id: 'asc' },
+          })
+          if (firstVariant) {
+            targetVariantId = firstVariant.id
+          }
+        }
+
+        if (targetVariantId) {
+          try {
+            await prisma.productVariant.update({
+              where: { id: targetVariantId },
+              data: { stock: { decrement: item.quantity } },
+            })
+          } catch (stockErr) {
+            console.error(`[admin/orders PATCH] Erro ao deduzir estoque para variante ${targetVariantId}:`, stockErr)
+          }
+        } else if (item.kitId) {
+          try {
+            const kitItems = await prisma.kitItem.findMany({ where: { kitId: item.kitId } })
+            for (const ki of kitItems) {
+              let targetKitVariantId = ki.variantId
+              if (!targetKitVariantId && ki.productId) {
+                const firstVar = await prisma.productVariant.findFirst({
+                  where: { productId: ki.productId },
+                  orderBy: { id: 'asc' },
+                })
+                if (firstVar) {
+                  targetKitVariantId = firstVar.id
+                }
+              }
+
+              if (targetKitVariantId) {
+                await prisma.productVariant.update({
+                  where: { id: targetKitVariantId },
+                  data: { stock: { decrement: ki.quantity * item.quantity } },
+                })
+              }
+            }
+          } catch (kitStockErr) {
+            console.error(`[admin/orders PATCH] Erro ao deduzir estoque de kit ${item.kitId}:`, kitStockErr)
+          }
+        }
+      }
+    }
+
+    // Caso 2: Passou de pago para CANCELADO -> Devolver estoque
+    if (wasPaid && status === 'CANCELADO') {
+      for (const item of orderBefore.items) {
+        let targetVariantId = item.variantId
+        if (!targetVariantId && item.productId) {
+          const firstVariant = await prisma.productVariant.findFirst({
+            where: { productId: item.productId },
+            orderBy: { id: 'asc' },
+          })
+          if (firstVariant) {
+            targetVariantId = firstVariant.id
+          }
+        }
+
+        if (targetVariantId) {
+          try {
+            await prisma.productVariant.update({
+              where: { id: targetVariantId },
+              data: { stock: { increment: item.quantity } },
+            })
+          } catch (stockErr) {
+            console.error(`[admin/orders PATCH] Erro ao devolver estoque para variante ${targetVariantId}:`, stockErr)
+          }
+        } else if (item.kitId) {
+          try {
+            const kitItems = await prisma.kitItem.findMany({ where: { kitId: item.kitId } })
+            for (const ki of kitItems) {
+              let targetKitVariantId = ki.variantId
+              if (!targetKitVariantId && ki.productId) {
+                const firstVar = await prisma.productVariant.findFirst({
+                  where: { productId: ki.productId },
+                  orderBy: { id: 'asc' },
+                })
+                if (firstVar) {
+                  targetKitVariantId = firstVar.id
+                }
+              }
+
+              if (targetKitVariantId) {
+                await prisma.productVariant.update({
+                  where: { id: targetKitVariantId },
+                  data: { stock: { increment: ki.quantity * item.quantity } },
+                })
+              }
+            }
+          } catch (kitStockErr) {
+            console.error(`[admin/orders PATCH] Erro ao devolver estoque de kit ${item.kitId}:`, kitStockErr)
+          }
+        }
+      }
+    }
 
     if (updated.status === 'PAGO' && !updated.trackingCode) {
       try {

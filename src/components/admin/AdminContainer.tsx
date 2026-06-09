@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { LayoutDashboard, ShoppingBag, Users, Boxes, Package, Scissors, Layers, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -26,9 +27,18 @@ export default function AdminContainer({
   adminName: string
   adminInitial: string
 }) {
+  const pathname = usePathname()
+  const router = useRouter()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [mounted, setMounted] = useState(false)
   const isVendedor = role === 'VENDEDOR'
+
+  // Restringe vendedores à página de vendas
+  useEffect(() => {
+    if (isVendedor && pathname.startsWith('/admin') && pathname !== '/admin/vendas') {
+      router.replace('/admin/vendas')
+    }
+  }, [isVendedor, pathname, router])
 
   // Garante a montagem inicial no cliente e lê o localStorage
   useEffect(() => {

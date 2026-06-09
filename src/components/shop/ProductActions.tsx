@@ -6,7 +6,7 @@ import { useCartStore } from '@/store/cartStore'
 type Variant = { id: string; label: string; price: number; pricePro: number | null; priceVendedor: number | null; stock: number }
 
 type Props = {
-  product: { id: string; name: string; slug: string; proOnly: boolean }
+  product: { id: string; name: string; slug: string; proOnly: boolean; weight?: string | null }
   variants: Variant[]
   basePrice: number
   discountPct: number
@@ -79,9 +79,40 @@ export default function ProductActions({ product, variants, basePrice, discountP
     const cleaned = cep.replace(/\D/g, '')
     if (cleaned.length !== 8) return
     setCalcLoading(true)
-    await new Promise(r => setTimeout(r, 900))
-    setShipping('Frete Grátis · Entrega em 3–7 dias úteis')
-    setCalcLoading(false)
+    setShipping(null)
+    try {
+      const res = await fetch('/api/shipping', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          zipCode: cleaned,
+          items: [{
+            productId: product.id,
+            quantity: qty,
+            weight: product.weight || null
+          }]
+        })
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        if (Array.isArray(data) && data.length > 0) {
+          const formatted = data
+            .map((o: any) => `${o.name.replace('Correios ', '')}: R$ ${o.price.toFixed(2).replace('.', ',')} (${o.deliveryTime})`)
+            .join(' · ')
+          setShipping(formatted)
+        } else {
+          setShipping('Não disponível para este CEP')
+        }
+      } else {
+        setShipping('Erro ao calcular frete')
+      }
+    } catch (err) {
+      console.error('[calcShipping]', err)
+      setShipping('Erro ao calcular frete')
+    } finally {
+      setCalcLoading(false)
+    }
   }
 
   const formatCep = (v: string) =>
