@@ -38,9 +38,20 @@ export async function POST(req: NextRequest) {
           })
           if (order) {
             for (const item of order.items) {
-              if (item.variantId) {
+              let targetVariantId = item.variantId
+              if (!targetVariantId && item.productId) {
+                const firstVariant = await prisma.productVariant.findFirst({
+                  where: { productId: item.productId },
+                  orderBy: { id: 'asc' },
+                })
+                if (firstVariant) {
+                  targetVariantId = firstVariant.id
+                }
+              }
+
+              if (targetVariantId) {
                 await prisma.productVariant.update({
-                  where: { id: item.variantId },
+                  where: { id: targetVariantId },
                   data: { stock: { decrement: item.quantity } },
                 })
               }

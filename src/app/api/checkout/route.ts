@@ -21,7 +21,10 @@ export async function POST(req: NextRequest) {
 
     // Buscar produtos e calcular preços no backend (NUNCA confiar no frontend)
     const productIds = items.map((i: any) => i.productId)
-    const products = await prisma.product.findMany({ where: { id: { in: productIds }, active: true } })
+    const products = await prisma.product.findMany({
+      where: { id: { in: productIds }, active: true },
+      include: { variants: true }
+    })
 
     const discountPct = user.discountTable?.percentage ?? 0
 
@@ -34,12 +37,40 @@ export async function POST(req: NextRequest) {
         throw new Error(`Produto restrito: ${product.name}`)
       }
 
-      const unitPrice = product.price * (1 - discountPct / 100)
+      let basePrice = product.price
+      let selectedVariantId = item.variantId || null
+
+      if (item.variantId) {
+        const variant = product.variants.find(v => v.id === item.variantId)
+        if (variant) {
+          if (user.role === 'CABELEIREIRA' || user.role === 'ADMIN') {
+            basePrice = variant.pricePro ?? variant.price
+          } else if (user.role === 'VENDEDOR') {
+            basePrice = variant.priceVendedor ?? variant.price
+          } else {
+            basePrice = variant.price
+          }
+        }
+      } else {
+        if (user.role === 'CABELEIREIRA' || user.role === 'ADMIN') {
+          basePrice = product.pricePro ?? product.price
+        } else if (user.role === 'VENDEDOR') {
+          basePrice = product.priceVendedor ?? product.price
+        }
+      }
+
+      const unitPrice = basePrice * (1 - discountPct / 100)
 
       return {
         price_data: {
           currency: 'brl',
-          product_data: { name: product.name },
+          product_data: {
+            name: product.name,
+            metadata: {
+              productId: product.id,
+              variantId: selectedVariantId || '',
+            }
+          },
           unit_amount: Math.round(unitPrice * 100),
         },
         quantity: item.quantity,

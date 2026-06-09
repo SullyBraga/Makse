@@ -154,6 +154,7 @@ model Address {
   city       String
   state      String
   zipCode    String
+  country    String  @default("Brasil")
   orders     Order[]
 }
 
@@ -165,6 +166,8 @@ model Order {
   sellerId         String?
   status           OrderStatus @default(AGUARDANDO_PAGAMENTO)
   total            Float
+  shippingPrice    Float       @default(0)
+  shippingMethod   String?
   address          Address?    @relation(fields: [addressId], references: [id])
   addressId        String?
   stripeSessionId  String?

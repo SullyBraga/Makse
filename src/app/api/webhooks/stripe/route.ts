@@ -22,22 +22,52 @@ export async function POST(req: NextRequest) {
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { expand: ['data.price.product'] })
 
     // Criar pedido no banco
-    await prisma.order.create({
+    const order = await prisma.order.create({
       data: {
         userId,
-        addressId: addressId || userId, // fallback temporário
+        addressId: addressId || null,
         status: 'PAGO',
         total: (session.amount_total ?? 0) / 100,
         stripeSessionId: session.id,
         items: {
-          create: lineItems.data.map(item => ({
-            productId: (item.price?.product as any)?.metadata?.productId ?? userId,
-            quantity: item.quantity ?? 1,
-            unitPrice: (item.price?.unit_amount ?? 0) / 100,
-          }))
+          create: lineItems.data.map(item => {
+            const prodMetadata = (item.price?.product as any)?.metadata || {}
+            return {
+              productId: prodMetadata.productId || null,
+              variantId: prodMetadata.variantId || null,
+              quantity: item.quantity ?? 1,
+              unitPrice: (item.price?.unit_amount ?? 0) / 100,
+            }
+          })
+        }
+      },
+      include: { items: true }
+    })
+
+    // Reduzir estoque dos produtos
+    for (const item of order.items) {
+      let targetVariantId = item.variantId
+      if (!targetVariantId && item.productId) {
+        const firstVariant = await prisma.productVariant.findFirst({
+          where: { productId: item.productId },
+          orderBy: { id: 'asc' }
+        })
+        if (firstVariant) {
+          targetVariantId = firstVariant.id
         }
       }
-    })
+
+      if (targetVariantId) {
+        try {
+          await prisma.productVariant.update({
+            where: { id: targetVariantId },
+            data: { stock: { decrement: item.quantity } }
+          })
+        } catch (stockErr) {
+          console.error(`[stripe-webhook] Erro ao deduzir estoque para a variante ${targetVariantId}:`, stockErr)
+        }
+      }
+    }
 
     // TODO: Chamar API do Bling para baixa no estoque
     // await updateBlingStock(lineItems.data)

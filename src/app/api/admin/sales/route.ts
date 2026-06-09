@@ -63,18 +63,40 @@ export async function POST(req: NextRequest) {
 
       // Deduct stock for each item
       for (const item of items) {
-        if (item.variantId) {
+        let targetVariantId = item.variantId
+        if (!targetVariantId && item.productId) {
+          const firstVariant = await tx.productVariant.findFirst({
+            where: { productId: item.productId },
+            orderBy: { id: 'asc' },
+          })
+          if (firstVariant) {
+            targetVariantId = firstVariant.id
+          }
+        }
+
+        if (targetVariantId) {
           await tx.productVariant.update({
-            where: { id: item.variantId },
+            where: { id: targetVariantId },
             data: { stock: { decrement: parseInt(item.quantity) } },
           })
         } else if (item.kitId) {
           // Deduct stock for each product in the kit
           const kitItems = await tx.kitItem.findMany({ where: { kitId: item.kitId } })
           for (const ki of kitItems) {
-            if (ki.variantId) {
+            let targetKitVariantId = ki.variantId
+            if (!targetKitVariantId && ki.productId) {
+              const firstVar = await tx.productVariant.findFirst({
+                where: { productId: ki.productId },
+                orderBy: { id: 'asc' },
+              })
+              if (firstVar) {
+                targetKitVariantId = firstVar.id
+              }
+            }
+
+            if (targetKitVariantId) {
               await tx.productVariant.update({
-                where: { id: ki.variantId },
+                where: { id: targetKitVariantId },
                 data: { stock: { decrement: ki.quantity * parseInt(item.quantity) } },
               })
             }

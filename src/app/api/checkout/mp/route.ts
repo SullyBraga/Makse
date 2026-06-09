@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
   try {
-    const { items } = await req.json()
+    const { items, addressId, shippingPrice, shippingMethod } = await req.json()
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'Carrinho vazio' }, { status: 400 })
     }
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
     const isPro = role === 'CABELEIREIRA' && discountPct > 0
 
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+    const shipPrice = parseFloat(shippingPrice) || 0
 
     // Build MP items
     const mpItems = items.map((i: any) => ({
@@ -35,6 +36,16 @@ export async function POST(req: NextRequest) {
       currency_id: 'BRL',
     }))
 
+    if (shipPrice > 0) {
+      mpItems.push({
+        id: 'shipping',
+        title: `Frete: ${shippingMethod || 'Envio Correios'}`,
+        quantity: 1,
+        unit_price: parseFloat(shipPrice.toFixed(2)),
+        currency_id: 'BRL',
+      })
+    }
+
     const total = mpItems.reduce((s: number, i: any) => s + i.unit_price * i.quantity, 0)
 
     // Create order in DB as AGUARDANDO_PAGAMENTO
@@ -43,6 +54,9 @@ export async function POST(req: NextRequest) {
         userId,
         status: 'AGUARDANDO_PAGAMENTO',
         total,
+        shippingPrice: shipPrice,
+        shippingMethod: shippingMethod || null,
+        addressId: addressId || null,
         paymentMethod: 'MP',
         items: {
           create: items.map((i: any) => ({
