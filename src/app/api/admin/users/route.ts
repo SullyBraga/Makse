@@ -35,7 +35,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (action === 'changeRole') {
-      const validRoles = ['ADMIN', 'CABELEIREIRA', 'CLIENTE_FINAL', 'PENDENTE']
+      const validRoles = ['ADMIN', 'CABELEIREIRA', 'CLIENTE_FINAL', 'PENDENTE', 'VENDEDOR']
       if (!role || !validRoles.includes(role)) {
         return NextResponse.json({ error: 'Role inválida' }, { status: 400 })
       }

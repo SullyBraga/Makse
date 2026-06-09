@@ -66,14 +66,23 @@ export default function UserActions({
     if (role === currentRole || loading) return
     setLoading('role')
     try {
-      await fetch('/api/admin/users', {
+      const res = await fetch('/api/admin/users', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, action: 'changeRole', role }),
       })
-      setSaved('role')
-      setTimeout(() => { setSaved(null); onActionDone(userId, 'roleChanged') }, 1400)
-    } finally { setLoading(null) }
+      if (res.ok) {
+        setSaved('role')
+        setTimeout(() => { setSaved(null); onActionDone(userId, 'roleChanged') }, 1400)
+      } else {
+        alert('Erro ao alterar cargo')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Erro ao alterar cargo')
+    } finally {
+      setLoading(null)
+    }
   }
 
   const handleDiscountChange = async () => {
