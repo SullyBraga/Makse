@@ -165,7 +165,7 @@ export async function POST(req: NextRequest) {
             data: {
               name: row.name, slug, price: row.price!, pricePro: row.pricePro,
               priceVendedor: row.priceVendedor, showInCatalog: row.showInCatalog,
-              showAsSuggestion: row.showAsSuggestion,
+              showAsSuggestion: row.showAsSuggestion, archived: false,
               items: { create: kitItems },
             },
           })
@@ -176,6 +176,7 @@ export async function POST(req: NextRequest) {
               name: row.name, slug, sku: row.sku,
               price: row.price!, pricePro: row.pricePro, priceVendedor: row.priceVendedor,
               showInCatalog: row.showInCatalog, showAsSuggestion: row.showAsSuggestion,
+              archived: false,
               images: [],
               items: { create: kitItems },
             },

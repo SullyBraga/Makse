@@ -93,6 +93,7 @@ model Product {
   proOnly        Boolean          @default(false)
   featured       Boolean          @default(false)
   active         Boolean          @default(true)
+  archived       Boolean          @default(false)
   blingId         String?
   relatedProducts Json             @default("[]")
   variants        ProductVariant[]
@@ -126,6 +127,7 @@ model Kit {
   showInCatalog    Boolean    @default(false)
   showAsSuggestion Boolean    @default(true)
   active           Boolean    @default(true)
+  archived         Boolean    @default(false)
   relatedProducts  Json       @default("[]")
   items            KitItem[]
   orderItems       OrderItem[]

@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
 
   const kits = await prisma.kit.findMany({
     where: {
-      active: true,
+      archived: false,
       ...(search ? {
         OR: [
           { name: { contains: search } },
@@ -170,7 +170,7 @@ export async function DELETE(req: NextRequest) {
         // Se já tiver histórico de vendas, apenas desativa o kit do catálogo
         await prisma.kit.update({
           where: { id },
-          data: { active: false },
+          data: { active: false, archived: true },
         })
         deactivated = true
       } else {
@@ -180,7 +180,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ 
       success: true,
-      message: deactivated ? 'Kit desativado devido a histórico de vendas.' : 'Kit excluído permanentemente.',
+      message: deactivated ? 'Kit arquivado devido a histórico de vendas.' : 'Kit excluído permanentemente.',
       deactivated
     })
   } catch (err) {

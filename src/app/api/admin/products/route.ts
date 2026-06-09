@@ -28,12 +28,15 @@ export async function GET(req: NextRequest) {
   const limit = parseInt(searchParams.get('limit') ?? '200')
 
   const products = await prisma.product.findMany({
-    where: search ? {
-      OR: [
-        { name: { contains: search } },
-        { sku: { contains: search } },
-      ],
-    } : undefined,
+    where: {
+      archived: false,
+      ...(search ? {
+        OR: [
+          { name: { contains: search } },
+          { sku: { contains: search } },
+        ],
+      } : {}),
+    },
     orderBy: { createdAt: 'desc' },
     take: limit,
     include: { line: { select: { name: true } }, variants: true },
@@ -190,7 +193,7 @@ export async function DELETE(req: NextRequest) {
         if (isConstraintError) {
           await prisma.product.update({
             where: { id: prodId },
-            data: { active: false },
+            data: { active: false, archived: true },
           })
           deactivated++
         } else {
@@ -202,7 +205,7 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ 
       success: true,
-      message: `Exclusão processada. ${deleted} produto(s) excluído(s) permanentemente e ${deactivated} produto(s) desativado(s) devido a histórico de vendas.`,
+      message: `Exclusão processada. ${deleted} produto(s) excluído(s) permanentemente e ${deactivated} produto(s) arquivado(s) devido a histórico de vendas.`,
       deleted,
       deactivated
     })

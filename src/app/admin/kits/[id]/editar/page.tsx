@@ -4,8 +4,8 @@ import KitFormEdit from './KitFormEdit'
 
 export default async function EditarKitPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const kit = await prisma.kit.findUnique({
-    where: { id },
+  const kit = await prisma.kit.findFirst({
+    where: { id, archived: false },
     include: {
       items: {
         include: {

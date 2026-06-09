@@ -17,6 +17,7 @@ function StockBar({ stock, min }: { stock: number; min: number }) {
 
 export default async function AdminEstoquePage() {
   const products = await prisma.product.findMany({
+    where: { archived: false },
     orderBy: { name: 'asc' },
     include: {
       variants: true,

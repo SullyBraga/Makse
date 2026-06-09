@@ -369,6 +369,7 @@ export async function POST(req: NextRequest) {
           proOnly: p.proOnly,
           featured: p.featured,
           active: p.active,
+          archived: false,
           lineId: p.lineId,
         }
 
@@ -453,6 +454,7 @@ export async function POST(req: NextRequest) {
               proOnly: p.proOnly,
               featured: p.featured,
               active: p.active,
+              archived: false,
               lineId: p.lineId,
             }
 
