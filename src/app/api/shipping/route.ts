@@ -5,14 +5,17 @@ function parseProductWeight(weightStr: string | null): number {
   const cleaned = weightStr.toLowerCase().trim()
   const num = parseFloat(cleaned.replace(',', '.').replace(/[^0-9.]/g, ''))
   if (isNaN(num)) return 0.5
+
+  // Se o número for 10 ou mais (ex: 300, 500, 1000), em cosméticos isso SEMPRE representa gramas/ml,
+  // mesmo se o usuário tiver digitado "300 Kg" ou "300Kg" por engano na tabela.
+  if (num >= 10) {
+    return num / 1000
+  }
+
   if (cleaned.includes('kg') || cleaned.includes('l')) {
     return num
   }
   if (cleaned.includes('g') || cleaned.includes('ml')) {
-    return num / 1000
-  }
-  // Se não possuir unidade (ex: "300" ou "500"), mas for um número de 10 ou mais, assume gramas
-  if (num >= 10) {
     return num / 1000
   }
   return num
