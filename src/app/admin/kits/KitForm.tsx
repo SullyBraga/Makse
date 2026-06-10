@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Plus, X, Search, Layers, RefreshCw, ImagePlus, Trash2, Upload, Link2 } from 'lucide-react'
 import Image from 'next/image'
+import { compressImage } from '@/lib/compress'
 
 type Product = {
   id: string; name: string; sku: string | null; price: number
@@ -317,7 +318,14 @@ export default function KitForm({ kitId, defaultValues }: Props) {
                     if (!files.length) return
                     setUploadingImage(true)
                     for (const file of files) {
-                      const fd = new FormData(); fd.append('file', file)
+                      let uploadBlob: Blob = file
+                      try {
+                        uploadBlob = await compressImage(file)
+                      } catch (err) {
+                        console.error('[KitForm] Erro ao comprimir imagem:', err)
+                      }
+                      const fd = new FormData()
+                      fd.append('file', uploadBlob, 'image.jpg')
                       const r = await fetch(`/api/admin/kits/${kitId}/images`, { method: 'POST', body: fd })
                       if (r.ok) { const d = await r.json(); setKitImages(prev => [...prev, d.url]) }
                     }

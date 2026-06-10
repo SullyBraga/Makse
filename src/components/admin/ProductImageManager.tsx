@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef } from 'react'
 import { Upload, Trash2, ArrowLeft, ArrowRight, Star, RefreshCw, ImageOff } from 'lucide-react'
+import { compressImage } from '@/lib/compress'
 
 type Props = {
   productId: string
@@ -21,8 +22,15 @@ export default function ProductImageManager({ productId, initialImages }: Props)
       if (!file.type.startsWith('image/')) { setError('Apenas imagens são permitidas.'); continue }
       if (file.size > 5 * 1024 * 1024) { setError('Imagem muito grande (máx 5MB).'); continue }
 
+      let uploadBlob: Blob = file
+      try {
+        uploadBlob = await compressImage(file)
+      } catch (err) {
+        console.error('[ProductImageManager] Erro ao comprimir imagem:', err)
+      }
+
       const fd = new FormData()
-      fd.append('file', file)
+      fd.append('file', uploadBlob, 'image.jpg')
       fd.append('productId', productId)
 
       const res = await fetch('/api/admin/products/images', { method: 'POST', body: fd })

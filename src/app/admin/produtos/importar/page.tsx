@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Upload, Download, FileSpreadsheet, Check, X, AlertTriangle, RefreshCw, ArrowLeft } from 'lucide-react'
+import { compressImage } from '@/lib/compress'
 
 const COLUMNS = [
   { col: 'Linha',                                           req: false, desc: 'Nome da linha (ex: Linha Crystal)' },
@@ -180,8 +181,14 @@ export default function ImportarProdutosPage() {
           if (matchedProduct) {
             for (const imgFile of files) {
               try {
+                let uploadBlob: Blob = imgFile
+                try {
+                  uploadBlob = await compressImage(imgFile)
+                } catch (err) {
+                  console.error('Erro ao comprimir imagem no importador:', err)
+                }
                 const imgFd = new FormData()
-                imgFd.append('file', imgFile)
+                imgFd.append('file', uploadBlob, 'image.jpg')
                 imgFd.append('productId', matchedProduct.id)
                 await fetch('/api/admin/products/images', { method: 'POST', body: imgFd })
               } catch (imgErr) {
