@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx prisma generate && npx prisma db push --accept-data-loss-warnings && next build && node -e \"const fs=require('fs'); fs.cpSync('public', '.next/standalone/public', {recursive:true}); fs.cpSync('.next/static', '.next/standalone/.next/static', {recursive:true})\"",
+    "build": "npx prisma generate && npx prisma db push --accept-data-loss && next build && node -e \"const fs=require('fs'); fs.cpSync('public', '.next/standalone/public', {recursive:true}); fs.cpSync('.next/static', '.next/standalone/.next/static', {recursive:true})\"",
     "start": "node app.js",
     "lint": "eslint"
   },
