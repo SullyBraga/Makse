@@ -37,6 +37,14 @@ export async function POST(req: NextRequest) {
             include: { items: true },
           })
           if (order) {
+            // Se o pedido usou cupom, incrementa o uso
+            if (order.couponId) {
+              await prisma.coupon.update({
+                where: { id: order.couponId },
+                data: { usageCount: { increment: 1 } },
+              }).catch(err => console.error('[mp-webhook] Erro ao incrementar uso de cupom:', err))
+            }
+
             for (const item of order.items) {
               let targetVariantId = item.variantId
               if (!targetVariantId && item.productId) {

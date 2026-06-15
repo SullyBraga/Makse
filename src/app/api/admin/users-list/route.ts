@@ -20,7 +20,28 @@ export async function GET(req: NextRequest) {
       ],
     } : undefined,
     orderBy: { name: 'asc' },
-    select: { id: true, name: true, email: true, role: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      discountTable: {
+        select: {
+          id: true,
+          name: true,
+          percentage: true,
+        }
+      },
+      professionalReq: {
+        select: {
+          salonName: true,
+          city: true,
+          phone: true,
+          instagram: true,
+        }
+      }
+    },
     take: 20,
   })
   return NextResponse.json(users)

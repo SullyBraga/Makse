@@ -55,6 +55,13 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // Estados de Cupom
+  const [couponCode, setCouponCode] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState<any>(null)
+  const [couponError, setCouponError] = useState('')
+  const [couponSuccess, setCouponSuccess] = useState('')
+  const [couponLoading, setCouponLoading] = useState(false)
+
   const role = (session?.user as any)?.role
   const discountPct: number = (session?.user as any)?.discountPct ?? 0
   const isPro = role === 'CABELEIREIRA' && discountPct > 0
@@ -202,6 +209,46 @@ export default function CheckoutPage() {
     }
   }
 
+  const handleApplyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!couponCode.trim()) return
+
+    setCouponLoading(true)
+    setCouponError('')
+    setCouponSuccess('')
+
+    try {
+      const res = await fetch('/api/checkout/validate-coupon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponCode.trim(),
+          subtotal: itemsTotal,
+        }),
+      })
+
+      const data = await res.json()
+      if (!res.ok || !data.valid) {
+        setCouponError(data.error || 'Erro ao validar cupom')
+        setAppliedCoupon(null)
+      } else {
+        setAppliedCoupon(data.coupon)
+        setCouponSuccess(`Cupom ${data.coupon.code} aplicado!`)
+      }
+    } catch {
+      setCouponError('Erro ao validar cupom. Tente novamente.')
+    } finally {
+      setCouponLoading(false)
+    }
+  }
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+    setCouponCode('')
+    setCouponSuccess('')
+    setCouponError('')
+  }
+
   // 6. Checkout Mercado Pago
   const handleCheckout = async () => {
     if (!selectedAddressId) {
@@ -223,6 +270,7 @@ export default function CheckoutPage() {
           addressId: selectedAddressId,
           shippingPrice: selectedShipping.price,
           shippingMethod: selectedShipping.name,
+          couponId: appliedCoupon?.id || null,
           items: items.map(i => ({
             productId: i.productId,
             variantId: i.variantId || null,
@@ -284,7 +332,18 @@ export default function CheckoutPage() {
 
   const itemsTotal = isPro ? total() * (1 - discountPct / 100) : total()
   const shippingCost = selectedShipping?.price ?? 0
-  const finalTotal = itemsTotal + shippingCost
+  
+  let couponDiscountValue = 0
+  if (appliedCoupon) {
+    if (appliedCoupon.discountType === 'PERCENTAGE') {
+      couponDiscountValue = itemsTotal * (appliedCoupon.value / 100)
+    } else {
+      couponDiscountValue = Math.min(appliedCoupon.value, itemsTotal)
+    }
+  }
+
+  const itemsTotalAfterCoupon = Math.max(0, itemsTotal - couponDiscountValue)
+  const finalTotal = itemsTotalAfterCoupon + shippingCost
 
   return (
     <div style={{ maxWidth: '72rem', margin: '0 auto', padding: 'clamp(2rem,5vw,4rem) 1.5rem' }}>
@@ -525,6 +584,15 @@ export default function CheckoutPage() {
               </div>
             )}
 
+            {appliedCoupon && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.625rem', color: '#16a34a' }}>
+                <span style={{ fontSize: '0.82rem' }}>Cupom ({appliedCoupon.code})</span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 500 }}>
+                  -R$ {couponDiscountValue.toFixed(2).replace('.', ',')}
+                </span>
+              </div>
+            )}
+
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Custo de Envio (Correios)</span>
               <span style={{ fontSize: '0.82rem', color: selectedShipping ? 'var(--navy)' : 'var(--text-muted)' }}>
@@ -537,6 +605,55 @@ export default function CheckoutPage() {
                 Método: <strong>{selectedShipping.name}</strong>
               </p>
             )}
+
+            {/* Input Cupom */}
+            <div style={{ margin: '1rem 0', padding: '0.75rem 0', borderTop: '1px dashed var(--border)', borderBottom: '1px dashed var(--border)' }}>
+              {appliedCoupon ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--cream)', padding: '0.4rem 0.75rem', borderRadius: '8px' }}>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--navy)', fontWeight: 500 }}>
+                    🎟️ {appliedCoupon.code}
+                  </span>
+                  <button onClick={handleRemoveCoupon} style={{ background: 'none', border: 'none', color: '#dc2626', fontSize: '0.72rem', cursor: 'pointer' }}>
+                    Remover
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleApplyCoupon} style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="text"
+                    placeholder="Cupom de desconto"
+                    value={couponCode}
+                    onChange={e => setCouponCode(e.target.value.toUpperCase())}
+                    style={{
+                      flex: 1,
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      padding: '0.35rem 0.625rem',
+                      fontSize: '0.78rem',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={couponLoading}
+                    style={{
+                      background: 'var(--navy)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0.35rem 0.75rem',
+                      fontSize: '0.78rem',
+                      cursor: 'pointer',
+                      opacity: couponLoading ? 0.7 : 1,
+                    }}
+                  >
+                    Aplicar
+                  </button>
+                </form>
+              )}
+              {couponError && <p style={{ fontSize: '0.7rem', color: '#dc2626', marginTop: '0.25rem', margin: '0.25rem 0 0' }}>{couponError}</p>}
+              {couponSuccess && <p style={{ fontSize: '0.7rem', color: '#16a34a', marginTop: '0.25rem', margin: '0.25rem 0 0' }}>{couponSuccess}</p>}
+            </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.875rem', borderTop: '1px solid var(--cream-dark)', marginTop: '0.25rem' }}>
               <span style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--navy)' }}>Total Geral</span>

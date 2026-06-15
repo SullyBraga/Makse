@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { LayoutDashboard, ShoppingBag, Users, Boxes, Package, Scissors, Layers, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, ShoppingBag, Users, Boxes, Package, Scissors, Layers, ShoppingCart, ChevronLeft, ChevronRight, Percent } from 'lucide-react'
 import AdminSignOut from '@/components/admin/AdminSignOut'
 
 const nav = [
@@ -11,6 +11,7 @@ const nav = [
   { label: 'Pedidos', href: '/admin/pedidos', icon: <ShoppingBag size={15} /> },
   { label: 'Produtos', href: '/admin/produtos', icon: <Package size={15} /> },
   { label: 'Kits', href: '/admin/kits', icon: <Layers size={15} /> },
+  { label: 'Cupons', href: '/admin/cupons', icon: <Percent size={15} /> },
   { label: 'Usuários', href: '/admin/usuarios', icon: <Users size={15} /> },
   { label: 'Estoque', href: '/admin/estoque', icon: <Boxes size={15} /> },
   { label: 'Vendas', href: '/admin/vendas', icon: <ShoppingCart size={15} /> },

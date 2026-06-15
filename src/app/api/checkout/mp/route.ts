@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
 
   try {
-    const { items, addressId, shippingPrice, shippingMethod } = await req.json()
+    const { items, addressId, shippingPrice, shippingMethod, couponId } = await req.json()
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'Carrinho vazio' }, { status: 400 })
     }
@@ -25,16 +25,57 @@ export async function POST(req: NextRequest) {
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
     const shipPrice = parseFloat(shippingPrice) || 0
 
-    // Build MP items
-    const mpItems = items.map((i: any) => ({
-      id: i.productId || i.variantId || 'item',
-      title: i.name,
-      quantity: Number(i.quantity),
-      unit_price: isPro
+    // Calculate subtotal of items
+    const itemsSubtotal = items.reduce((sum: number, i: any) => {
+      const price = isPro
         ? parseFloat((i.price * (1 - discountPct / 100)).toFixed(2))
-        : parseFloat(Number(i.price).toFixed(2)),
-      currency_id: 'BRL',
-    }))
+        : parseFloat(Number(i.price).toFixed(2));
+      return sum + (price * Number(i.quantity));
+    }, 0);
+
+    let couponDiscountValue = 0;
+    let coupon = null;
+
+    if (couponId) {
+      coupon = await prisma.coupon.findUnique({ where: { id: couponId } });
+      if (coupon && coupon.active) {
+        const notExpired = !coupon.expiresAt || new Date(coupon.expiresAt) > new Date();
+        const limitNotReached = coupon.usageLimit === null || coupon.usageCount < coupon.usageLimit;
+        const minMet = !coupon.minOrderValue || itemsSubtotal >= coupon.minOrderValue;
+
+        if (notExpired && limitNotReached && minMet) {
+          if (coupon.discountType === 'PERCENTAGE') {
+            couponDiscountValue = parseFloat((itemsSubtotal * (coupon.value / 100)).toFixed(2));
+          } else {
+            couponDiscountValue = parseFloat(Math.min(coupon.value, itemsSubtotal).toFixed(2));
+          }
+        }
+      }
+    }
+
+    // Build MP items (deducting coupon discount proportionally)
+    const mpItems = items.map((i: any) => {
+      const originalPrice = isPro
+        ? parseFloat((i.price * (1 - discountPct / 100)).toFixed(2))
+        : parseFloat(Number(i.price).toFixed(2));
+
+      let finalPrice = originalPrice;
+
+      if (couponDiscountValue > 0 && itemsSubtotal > 0) {
+        const share = (originalPrice * Number(i.quantity)) / itemsSubtotal;
+        const itemDiscountTotal = couponDiscountValue * share;
+        const itemDiscountUnit = parseFloat((itemDiscountTotal / Number(i.quantity)).toFixed(2));
+        finalPrice = parseFloat(Math.max(0, originalPrice - itemDiscountUnit).toFixed(2));
+      }
+
+      return {
+        id: i.productId || i.variantId || 'item',
+        title: i.name,
+        quantity: Number(i.quantity),
+        unit_price: finalPrice,
+        currency_id: 'BRL',
+      };
+    });
 
     if (shipPrice > 0) {
       mpItems.push({
@@ -58,6 +99,8 @@ export async function POST(req: NextRequest) {
         shippingMethod: shippingMethod || null,
         addressId: addressId || null,
         paymentMethod: 'MP',
+        couponId: coupon ? coupon.id : null,
+        couponDiscount: couponDiscountValue,
         items: {
           create: items.map((i: any) => ({
             productId: i.productId || null,

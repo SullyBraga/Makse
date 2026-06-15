@@ -84,12 +84,9 @@ export default function CadastroPage() {
     <div style={{ minHeight: '100vh', background: 'var(--cream)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '2rem 1.5rem 4rem' }}>
       <div style={{ width: '100%', maxWidth: '480px' }}>
 
-        {/* Logo */}
+        {/* Titulo */}
         <div style={{ textAlign: 'center', marginBottom: '2rem', paddingTop: '1.5rem' }}>
-          <Link href="/">
-            <Image src="/logo-makse.png" alt="Makse Profissional" width={150} height={48} style={{ objectFit: 'contain', height: 'auto' }} />
-          </Link>
-          <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.75rem', fontWeight: 400, color: 'var(--navy)', marginTop: '1.25rem' }}>
+          <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.75rem', fontWeight: 400, color: 'var(--navy)' }}>
             Criar conta
           </h1>
         </div>

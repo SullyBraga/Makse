@@ -13,7 +13,7 @@ export async function PATCH(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
 
   try {
-    const { orderId, status, trackingCode } = await req.json()
+    const { orderId, status, trackingCode, reverterEstoque } = await req.json()
 
     if (!orderId || !status) {
       return NextResponse.json({ error: 'orderId e status são obrigatórios' }, { status: 400 })
@@ -95,7 +95,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     // Caso 2: Passou de pago para CANCELADO -> Devolver estoque
-    if (wasPaid && status === 'CANCELADO') {
+    if (wasPaid && status === 'CANCELADO' && reverterEstoque !== false) {
       for (const item of orderBefore.items) {
         let targetVariantId = item.variantId
         if (!targetVariantId && item.productId) {

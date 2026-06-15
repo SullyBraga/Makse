@@ -62,7 +62,7 @@ export default function Footer() {
           <div>
             <h4 style={{fontSize:'0.65rem',letterSpacing:'0.28em',textTransform:'uppercase',color:'var(--gold)',marginBottom:'1.25rem',fontWeight:500}}>Navegação</h4>
             <ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-              {[['Início','/'],['Catálogo Completo','/catalogo'],['Nossas Linhas','/linhas'],['Para Profissionais','/para-profissionais'],['Seja um Distribuidor','/para-profissionais']].map(([l,h]) => (
+              {[['Início','/'],['Catálogo Completo','/catalogo'],['Nossas Linhas','/linhas']].map(([l,h]) => (
                 <li key={l}><Link href={h} style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.55)',textDecoration:'none',transition:'color .2s'}}>{l}</Link></li>
               ))}
             </ul>

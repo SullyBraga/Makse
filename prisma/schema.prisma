@@ -179,6 +179,9 @@ model Order {
   customerPhone    String?
   customerAddress  String?
   items            OrderItem[]
+  coupon           Coupon?     @relation(fields: [couponId], references: [id])
+  couponId         String?
+  couponDiscount   Float       @default(0)
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
 }
@@ -195,4 +198,18 @@ model OrderItem {
   variantId String?
   quantity  Int
   unitPrice Float
+}
+
+model Coupon {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  discountType  String    // "PERCENTAGE" or "FIXED"
+  value         Float
+  minOrderValue Float?
+  expiresAt     DateTime?
+  usageLimit    Int?
+  usageCount    Int       @default(0)
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  orders        Order[]
 }

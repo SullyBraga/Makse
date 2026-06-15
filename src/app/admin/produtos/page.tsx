@@ -1,12 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Upload, Edit2, Trash2, Search, RefreshCw, Package, Star } from 'lucide-react'
+import { Plus, Upload, Edit2, Trash2, Search, RefreshCw, Package, Star, ChevronDown } from 'lucide-react'
 
 type Product = {
   id: string; name: string; sku: string | null; price: number
   productType: string | null; weight: string | null; active: boolean; featured: boolean; proOnly: boolean
-  line: { name: string } | null; variants: { stock: number }[]
+  line: { id: string; name: string } | null; variants: { stock: number }[]
 }
 
 export default function AdminProdutosPage() {
@@ -16,6 +16,8 @@ export default function AdminProdutosPage() {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [deletingBulk, setDeletingBulk] = useState(false)
+  const [lines, setLines] = useState<{ id: string; name: string }[]>([])
+  const [selectedLineId, setSelectedLineId] = useState<string>('')
 
   const fetch_ = async () => {
     setLoading(true)
@@ -27,7 +29,17 @@ export default function AdminProdutosPage() {
     setLoading(false)
   }
 
-  useEffect(() => { fetch_() }, [])
+  useEffect(() => {
+    fetch_()
+    fetch('/api/admin/lines')
+      .then(async r => {
+        if (r.ok) {
+          const data = await r.json()
+          setLines(data)
+        }
+      })
+      .catch(err => console.error('Error fetching lines:', err))
+  }, [])
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Excluir "${name}" permanentemente?`)) return
@@ -66,10 +78,12 @@ export default function AdminProdutosPage() {
     setProducts(prev => prev.map(p => p.id === id ? { ...p, featured: !current } : p))
   }
 
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    (p.sku ?? '').toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
+      (p.sku ?? '').toLowerCase().includes(search.toLowerCase())
+    const matchesLine = !selectedLineId || p.line?.id === selectedLineId
+    return matchesSearch && matchesLine
+  })
 
   const allSelected = filtered.length > 0 && filtered.every(p => selectedIds.includes(p.id))
   const someSelected = filtered.some(p => selectedIds.includes(p.id)) && !allSelected
@@ -126,11 +140,39 @@ export default function AdminProdutosPage() {
         </div>
       </div>
 
-      {/* Busca */}
-      <div style={{ position: 'relative', marginBottom: '1.5rem', maxWidth: '360px' }}>
-        <Search size={14} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-        <input type="text" placeholder="Buscar por nome ou SKU..." value={search} onChange={e => setSearch(e.target.value)}
-          style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.25rem', border: '1px solid var(--border)', borderRadius: '99px', fontSize: '0.82rem', outline: 'none', fontFamily: 'var(--font-dm-sans), sans-serif', background: '#fff' }} />
+      {/* Filtros */}
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: '1', minWidth: '240px', maxWidth: '360px' }}>
+          <Search size={14} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+          <input type="text" placeholder="Buscar por nome ou SKU..." value={search} onChange={e => setSearch(e.target.value)}
+            style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.25rem', border: '1px solid var(--border)', borderRadius: '99px', fontSize: '0.82rem', outline: 'none', fontFamily: 'var(--font-dm-sans), sans-serif', background: '#fff' }} />
+        </div>
+
+        <div style={{ position: 'relative', width: '200px' }}>
+          <select
+            value={selectedLineId}
+            onChange={e => setSelectedLineId(e.target.value)}
+            style={{
+              width: '100%',
+              appearance: 'none',
+              border: '1px solid var(--border)',
+              borderRadius: '99px',
+              padding: '0.6rem 2.25rem 0.6rem 1rem',
+              fontSize: '0.82rem',
+              color: 'var(--navy)',
+              background: '#fff',
+              cursor: 'pointer',
+              outline: 'none',
+              fontFamily: 'var(--font-dm-sans), sans-serif',
+            }}
+          >
+            <option value="">Todas as linhas</option>
+            {lines.map(l => (
+              <option key={l.id} value={l.id}>{l.name}</option>
+            ))}
+          </select>
+          <ChevronDown size={14} style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+        </div>
       </div>
 
       <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>

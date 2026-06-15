@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     },
     orderBy: { createdAt: 'desc' },
     take: limit,
-    include: { line: { select: { name: true } }, variants: true },
+    include: { line: { select: { id: true, name: true } }, variants: true },
   })
   return NextResponse.json(products)
 }
@@ -112,6 +112,8 @@ export async function PATCH(req: NextRequest) {
     if (updates.priceVendedor != null) updates.priceVendedor = updates.priceVendedor ? parseFloat(updates.priceVendedor) : null
     if (updates.name) updates.slug = toSlug(updates.name)
     if (relatedProducts !== undefined) updates.relatedProducts = Array.isArray(relatedProducts) ? relatedProducts : []
+    if (updates.lineId === '') updates.lineId = null
+    if (updates.sku === '') updates.sku = null
 
     const product = await prisma.$transaction(async (tx) => {
       const updated = await tx.product.update({

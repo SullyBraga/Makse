@@ -85,6 +85,10 @@ export default function VendasPage() {
     else setCart(prev => prev.map(i => i.productId === productId && i.variantId === variantId ? { ...i, quantity: qty } : i))
   }
 
+  const updatePrice = (productId: string, variantId: string | null, price: number) => {
+    setCart(prev => prev.map(i => i.productId === productId && i.variantId === variantId ? { ...i, price } : i))
+  }
+
   const total = cart.reduce((s, i) => s + i.price * i.quantity, 0)
 
   const handleSell = async () => {
@@ -262,7 +266,28 @@ export default function VendasPage() {
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: '0.78rem', fontWeight: 500, color: 'var(--navy)', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</p>
-                      <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{item.variantLabel} · R$ {item.price.toFixed(2).replace('.', ',')}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.15rem' }}>
+                        <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{item.variantLabel ? `${item.variantLabel} · ` : ''}R$</span>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={item.price}
+                          onChange={e => {
+                            const val = parseFloat(e.target.value)
+                            updatePrice(item.productId, item.variantId, isNaN(val) ? 0 : val)
+                          }}
+                          style={{
+                            width: '64px',
+                            border: '1px solid var(--border)',
+                            borderRadius: '6px',
+                            padding: '0.15rem 0.35rem',
+                            fontSize: '0.68rem',
+                            color: 'var(--navy)',
+                            outline: 'none',
+                            fontFamily: 'var(--font-dm-sans), sans-serif',
+                          }}
+                        />
+                      </div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--border)', borderRadius: '6px', overflow: 'hidden' }}>
                       <button onClick={() => updateQty(item.productId, item.variantId, item.quantity - 1)} style={{ padding: '0.25rem 0.4rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--navy)' }}><Minus size={10} /></button>

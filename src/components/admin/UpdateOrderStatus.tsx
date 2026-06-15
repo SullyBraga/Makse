@@ -21,6 +21,7 @@ export default function UpdateOrderStatus({ orderId, currentStatus }: Props) {
   const router = useRouter()
   const [status, setStatus] = useState(currentStatus)
   const [tracking, setTracking] = useState('')
+  const [revertStock, setRevertStock] = useState(true)
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -31,7 +32,12 @@ export default function UpdateOrderStatus({ orderId, currentStatus }: Props) {
       await fetch('/api/admin/orders', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId, status, trackingCode: tracking || undefined }),
+        body: JSON.stringify({
+          orderId,
+          status,
+          trackingCode: tracking || undefined,
+          reverterEstoque: status === 'CANCELADO' ? revertStock : undefined,
+        }),
       })
       setSaved(true)
       router.refresh()
@@ -76,6 +82,21 @@ export default function UpdateOrderStatus({ orderId, currentStatus }: Props) {
               fontFamily: 'monospace', color: '#0d1b2a', outline: 'none',
             }}
           />
+        </div>
+      )}
+
+      {status === 'CANCELADO' && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', margin: '0.1rem 0', userSelect: 'none' }}>
+          <input
+            type="checkbox"
+            id={`revert-stock-${orderId}`}
+            checked={revertStock}
+            onChange={e => setRevertStock(e.target.checked)}
+            style={{ cursor: 'pointer', accentColor: 'var(--navy)', width: '13px', height: '13px' }}
+          />
+          <label htmlFor={`revert-stock-${orderId}`} style={{ fontSize: '0.68rem', color: '#6b6b6b', cursor: 'pointer' }}>
+            Devolver ao estoque?
+          </label>
         </div>
       )}
 
