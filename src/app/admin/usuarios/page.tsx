@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import ApproveUserClient from '@/components/admin/ApproveUserClient'
 import UserActions from '@/components/admin/UserActions'
-import { Users, Search, RefreshCw, UserPlus, X, Eye, EyeOff } from 'lucide-react'
+import { Users, Search, RefreshCw, UserPlus, X, Eye, EyeOff, Percent, Trash2 } from 'lucide-react'
 
 const roleConfig: Record<string, { label: string; bg: string; color: string }> = {
   ADMIN:         { label: 'Admin',         bg: 'var(--cream-dark)', color: 'var(--navy)' },
@@ -34,6 +34,13 @@ export default function AdminUsuariosPage() {
   const [sellerError, setSellerError] = useState('')
   const [sellerOk, setSellerOk] = useState(false)
 
+  // Manage discount tables modal
+  const [showDiscountTablesModal, setShowDiscountTablesModal] = useState(false)
+  const [newTableName, setNewTableName] = useState('')
+  const [newTablePercentage, setNewTablePercentage] = useState('')
+  const [tableActionLoading, setTableActionLoading] = useState(false)
+  const [tableActionError, setTableActionError] = useState('')
+
   const fetchData = async () => {
     setLoading(true)
     const [usersRes, tablesRes] = await Promise.all([
@@ -55,7 +62,56 @@ export default function AdminUsuariosPage() {
     setLoading(false)
   }
 
+  const handleCreateDiscountTable = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setTableActionLoading(true)
+    setTableActionError('')
+    try {
+      const res = await fetch('/api/admin/discount-tables', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newTableName, percentage: newTablePercentage }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setTableActionError(data.error || 'Erro ao criar tabela de desconto')
+      } else {
+        setNewTableName('')
+        setNewTablePercentage('')
+        await fetchData()
+      }
+    } catch (err) {
+      setTableActionError('Erro ao criar tabela de desconto')
+    } finally {
+      setTableActionLoading(false)
+    }
+  }
+
+  const handleDeleteDiscountTable = async (id: string) => {
+    if (!confirm('Deseja realmente excluir esta tabela de desconto? Usuários com este desconto voltarão a ficar "Sem desconto".')) return
+    setTableActionLoading(true)
+    setTableActionError('')
+    try {
+      const res = await fetch('/api/admin/discount-tables', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setTableActionError(data.error || 'Erro ao deletar tabela de desconto')
+      } else {
+        await fetchData()
+      }
+    } catch (err) {
+      setTableActionError('Erro ao deletar tabela de desconto')
+    } finally {
+      setTableActionLoading(false)
+    }
+  }
+
   useEffect(() => { fetchData() }, [])
+
 
   const handleAction = (userId: string, action: 'deleted' | 'roleChanged' | 'discountChanged') => {
     if (action === 'deleted') {
@@ -101,6 +157,10 @@ export default function AdminUsuariosPage() {
           <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Gerencie clientes, profissionais e aprovações</p>
         </div>
         <div style={{ display: 'flex', gap: '0.625rem' }}>
+          <button onClick={() => setShowDiscountTablesModal(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.125rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', cursor: 'pointer', color: 'var(--navy)', fontWeight: 500, fontFamily: 'var(--font-dm-sans), sans-serif' }}>
+            <Percent size={13} style={{ color: 'var(--gold)' }} /> Tabelas de Desconto
+          </button>
           <button onClick={() => setShowCreateSeller(true)}
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.125rem', border: 'none', borderRadius: '99px', background: '#7c3aed', color: '#fff', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 500, fontFamily: 'var(--font-dm-sans), sans-serif' }}>
             <UserPlus size={13} /> Criar Vendedor
@@ -153,6 +213,71 @@ export default function AdminUsuariosPage() {
               <button type="submit" disabled={sellerLoading}
                 style={{ width: '100%', padding: '0.75rem', background: '#7c3aed', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-dm-sans), sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', opacity: sellerLoading ? 0.7 : 1 }}>
                 {sellerLoading ? <><RefreshCw size={14} style={{ animation: 'spin 0.7s linear infinite' }} /> Criando...</> : <><UserPlus size={14} /> Criar Conta Vendedor</>}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Discount Tables Modal */}
+      {showDiscountTablesModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+          <div style={{ background: '#fff', borderRadius: '20px', padding: '2rem', width: '100%', maxWidth: '480px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexShrink: 0 }}>
+              <div>
+                <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.4rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>Tabelas de Desconto</h2>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Crie e gerencie as opções de desconto para clientes profissionais</p>
+              </div>
+              <button onClick={() => setShowDiscountTablesModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem' }}><X size={18} /></button>
+            </div>
+
+            {tableActionError && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '10px', padding: '0.75rem', fontSize: '0.82rem', color: '#dc2626', marginBottom: '1rem', flexShrink: 0 }}>{tableActionError}</div>}
+
+            {/* List of existing tables */}
+            <div style={{ flex: 1, overflowY: 'auto', marginBottom: '1.5rem', border: '1px solid var(--border)', borderRadius: '12px', padding: '0.5rem' }}>
+              {discountTables.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)', fontSize: '0.8rem' }}>Nenhuma tabela cadastrada. Crie uma abaixo.</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {discountTables.map(t => (
+                    <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 0.8rem', background: 'var(--cream)', borderRadius: '8px' }}>
+                      <div>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--navy)' }}>{t.name}</span>
+                        <span style={{ fontSize: '0.8rem', color: '#d97706', marginLeft: '0.5rem', fontWeight: 500 }}>{t.percentage}%</span>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteDiscountTable(t.id)}
+                        disabled={tableActionLoading}
+                        style={{ background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', padding: '0.25rem', display: 'flex', alignItems: 'center', opacity: tableActionLoading ? 0.5 : 1 }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Form to create new table */}
+            <form onSubmit={handleCreateDiscountTable} style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flexShrink: 0 }}>
+              <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>Nova Tabela de Desconto</h3>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <div style={{ flex: 2 }}>
+                  <label style={{ display: 'block', fontSize: '0.63rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.3rem' }}>Nome da Tabela</label>
+                  <input required type="text" placeholder="Ex: Bronze"
+                    value={newTableName} onChange={e => setNewTableName(e.target.value)}
+                    style={{ width: '100%', padding: '0.55rem 0.875rem', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.84rem', outline: 'none', fontFamily: 'var(--font-dm-sans), sans-serif', background: '#fff', color: 'var(--navy)' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.63rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.3rem' }}>Desconto %</label>
+                  <input required type="number" min="0" max="100" step="any" placeholder="15"
+                    value={newTablePercentage} onChange={e => setNewTablePercentage(e.target.value)}
+                    style={{ width: '100%', padding: '0.55rem 0.875rem', border: '1px solid var(--border)', borderRadius: '10px', fontSize: '0.84rem', outline: 'none', fontFamily: 'var(--font-dm-sans), sans-serif', background: '#fff', color: 'var(--navy)' }} />
+                </div>
+              </div>
+              <button type="submit" disabled={tableActionLoading}
+                style={{ width: '100%', padding: '0.75rem', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-dm-sans), sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', opacity: tableActionLoading ? 0.7 : 1 }}>
+                {tableActionLoading ? <><RefreshCw size={14} style={{ animation: 'spin 0.7s linear infinite' }} /> Criando...</> : 'Criar Tabela'}
               </button>
             </form>
           </div>
