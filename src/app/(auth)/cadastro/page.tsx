@@ -14,9 +14,9 @@ export default function CadastroPage() {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', password: '', confirm: '',
     // cliente
-    address: '',
+    street: '', number: '', complement: '', city: '', state: '', zipCode: '',
     // profissional
-    salonName: '', city: '', cnpj: '', salonAddress: '', instagram: '',
+    salonName: '', cnpj: '', salonAddress: '', instagram: '',
   })
 
   const update = (key: string, value: string) => setForm(f => ({ ...f, [key]: value }))
@@ -46,7 +46,12 @@ export default function CadastroPage() {
         type: accountType,
       }
       if (accountType === 'client') {
-        payload.address = form.address
+        payload.street = form.street
+        payload.number = form.number
+        payload.complement = form.complement
+        payload.city = form.city
+        payload.state = form.state
+        payload.zipCode = form.zipCode
       }
       if (accountType === 'professional') {
         payload.salonName = form.salonName
@@ -178,11 +183,37 @@ export default function CadastroPage() {
             {isClient && (
               <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '1rem', marginTop: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
                 <p style={sectionLabelStyle}>Endereço de entrega</p>
-                <div>
-                  <label style={labelStyle}>Endereço completo</label>
-                  <div style={{ position: 'relative' }}>
-                    <MapPin size={13} style={{ position: 'absolute', left: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                    <input type="text" className="input-field" placeholder="Rua, número, bairro, cidade, CEP" style={{ paddingLeft: '2.25rem' }} value={form.address} onChange={e => update('address', e.target.value)} />
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={labelStyle}>CEP *</label>
+                    <input type="text" className="input-field" placeholder="00000-000" required={isClient} value={form.zipCode} onChange={e => update('zipCode', e.target.value)} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Cidade *</label>
+                    <input type="text" className="input-field" placeholder="Cidade" required={isClient} value={form.city} onChange={e => update('city', e.target.value)} />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={labelStyle}>Rua / Logradouro *</label>
+                    <input type="text" className="input-field" placeholder="Av. Paulista" required={isClient} value={form.street} onChange={e => update('street', e.target.value)} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Número *</label>
+                    <input type="text" className="input-field" placeholder="123" required={isClient} value={form.number} onChange={e => update('number', e.target.value)} />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={labelStyle}>Bairro / Complemento</label>
+                    <input type="text" className="input-field" placeholder="Apto, bloco, etc." value={form.complement} onChange={e => update('complement', e.target.value)} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Estado (UF) *</label>
+                    <input type="text" className="input-field" placeholder="SP" required={isClient} value={form.state} onChange={e => update('state', e.target.value)} />
                   </div>
                 </div>
               </div>

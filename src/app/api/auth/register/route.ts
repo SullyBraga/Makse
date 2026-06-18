@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const { name, email, password, phone, type,
             // cliente
-            address,
-            // profissional
+            street, number, complement, state, zipCode,
+            // profissional or both
             salonName, city, cnpj, salonAddress, instagram } = body
 
     if (!name || !email || !password) {
@@ -54,15 +54,16 @@ export async function POST(req: NextRequest) {
       })
 
       // Salvar endereço se fornecido
-      if (address) {
+      if (street || city || state || zipCode) {
         await prisma.address.create({
           data: {
             userId:  user.id,
-            street:  address,
-            number:  '',
-            city:    '',
-            state:   '',
-            zipCode: '',
+            street:  street || '',
+            number:  number || '',
+            complement: complement || null,
+            city:    city || '',
+            state:   state || '',
+            zipCode: zipCode || '',
           },
         })
       }

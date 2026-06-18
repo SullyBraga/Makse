@@ -22,10 +22,16 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const catalogOnly = searchParams.get('catalog') === 'true'
 
+  const session = await auth()
+  const role = (session?.user as any)?.role ?? 'guest'
+  const isPro = role === 'CABELEIREIRA' || role === 'ADMIN'
+
   const kits = await prisma.kit.findMany({
     where: {
       active: true,
+      archived: false,
       ...(catalogOnly && { showInCatalog: true }),
+      ...(isPro ? {} : { items: { none: { product: { proOnly: true } } } }),
     },
     orderBy: { createdAt: 'desc' },
     include: {

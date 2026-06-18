@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
 
     // Parse rows
     type PreviewRow = {
-      row: number; name: string; sku: string | null; price: number | null;
+      row: number; name: string; sku: string | null; description: string | null; price: number | null;
       pricePro: number | null; priceVendedor: number | null;
       skuComponents: string[]; quantities: number[];
       showInCatalog: boolean; showAsSuggestion: boolean;
@@ -108,6 +108,7 @@ export async function POST(req: NextRequest) {
     const rows: PreviewRow[] = rawRows.map((raw, idx) => {
       const name = String(raw['nome'] || '').trim()
       const sku = String(raw['sku'] || '').trim() || null
+      const description = String(raw['descricao'] || '').trim() || null
       const price = parsePrice(raw['preco'])
       const pricePro = parsePrice(raw['preco_pro'])
       const priceVendedor = parsePrice(raw['preco_vendedor'])
@@ -124,7 +125,7 @@ export async function POST(req: NextRequest) {
       if (!name) error = 'Nome obrigatório'
       else if (price == null) error = 'Preço inválido'
 
-      return { row: idx + 2, name, sku, price, pricePro, priceVendedor, skuComponents, quantities, showInCatalog, showAsSuggestion, isDuplicate, missingSkus: rowMissingSkus, error }
+      return { row: idx + 2, name, sku, description, price, pricePro, priceVendedor, skuComponents, quantities, showInCatalog, showAsSuggestion, isDuplicate, missingSkus: rowMissingSkus, error }
     })
 
     if (isPreview) {
@@ -163,7 +164,7 @@ export async function POST(req: NextRequest) {
           await prisma.kit.update({
             where: { id: existing.id },
             data: {
-              name: row.name, slug, price: row.price!, pricePro: row.pricePro,
+              name: row.name, slug, description: row.description, price: row.price!, pricePro: row.pricePro,
               priceVendedor: row.priceVendedor, showInCatalog: row.showInCatalog,
               showAsSuggestion: row.showAsSuggestion, archived: false,
               items: { create: kitItems },
@@ -173,7 +174,7 @@ export async function POST(req: NextRequest) {
         } else {
           await prisma.kit.create({
             data: {
-              name: row.name, slug, sku: row.sku,
+              name: row.name, slug, sku: row.sku, description: row.description,
               price: row.price!, pricePro: row.pricePro, priceVendedor: row.priceVendedor,
               showInCatalog: row.showInCatalog, showAsSuggestion: row.showAsSuggestion,
               archived: false,

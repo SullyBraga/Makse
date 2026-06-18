@@ -22,8 +22,8 @@ export default async function HomePage() {
     featuredProducts = await prisma.product.findMany({
       where: {
         active: true,
+        archived: false,
         featured: true,
-        ...(isPro ? {} : { proOnly: false, price: { gt: 0 } }),
       },
       include: { line: { select: { name: true, slug: true } } },
       orderBy: { createdAt: 'desc' },
@@ -71,51 +71,53 @@ export default async function HomePage() {
       </section>
 
       {/* ── BEST SELLERS ── */}
-      <section style={S.section('#fafafa')}>
-        <div style={S.container}>
-          <div data-reveal style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-            <div>
-              <span className="section-label">Favoritos do Salão</span>
-              <h2 style={{ fontFamily: 'var(--font-cormorant),Georgia,serif', fontSize: 'clamp(2rem,4vw,2.75rem)', fontWeight: 400, color: 'var(--navy)', lineHeight: 1.1, margin: 0 }}>
-                Os Mais Escolhidos
-              </h2>
+      {(featuredProducts.length > 0 || role === 'ADMIN') && (
+        <section style={S.section('#fafafa')}>
+          <div style={S.container}>
+            <div data-reveal style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <span className="section-label">Favoritos do Salão</span>
+                <h2 style={{ fontFamily: 'var(--font-cormorant),Georgia,serif', fontSize: 'clamp(2rem,4vw,2.75rem)', fontWeight: 400, color: 'var(--navy)', lineHeight: 1.1, margin: 0 }}>
+                  Os Mais Escolhidos
+                </h2>
+              </div>
+              <Link
+                href="/catalogo"
+                className="arrow-link"
+                style={{ fontSize: '0.68rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--navy)', textDecoration: 'none', fontWeight: 600 }}
+              >
+                Ver Todos <span className="arrow-icon"><ArrowRight size={13} /></span>
+              </Link>
             </div>
-            <Link
-              href="/catalogo"
-              className="arrow-link"
-              style={{ fontSize: '0.68rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--navy)', textDecoration: 'none', fontWeight: 600 }}
-            >
-              Ver Todos <span className="arrow-icon"><ArrowRight size={13} /></span>
-            </Link>
-          </div>
 
-          {featuredProducts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '4rem', background: '#fff', borderRadius: '20px', border: '1px dashed var(--cream-dark)' }}>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                Nenhum produto em destaque ainda.{' '}
-                <Link href="/admin/produtos" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 600 }}>Marcar destaques no Admin →</Link>
-              </p>
-            </div>
-          ) : (
-            /* Cards are auto-detected by ScrollReveal (.card-product selector) */
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem' }}>
-              {featuredProducts.map(p => (
-                <ProductCard
-                  key={p.id}
-                  id={p.id}
-                  name={p.name}
-                  slug={p.slug}
-                  price={p.price}
-                  lineName={p.line?.name ?? null}
-                  images={p.images as string[]}
-                  proOnly={p.proOnly}
-                  featured
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+            {featuredProducts.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '4rem', background: '#fff', borderRadius: '20px', border: '1px dashed var(--cream-dark)' }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                  Nenhum produto em destaque ainda.{' '}
+                  <Link href="/admin/produtos" style={{ color: 'var(--gold)', textDecoration: 'none', fontWeight: 600 }}>Marcar destaques no Admin →</Link>
+                </p>
+              </div>
+            ) : (
+              /* Cards are auto-detected by ScrollReveal (.card-product selector) */
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.25rem' }}>
+                {featuredProducts.map(p => (
+                  <ProductCard
+                    key={p.id}
+                    id={p.id}
+                    name={p.name}
+                    slug={p.slug}
+                    price={isPro && p.pricePro ? p.pricePro : (p.price > 0 ? p.price : (p.pricePro ?? p.price))}
+                    lineName={p.line?.name ?? null}
+                    images={p.images as string[]}
+                    proOnly={p.proOnly}
+                    featured
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ── COMPROMISSO ── */}
       <section style={{ padding: 'clamp(3rem,6vw,5rem) 1.5rem' }}>

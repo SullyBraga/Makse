@@ -14,6 +14,8 @@ export default async function CatalogoPage() {
     prisma.product.findMany({
       where: {
         active: true,
+        archived: false,
+        ...(isPro ? {} : { proOnly: false, price: { gt: 0 } }),
       },
       include: {
         line: { select: { name: true, slug: true } },
@@ -23,7 +25,12 @@ export default async function CatalogoPage() {
     }),
     prisma.productLine.findMany({ orderBy: { order: 'asc' } }),
     prisma.kit.findMany({
-      where: { showInCatalog: true, active: true },
+      where: {
+        showInCatalog: true,
+        active: true,
+        archived: false,
+        ...(isPro ? {} : { items: { none: { product: { proOnly: true } } } }),
+      },
       include: {
         items: {
           include: { product: { select: { id: true } } },

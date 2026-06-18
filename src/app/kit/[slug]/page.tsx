@@ -29,6 +29,12 @@ export default async function KitPage({ params }: { params: Promise<{ slug: stri
 
   if (!kit) notFound()
 
+  // Verify access for pro-only kits
+  const hasProOnlyProduct = kit.items.some(item => item.product.proOnly)
+  if (hasProOnlyProduct && !isPro) {
+    notFound()
+  }
+
   // Compute price for session role
   const price = isVendedor && kit.priceVendedor
     ? kit.priceVendedor

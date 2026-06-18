@@ -45,7 +45,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     where: {
       active: true,
       showAsSuggestion: true,
-      items: { some: { productId: product.id } },
+      AND: [
+        { items: { some: { productId: product.id } } },
+        isPro ? {} : { items: { none: { product: { proOnly: true } } } }
+      ]
     },
     include: {
       items: {
