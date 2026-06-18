@@ -28,23 +28,34 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     }
 
     const body = await req.json()
-    const { street, number, complement, city, state, zipCode, country } = body
+    const { street, number, complement, city, state, zipCode, country, isDefault } = body
 
-    if (!street || !number || !city || !state || !zipCode) {
-      return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
+    const dataUpdate: any = {}
+    if (street !== undefined) dataUpdate.street = street
+    if (number !== undefined) dataUpdate.number = number
+    if (complement !== undefined) dataUpdate.complement = complement || null
+    if (city !== undefined) dataUpdate.city = city
+    if (state !== undefined) dataUpdate.state = state
+    if (zipCode !== undefined) dataUpdate.zipCode = zipCode
+    if (country !== undefined) dataUpdate.country = country || 'Brasil'
+    if (isDefault !== undefined) dataUpdate.isDefault = !!isDefault
+
+    if (isDefault === undefined || street !== undefined) {
+      if (!street || !number || !city || !state || !zipCode) {
+        return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
+      }
+    }
+
+    if (isDefault === true) {
+      await prisma.address.updateMany({
+        where: { userId: user.id, id: { not: id } },
+        data: { isDefault: false }
+      })
     }
 
     const updatedAddress = await prisma.address.update({
       where: { id },
-      data: {
-        street,
-        number,
-        complement: complement || null,
-        city,
-        state,
-        zipCode,
-        country: country || 'Brasil',
-      }
+      data: dataUpdate,
     })
 
     return NextResponse.json(updatedAddress)

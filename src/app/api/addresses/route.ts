@@ -12,7 +12,14 @@ export async function GET(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      include: { addresses: { orderBy: { createdAt: 'desc' } as any } }
+      include: {
+        addresses: {
+          orderBy: [
+            { isDefault: 'desc' },
+            { createdAt: 'desc' }
+          ]
+        }
+      }
     })
 
     if (!user) {
@@ -43,10 +50,20 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { street, number, complement, city, state, zipCode, country } = body
+    const { street, number, complement, city, state, zipCode, country, isDefault } = body
 
     if (!street || !number || !city || !state || !zipCode) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes' }, { status: 400 })
+    }
+
+    const addressCount = await prisma.address.count({ where: { userId: user.id } })
+    const makeDefault = isDefault === true || addressCount === 0
+
+    if (makeDefault) {
+      await prisma.address.updateMany({
+        where: { userId: user.id },
+        data: { isDefault: false }
+      })
     }
 
     const newAddress = await prisma.address.create({
@@ -59,6 +76,7 @@ export async function POST(req: NextRequest) {
         state,
         zipCode,
         country: country || 'Brasil',
+        isDefault: makeDefault,
       }
     })
 

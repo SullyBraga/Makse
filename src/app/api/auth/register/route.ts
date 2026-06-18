@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
             city:    city || '',
             state:   state || '',
             zipCode: zipCode || '',
+            isDefault: true,
           },
         })
       }

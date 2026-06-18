@@ -141,6 +141,28 @@ export default function ContaPage() {
     }
   }
 
+  const handleSetDefaultAddress = async (id: string) => {
+    try {
+      const res = await fetch(`/api/addresses/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isDefault: true }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Erro ao definir endereço como padrão')
+      }
+      setAddresses(prev =>
+        prev.map(a => ({
+          ...a,
+          isDefault: a.id === id,
+        })).sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0))
+      )
+    } catch (err: any) {
+      alert(err.message)
+    }
+  }
+
   const startEditAddress = (addr: any) => {
     setEditingAddress(addr)
     setAddingAddress(false)
@@ -465,8 +487,11 @@ export default function ContaPage() {
                     {addresses.map(addr => (
                       <div key={addr.id} style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
-                          <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--navy)', marginBottom: '0.25rem' }}>
+                          <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--navy)', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                             {addr.street}, {addr.number}
+                            {addr.isDefault && (
+                              <span style={{ fontSize: '0.55rem', background: 'var(--navy)', color: 'var(--gold)', padding: '2px 6px', borderRadius: '4px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Padrão</span>
+                            )}
                           </p>
                           {addr.complement && (
                             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{addr.complement}</p>
@@ -475,7 +500,12 @@ export default function ContaPage() {
                             {addr.city} - {addr.state}, CEP {addr.zipCode}
                           </p>
                         </div>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                          {!addr.isDefault && (
+                            <button onClick={() => handleSetDefaultAddress(addr.id)} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', padding: '0.4rem 0.75rem', border: '1px solid var(--gold)', borderRadius: '99px', background: 'none', fontSize: '0.68rem', cursor: 'pointer', color: 'var(--gold)', fontWeight: 600 }}>
+                              Definir como Principal
+                            </button>
+                          )}
                           <button onClick={() => startEditAddress(addr)} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', padding: '0.4rem 0.75rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.68rem', cursor: 'pointer', color: 'var(--navy)' }}>
                             <Edit3 size={11} /> Editar
                           </button>

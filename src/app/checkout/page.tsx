@@ -468,6 +468,9 @@ export default function CheckoutPage() {
                       <p style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--navy)', marginBottom: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                         {addr.country !== 'Brasil' ? <Globe size={13} style={{ color: 'var(--gold)' }} /> : <MapPin size={13} style={{ color: 'var(--gold)' }} />}
                         {addr.country}
+                        {(addr as any).isDefault && (
+                          <span style={{ fontSize: '0.55rem', background: 'var(--cream-dark)', color: 'var(--navy)', padding: '1px 5px', borderRadius: '4px', marginLeft: 'auto', marginRight: isSelected ? '1rem' : 0, fontWeight: 700 }}>Principal</span>
+                        )}
                       </p>
                       <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
                         {addr.street}, {addr.number}

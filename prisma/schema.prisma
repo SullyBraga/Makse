@@ -145,8 +145,8 @@ model KitItem {
 }
 
 model Address {
-  id         String  @id @default(cuid())
-  user       User    @relation(fields: [userId], references: [id])
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
   userId     String
   street     String
   number     String
@@ -154,7 +154,9 @@ model Address {
   city       String
   state      String
   zipCode    String
-  country    String  @default("Brasil")
+  country    String   @default("Brasil")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
   orders     Order[]
 }
 
