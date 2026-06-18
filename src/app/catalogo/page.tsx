@@ -15,7 +15,6 @@ export default async function CatalogoPage() {
       where: {
         active: true,
         archived: false,
-        ...(isPro ? {} : { proOnly: false, price: { gt: 0 } }),
       },
       include: {
         line: { select: { name: true, slug: true } },
