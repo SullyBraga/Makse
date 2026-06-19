@@ -102,7 +102,6 @@ model Product {
   createdAt       DateTime         @default(now())
 
   @@index([active, archived, featured])
-  @@index([lineId])
 }
 
 model ProductVariant {
