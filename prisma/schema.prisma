@@ -100,6 +100,9 @@ model Product {
   orderItems      OrderItem[]
   kitItems        KitItem[]
   createdAt       DateTime         @default(now())
+
+  @@index([active, archived, featured])
+  @@index([lineId])
 }
 
 model ProductVariant {
@@ -132,6 +135,8 @@ model Kit {
   items            KitItem[]
   orderItems       OrderItem[]
   createdAt        DateTime   @default(now())
+
+  @@index([showInCatalog, active, archived])
 }
 
 model KitItem {

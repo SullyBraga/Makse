@@ -35,7 +35,17 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           active: true,
           ...(isPro ? {} : { proOnly: false }),
         },
-        include: { line: { select: { name: true } } },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          pricePro: true,
+          productType: true,
+          proOnly: true,
+          images: true,
+          line: { select: { name: true } },
+        },
         take: 6,
       })
     : []
