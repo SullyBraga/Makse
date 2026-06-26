@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Leaf, Star, Shield } from 'lucide-react'
+import { ArrowRight, Shield } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import ProductCard from '@/components/shop/ProductCard'
@@ -39,36 +39,7 @@ export default async function HomePage() {
       {/* ── HERO ── */}
       <HeroSection />
 
-      {/* ── DIFERENCIAIS ── */}
-      <section style={S.section('#fff')}>
-        <div style={S.container}>
-          <div data-reveal style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <span className="section-label">Por que Makse</span>
-          </div>
-          {/* Each card has its own data-reveal + delay */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: '1.25rem' }}>
-            {[
-              { icon: <Leaf size={22} />, title: 'Ativos Naturais', desc: 'Biotecnologia com o poder da natureza para resultados saudáveis e duradouros.', delay: '0' },
-              { icon: <Star size={22} />, title: 'Performance Pro', desc: 'Aprovados pelos maiores coloristas e salões profissionais do Brasil.', delay: '0.1' },
-              { icon: <Shield size={22} />, title: 'Tecnologia Plex', desc: 'Proteção máxima da fibra capilar mesmo durante os processos mais intensos.', delay: '0.2' },
-            ].map(item => (
-              <div
-                key={item.title}
-                data-reveal
-                data-reveal-delay={item.delay}
-                className="hover-lift"
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '2rem 1.5rem', border: '1px solid var(--cream)', borderRadius: '20px', background: '#fff' }}
-              >
-                <div style={{ color: 'var(--gold)', marginBottom: '1rem', padding: '0.875rem', background: 'var(--cream)', borderRadius: '50%' }}>
-                  {item.icon}
-                </div>
-                <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--navy)', marginBottom: '0.5rem', fontFamily: 'var(--font-dm-sans),sans-serif' }}>{item.title}</h3>
-                <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* ── BEST SELLERS ── */}
       {(featuredProducts.length > 0 || role === 'ADMIN') && (
