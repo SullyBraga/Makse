@@ -14,7 +14,21 @@ type CartItem = {
   price: number; image: string; quantity: number
 }
 
-type UserResult = { id: string; name: string; email: string; role: string }
+type UserResult = {
+  id: string; name: string; email: string; role: string
+  professionalReq?: { phone: string; cnpj?: string | null; salonAddress?: string | null } | null
+  addresses?: {
+    id: string
+    street: string
+    number: string
+    complement: string | null
+    city: string
+    state: string
+    zipCode: string
+    country: string
+    isDefault: boolean
+  }[]
+}
 
 const PAYMENT_METHODS = [
   { value: 'DINHEIRO', label: 'Dinheiro' },
@@ -35,6 +49,9 @@ export default function VendasPage() {
   const [customerResults, setCustomerResults] = useState<UserResult[]>([])
   const [selectedCustomer, setSelectedCustomer] = useState<UserResult | null>(null)
   const [customerName, setCustomerName] = useState('')
+  const [customerCpf, setCustomerCpf] = useState('')
+  const [customerPhone, setCustomerPhone] = useState('')
+  const [customerAddress, setCustomerAddress] = useState('')
 
   // Payment
   const [paymentMethod, setPaymentMethod] = useState('PIX')
@@ -89,6 +106,35 @@ export default function VendasPage() {
     setCart(prev => prev.map(i => i.productId === productId && i.variantId === variantId ? { ...i, price } : i))
   }
 
+  const formatAddress = (addr: any) => {
+    if (!addr) return ''
+    return `${addr.street}, ${addr.number}${addr.complement ? ` - ${addr.complement}` : ''}, ${addr.city} - ${addr.state}, CEP ${addr.zipCode}`
+  }
+
+  const handleSelectCustomer = (u: UserResult) => {
+    setSelectedCustomer(u)
+    setCustomerSearch('')
+    setCustomerResults([])
+    setCustomerName(u.name)
+    
+    // Auto-populate phone
+    const phone = u.professionalReq?.phone || ''
+    setCustomerPhone(phone)
+
+    // Auto-populate CPF/CNPJ
+    const cnpj = u.professionalReq?.cnpj || ''
+    setCustomerCpf(cnpj)
+
+    // Auto-populate address
+    const addresses = u.addresses || []
+    const defaultAddr = addresses.find(a => a.isDefault) || addresses[0]
+    if (defaultAddr) {
+      setCustomerAddress(formatAddress(defaultAddr))
+    } else {
+      setCustomerAddress('')
+    }
+  }
+
   const total = cart.reduce((s, i) => s + i.price * i.quantity, 0)
 
   const handleSell = async () => {
@@ -99,14 +145,18 @@ export default function VendasPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         customerId: selectedCustomer?.id || null,
-        customerName: !selectedCustomer ? customerName.trim() : null,
+        customerName: selectedCustomer ? selectedCustomer.name : customerName.trim(),
+        customerCpf: customerCpf.trim() || null,
+        customerPhone: customerPhone.trim() || null,
+        customerAddress: customerAddress.trim() || null,
         paymentMethod,
         note: note || null,
         items: cart.map(i => ({ productId: i.productId, variantId: i.variantId, quantity: i.quantity, unitPrice: i.price })),
       }),
     })
     if (res.ok) {
-      setSuccess(true); setCart([]); setSelectedCustomer(null); setCustomerName('')
+      setSuccess(true); setCart([]); setSelectedCustomer(null)
+      setCustomerName(''); setCustomerCpf(''); setCustomerPhone(''); setCustomerAddress('')
       setTimeout(() => { setSuccess(false); setStep('cart') }, 3000)
     } else {
       const d = await res.json(); setError(d.error || 'Erro ao registrar venda')
@@ -193,7 +243,7 @@ export default function VendasPage() {
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{selectedCustomer.email}</p>
                       </div>
                     </div>
-                    <button onClick={() => setSelectedCustomer(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={14} /></button>
+                    <button onClick={() => { setSelectedCustomer(null); setCustomerName(''); setCustomerCpf(''); setCustomerPhone(''); setCustomerAddress('') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={14} /></button>
                   </div>
                 ) : (
                   <>
@@ -205,7 +255,7 @@ export default function VendasPage() {
                     {customerResults.length > 0 && (
                       <div style={{ border: '1px solid var(--border)', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.75rem' }}>
                         {customerResults.map(u => (
-                          <button key={u.id} onClick={() => { setSelectedCustomer(u); setCustomerSearch(''); setCustomerResults([]) }}
+                          <button key={u.id} onClick={() => handleSelectCustomer(u)}
                             style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 0.875rem', background: 'none', border: 'none', borderBottom: '1px solid var(--cream)', cursor: 'pointer', textAlign: 'left' }}>
                             <User size={13} style={{ color: 'var(--text-muted)' }} />
                             <div>
@@ -220,6 +270,51 @@ export default function VendasPage() {
                     <input type="text" placeholder="Nome do cliente" value={customerName} onChange={e => setCustomerName(e.target.value)} style={inp} />
                   </>
                 )}
+
+                {/* Customer Details Form */}
+                <div style={{ background: 'var(--cream)', borderRadius: '12px', padding: '1rem', marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                    <div>
+                      <label style={lbl}>CPF/CNPJ</label>
+                      <input style={inp} placeholder="000.000.000-00" value={customerCpf} onChange={e => setCustomerCpf(e.target.value)} />
+                    </div>
+                    <div>
+                      <label style={lbl}>Telefone</label>
+                      <input style={inp} placeholder="(00) 00000-0000" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} />
+                    </div>
+                  </div>
+
+                  {selectedCustomer && selectedCustomer.addresses && selectedCustomer.addresses.length > 0 && (
+                    <div style={{ marginBottom: '0.25rem' }}>
+                      <label style={lbl}>Selecionar Endereço Salvo</label>
+                      <select
+                        style={inp}
+                        onChange={e => {
+                          const idx = parseInt(e.target.value)
+                          if (idx >= 0 && selectedCustomer.addresses) {
+                            setCustomerAddress(formatAddress(selectedCustomer.addresses[idx]))
+                          }
+                        }}
+                        defaultValue={
+                          (() => {
+                            const defIdx = selectedCustomer.addresses.findIndex(a => a.isDefault)
+                            return defIdx >= 0 ? defIdx : 0
+                          })()
+                        }
+                      >
+                        {selectedCustomer.addresses.map((addr, idx) => (
+                          <option key={addr.id} value={idx}>
+                            {addr.isDefault ? '[Padrão] ' : ''}{addr.street}, {addr.number} ({addr.city})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  <div>
+                    <label style={lbl}>Endereço</label>
+                    <input style={inp} placeholder="Rua, número, bairro, cidade" value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} />
+                  </div>
+                </div>
               </div>
 
               {/* Payment method */}

@@ -15,7 +15,18 @@ const roleConfig: Record<string, { label: string; bg: string; color: string }> =
 type User = {
   id: string; name: string; email: string; role: string; createdAt: string
   discountTable: { id: string; name: string; percentage: number } | null
-  professionalReq: { salonName: string; city: string; phone: string; instagram?: string } | null
+  professionalReq: { salonName: string; city: string; phone: string; instagram?: string; cnpj?: string | null; salonAddress?: string | null } | null
+  addresses?: {
+    id: string
+    street: string
+    number: string
+    complement: string | null
+    city: string
+    state: string
+    zipCode: string
+    country: string
+    isDefault: boolean
+  }[]
 }
 
 type DiscountTable = { id: string; name: string; percentage: number }
@@ -40,6 +51,7 @@ export default function AdminUsuariosPage() {
   const [newTablePercentage, setNewTablePercentage] = useState('')
   const [tableActionLoading, setTableActionLoading] = useState(false)
   const [tableActionError, setTableActionError] = useState('')
+  const [selectedUserForDetails, setSelectedUserForDetails] = useState<User | null>(null)
 
   const fetchData = async () => {
     setLoading(true)
@@ -365,7 +377,27 @@ export default function AdminUsuariosPage() {
                       const rc = roleConfig[user.role] ?? { label: user.role, bg: 'var(--cream)', color: 'var(--navy)' }
                       return (
                         <tr key={user.id} style={{ borderBottom: '1px solid var(--cream)' }}>
-                          <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.84rem', fontWeight: 500, color: 'var(--navy)' }}>{user.name}</td>
+                           <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.84rem', fontWeight: 500, color: 'var(--navy)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <span>{user.name}</span>
+                              <button
+                                onClick={() => setSelectedUserForDetails(user)}
+                                title="Ver detalhes do usuário"
+                                style={{
+                                  background: 'none',
+                                  border: 'none',
+                                  cursor: 'pointer',
+                                  color: 'var(--text-muted)',
+                                  padding: '0.2rem',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  borderRadius: '4px',
+                                }}
+                              >
+                                <Eye size={13} style={{ color: 'var(--gold)' }} />
+                              </button>
+                            </div>
+                          </td>
                           <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user.email}</td>
                           <td style={{ padding: '0.875rem 1.25rem' }}>
                             <span style={{ fontSize: '0.65rem', padding: '0.25rem 0.625rem', borderRadius: '99px', background: rc.bg, color: rc.color, fontWeight: 600 }}>
@@ -397,6 +429,107 @@ export default function AdminUsuariosPage() {
             )}
           </div>
         </>
+      )}
+
+      {/* User Details Modal */}
+      {selectedUserForDetails && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+          <div style={{ background: '#fff', borderRadius: '20px', padding: '2rem', width: '100%', maxWidth: '540px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+              <div>
+                <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>Detalhes do Usuário</h2>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Informações cadastrais e de envio</p>
+              </div>
+              <button onClick={() => setSelectedUserForDetails(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem' }}><X size={18} /></button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              {/* Seção 1: Geral */}
+              <div>
+                <h3 style={{ fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.6rem' }}>Informações de Conta</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: 'var(--cream)', padding: '1rem', borderRadius: '12px' }}>
+                  <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>Nome:</strong> {selectedUserForDetails.name}</p>
+                  <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>E-mail:</strong> {selectedUserForDetails.email}</p>
+                  <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}>
+                    <strong>Tipo:</strong>{' '}
+                    <span style={{ fontSize: '0.7rem', padding: '0.15rem 0.5rem', borderRadius: '99px', background: roleConfig[selectedUserForDetails.role]?.bg || 'var(--cream-dark)', color: roleConfig[selectedUserForDetails.role]?.color || 'var(--navy)', fontWeight: 600, marginLeft: '0.25rem' }}>
+                      {roleConfig[selectedUserForDetails.role]?.label || selectedUserForDetails.role}
+                    </span>
+                  </p>
+                  <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>Desconto Ativo:</strong> {selectedUserForDetails.discountTable ? `${selectedUserForDetails.discountTable.name} (${selectedUserForDetails.discountTable.percentage}%)` : 'Sem desconto'}</p>
+                  <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', margin: 0 }}><strong>Criado em:</strong> {new Date(selectedUserForDetails.createdAt).toLocaleDateString('pt-BR')} às {new Date(selectedUserForDetails.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
+                </div>
+              </div>
+
+              {/* Seção 2: Dados Profissionais */}
+              {selectedUserForDetails.professionalReq && (
+                <div>
+                  <h3 style={{ fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.6rem' }}>Dados Profissionais</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', background: '#f5f3ff', padding: '1rem', borderRadius: '12px', border: '1px solid #ddd6fe' }}>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>Salão:</strong> {selectedUserForDetails.professionalReq.salonName}</p>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>Cidade do Salão:</strong> {selectedUserForDetails.professionalReq.city}</p>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>Telefone:</strong> {selectedUserForDetails.professionalReq.phone}</p>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>CNPJ:</strong> {selectedUserForDetails.professionalReq.cnpj || '—'}</p>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}><strong>Endereço do Salão:</strong> {selectedUserForDetails.professionalReq.salonAddress || '—'}</p>
+                    {selectedUserForDetails.professionalReq.instagram && (
+                      <p style={{ fontSize: '0.84rem', color: 'var(--navy)', margin: 0 }}>
+                        <strong>Instagram:</strong>{' '}
+                        <a
+                          href={`https://instagram.com/${selectedUserForDetails.professionalReq.instagram.replace('@', '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: '#7c3aed', textDecoration: 'underline', fontWeight: 500 }}
+                        >
+                          {selectedUserForDetails.professionalReq.instagram}
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Seção 3: Endereços de Envio */}
+              <div>
+                <h3 style={{ fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.6rem' }}>Endereços de Envio</h3>
+                {selectedUserForDetails.addresses && selectedUserForDetails.addresses.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {selectedUserForDetails.addresses.map((addr) => (
+                      <div key={addr.id} style={{ border: '1px solid var(--border)', borderRadius: '10px', padding: '0.75rem 1rem', background: addr.isDefault ? '#f0fdf4' : '#fff', borderColor: addr.isDefault ? '#bbf7d0' : 'var(--border)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--navy)' }}>
+                            {addr.street}, Nº {addr.number}
+                          </span>
+                          {addr.isDefault && (
+                            <span style={{ fontSize: '0.6rem', padding: '0.1rem 0.4rem', borderRadius: '4px', background: '#dcfce7', color: '#15803d', fontWeight: 700 }}>
+                              Padrão
+                            </span>
+                          )}
+                        </div>
+                        {addr.complement && <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', margin: '0 0 0.25rem' }}>Compl: {addr.complement}</p>}
+                        <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', margin: 0 }}>
+                          {addr.city} - {addr.state} · CEP {addr.zipCode}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ padding: '1rem', border: '1px dashed var(--border)', borderRadius: '10px', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    Nenhum endereço de envio cadastrado.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1.75rem', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid var(--border)', paddingTop: '1rem', flexShrink: 0 }}>
+              <button
+                onClick={() => setSelectedUserForDetails(null)}
+                style={{ padding: '0.55rem 1.5rem', border: '1px solid var(--border)', borderRadius: '10px', background: '#fff', color: 'var(--navy)', fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-dm-sans), sans-serif' }}
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

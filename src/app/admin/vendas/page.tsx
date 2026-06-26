@@ -7,7 +7,21 @@ type Variant = { id: string; label: string; price: number; priceVendedor: number
 type Product = { id: string; name: string; sku: string | null; price: number; pricePro: number | null; priceVendedor: number | null; proOnly: boolean; images: string[]; variants: Variant[] }
 type Kit = { id: string; name: string; sku: string | null; price: number; priceVendedor: number | null; images: string[] }
 type CartItem = { productId?: string; kitId?: string; variantId: string | null; name: string; variantLabel: string; price: number; image: string; quantity: number; proOnly?: boolean; isKit?: boolean }
-type UserResult = { id: string; name: string; email: string; role: string }
+type UserResult = {
+  id: string; name: string; email: string; role: string
+  professionalReq?: { phone: string; cnpj?: string | null; salonAddress?: string | null } | null
+  addresses?: {
+    id: string
+    street: string
+    number: string
+    complement: string | null
+    city: string
+    state: string
+    zipCode: string
+    country: string
+    isDefault: boolean
+  }[]
+}
 
 const PAYMENTS = [
   { value: 'DINHEIRO', label: 'Dinheiro' },
@@ -88,6 +102,35 @@ export default function VendasPage() {
     setCart(prev => prev.map((item, i) => i === idx ? { ...item, price } : item))
   }
 
+  const formatAddress = (addr: any) => {
+    if (!addr) return ''
+    return `${addr.street}, ${addr.number}${addr.complement ? ` - ${addr.complement}` : ''}, ${addr.city} - ${addr.state}, CEP ${addr.zipCode}`
+  }
+
+  const handleSelectCustomer = (u: UserResult) => {
+    setSelectedCustomer(u)
+    setCustomerSearch('')
+    setCustomerResults([])
+    setCustomerName(u.name)
+    
+    // Auto-populate phone
+    const phone = u.professionalReq?.phone || ''
+    setCustomerPhone(phone)
+
+    // Auto-populate CPF/CNPJ
+    const cnpj = u.professionalReq?.cnpj || ''
+    setCustomerCpf(cnpj)
+
+    // Auto-populate address
+    const addresses = u.addresses || []
+    const defaultAddr = addresses.find(a => a.isDefault) || addresses[0]
+    if (defaultAddr) {
+      setCustomerAddress(formatAddress(defaultAddr))
+    } else {
+      setCustomerAddress('')
+    }
+  }
+
   const total = cart.reduce((s, i) => s + i.price * i.quantity, 0)
 
   const handleSell = async () => {
@@ -98,10 +141,10 @@ export default function VendasPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         customerId: selectedCustomer?.id || null,
-        customerName: !selectedCustomer ? customerName.trim() : null,
-        customerCpf: !selectedCustomer ? customerCpf.trim() || null : null,
-        customerPhone: !selectedCustomer ? customerPhone.trim() || null : null,
-        customerAddress: !selectedCustomer ? customerAddress.trim() || null : null,
+        customerName: selectedCustomer ? selectedCustomer.name : customerName.trim(),
+        customerCpf: customerCpf.trim() || null,
+        customerPhone: customerPhone.trim() || null,
+        customerAddress: customerAddress.trim() || null,
         paymentMethod, note: note || null,
         items: cart.map(i => ({ productId: i.productId || null, kitId: i.kitId || null, variantId: i.variantId, quantity: i.quantity, unitPrice: i.price })),
       }),
@@ -216,7 +259,7 @@ export default function VendasPage() {
                         <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{selectedCustomer.email} · {selectedCustomer.role}</p>
                       </div>
                     </div>
-                    <button onClick={() => setSelectedCustomer(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={14} /></button>
+                    <button onClick={() => { setSelectedCustomer(null); setCustomerName(''); setCustomerCpf(''); setCustomerPhone(''); setCustomerAddress('') }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={14} /></button>
                   </div>
                 ) : (
                   <>
@@ -227,7 +270,7 @@ export default function VendasPage() {
                     {customerResults.length > 0 && (
                       <div style={{ border: '1px solid var(--border)', borderRadius: '10px', overflow: 'hidden', marginBottom: '0.75rem' }}>
                         {customerResults.map(u => (
-                          <button key={u.id} onClick={() => { setSelectedCustomer(u); setCustomerSearch(''); setCustomerResults([]) }}
+                          <button key={u.id} onClick={() => handleSelectCustomer(u)}
                             style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 0.875rem', background: 'none', border: 'none', borderBottom: '1px solid var(--cream)', cursor: 'pointer', textAlign: 'left' }}>
                             <User size={13} style={{ color: 'var(--text-muted)' }} />
                             <div>
@@ -259,6 +302,32 @@ export default function VendasPage() {
                       <input style={s} placeholder="(00) 00000-0000" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} />
                     </div>
                   </div>
+                  {selectedCustomer && selectedCustomer.addresses && selectedCustomer.addresses.length > 0 && (
+                    <div style={{ marginBottom: '0.5rem' }}>
+                      <label style={lbl}>Selecionar Endereço Salvo</label>
+                      <select
+                        style={s}
+                        onChange={e => {
+                          const idx = parseInt(e.target.value)
+                          if (idx >= 0 && selectedCustomer.addresses) {
+                            setCustomerAddress(formatAddress(selectedCustomer.addresses[idx]))
+                          }
+                        }}
+                        defaultValue={
+                          (() => {
+                            const defIdx = selectedCustomer.addresses.findIndex(a => a.isDefault)
+                            return defIdx >= 0 ? defIdx : 0
+                          })()
+                        }
+                      >
+                        {selectedCustomer.addresses.map((addr, idx) => (
+                          <option key={addr.id} value={idx}>
+                            {addr.isDefault ? '[Padrão] ' : ''}{addr.street}, {addr.number} ({addr.city})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                   <div>
                     <label style={lbl}>Endereço</label>
                     <input style={s} placeholder="Rua, número, bairro, cidade" value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} />

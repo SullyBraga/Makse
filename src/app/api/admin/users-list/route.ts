@@ -39,6 +39,21 @@ export async function GET(req: NextRequest) {
           city: true,
           phone: true,
           instagram: true,
+          cnpj: true,
+          salonAddress: true,
+        }
+      },
+      addresses: {
+        select: {
+          id: true,
+          street: true,
+          number: true,
+          complement: true,
+          city: true,
+          state: true,
+          zipCode: true,
+          country: true,
+          isDefault: true,
         }
       }
     },
