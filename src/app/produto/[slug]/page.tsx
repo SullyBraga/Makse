@@ -182,6 +182,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 product={{ id: product.id, name: product.name, slug: product.slug, proOnly: product.proOnly, weight: product.weight }}
                 variants={product.variants}
                 basePrice={product.price}
+                baseOriginalPrice={product.originalPrice}
                 discountPct={discountPct}
                 isPro={isPro}
               />

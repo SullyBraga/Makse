@@ -5,7 +5,7 @@ import ProductCard from '@/components/shop/ProductCard'
 import Link from 'next/link'
 
 type Item = {
-  id: string; name: string; slug: string; price: number
+  id: string; name: string; slug: string; price: number; originalPrice?: number | null
   productType: string | null; weight: string | null
   proOnly: boolean; featured: boolean; images: string[]
   lineName: string | null; lineSlug: string | null; totalStock: number
@@ -26,6 +26,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
   const [activeLineSlug, setActiveLineSlug] = useState<string | null>(null)
   const [sort, setSort] = useState<'relevance' | 'asc' | 'desc'>('relevance')
   const [showKitsOnly, setShowKitsOnly] = useState(false)
+  const [showPromosOnly, setShowPromosOnly] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
   // Active filters states
@@ -38,6 +39,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
   // Temporary states for filters popup (non-realtime filtering)
   const [tempLineSlug, setTempLineSlug] = useState<string | null>(null)
   const [tempKitsOnly, setTempKitsOnly] = useState(false)
+  const [tempPromosOnly, setTempPromosOnly] = useState(false)
   const [tempSelectedTypes, setTempSelectedTypes] = useState<string[]>([])
   const [tempSelectedWeights, setTempSelectedWeights] = useState<string[]>([])
 
@@ -78,6 +80,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
     // Populate temp states from currently active filters
     setTempLineSlug(activeLineSlug)
     setTempKitsOnly(showKitsOnly)
+    setTempPromosOnly(showPromosOnly)
     setTempSelectedTypes(selectedTypes)
     setTempSelectedWeights(selectedWeights)
     
@@ -93,6 +96,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
   const applyFilters = () => {
     setActiveLineSlug(tempLineSlug)
     setShowKitsOnly(tempKitsOnly)
+    setShowPromosOnly(tempPromosOnly)
     setSelectedTypes(tempSelectedTypes)
     setSelectedWeights(tempSelectedWeights)
     closeFiltersModal()
@@ -101,10 +105,12 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
   const clearAllFilters = () => {
     setActiveLineSlug(null)
     setShowKitsOnly(false)
+    setShowPromosOnly(false)
     setSelectedTypes([])
     setSelectedWeights([])
     setTempLineSlug(null)
     setTempKitsOnly(false)
+    setTempPromosOnly(false)
     setTempSelectedTypes([])
     setTempSelectedWeights([])
     setSearchQuery('')
@@ -126,6 +132,13 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
         const matchesLine = (p.lineName || '').toLowerCase().includes(query)
         const matchesType = (p.productType || '').toLowerCase().includes(query)
         if (!matchesName && !matchesDesc && !matchesLine && !matchesType) return false
+      }
+
+      // Filter by Promos
+      if (showPromosOnly) {
+        const hasOriginal = p.originalPrice != null && p.originalPrice > p.price
+        const hasProDesc = !p.isKit && discountPct > 0
+        if (!hasOriginal && !hasProDesc) return false
       }
 
       // Filter by Line / Kits
@@ -222,6 +235,20 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <button
+              onClick={() => setShowPromosOnly(prev => !prev)}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                padding: '0.4rem 0.875rem', borderRadius: '999px', fontSize: '0.75rem',
+                border: `1px solid ${showPromosOnly ? '#16a34a' : 'var(--cream-dark)'}`,
+                background: showPromosOnly ? '#dcfce7' : '#fff',
+                color: showPromosOnly ? '#15803d' : 'var(--navy)',
+                fontFamily: 'var(--font-dm-sans)', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s'
+              }}
+            >
+              <span>🏷️ Promoções</span>
+            </button>
+
+            <button
               onClick={openFiltersModal}
               style={{
                 display: 'flex', alignItems: 'center', gap: '0.4rem',
@@ -233,14 +260,14 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
             >
               <SlidersHorizontal size={13} />
               <span>Filtrar</span>
-              {(activeLineSlug || showKitsOnly || selectedTypes.length > 0 || selectedWeights.length > 0) && (
+              {(activeLineSlug || showKitsOnly || showPromosOnly || selectedTypes.length > 0 || selectedWeights.length > 0) && (
                 <span style={{
                   background: 'var(--navy)',
                   color: '#fff',
                   fontSize: '0.6rem', padding: '1px 5px', borderRadius: '99px', fontWeight: 700,
                   marginLeft: '0.25rem'
                 }}>
-                  {(activeLineSlug ? 1 : 0) + (showKitsOnly ? 1 : 0) + selectedTypes.length + selectedWeights.length}
+                  {(activeLineSlug ? 1 : 0) + (showKitsOnly ? 1 : 0) + (showPromosOnly ? 1 : 0) + selectedTypes.length + selectedWeights.length}
                 </span>
               )}
             </button>
@@ -255,10 +282,29 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
         </div>
 
         {/* Active Filters Tags Bar */}
-        {(activeLineSlug || showKitsOnly || selectedTypes.length > 0 || selectedWeights.length > 0) && (
+        {(activeLineSlug || showKitsOnly || showPromosOnly || selectedTypes.length > 0 || selectedWeights.length > 0) && (
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.75rem', alignItems: 'center' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500 }}>Filtros ativos:</span>
             
+            {showPromosOnly && (
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
+                padding: '0.25rem 0.625rem', borderRadius: '99px', background: '#dcfce7',
+                color: '#15803d', fontSize: '0.7rem', fontWeight: 600, border: '1px solid #bbf7d0'
+              }}>
+                <span>🏷️ Promoções</span>
+                <button
+                  onClick={() => {
+                    setShowPromosOnly(false)
+                    setTempPromosOnly(false)
+                  }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#15803d', display: 'flex', padding: 0 }}
+                >
+                  <X size={10} />
+                </button>
+              </span>
+            )}
+
             {activeLineSlug && (
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
@@ -365,6 +411,7 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
                   name={p.name}
                   slug={p.isKit ? `kit/${p.slug}` : p.slug}
                   price={p.price}
+                  originalPrice={p.originalPrice}
                   discountedPrice={discounted}
                   discountPct={!p.isKit && discountPct > 0 ? discountPct : undefined}
                   lineName={p.lineName}
@@ -390,13 +437,36 @@ export default function CatalogoClient({ products, lines, discountPct, isPro, ro
         data-lenis-prevent
       >
         <div className="filters-dialog-header">
-          <h2 className="filters-dialog-title">Filtrar Produtos</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <SlidersHorizontal size={15} style={{ color: 'var(--gold)' }} />
+            <h3 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.35rem', fontWeight: 500, color: 'var(--navy)', margin: 0 }}>
+              Filtrar Produtos
+            </h3>
+          </div>
           <button className="filters-dialog-close" onClick={closeFiltersModal} aria-label="Fechar modal">
             <X size={15} />
           </button>
         </div>
 
         <div className="filters-dialog-content">
+          {/* Promoções & Ofertas */}
+          <div>
+            <h4 className="filters-dialog-section-title">Ofertas & Promoções</h4>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <button
+                onClick={() => setTempPromosOnly(!tempPromosOnly)}
+                className={`filter-pill ${tempPromosOnly ? 'active' : ''}`}
+                style={{
+                  background: tempPromosOnly ? '#16a34a' : undefined,
+                  borderColor: tempPromosOnly ? '#16a34a' : undefined,
+                  color: tempPromosOnly ? '#fff' : undefined,
+                }}
+              >
+                🏷️ Em Promoção
+              </button>
+            </div>
+          </div>
+
           {/* Linhas & Kits */}
           <div>
             <h4 className="filters-dialog-section-title">Linhas & Kits</h4>

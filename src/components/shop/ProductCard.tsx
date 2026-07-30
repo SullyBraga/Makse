@@ -7,6 +7,7 @@ type Props = {
   name: string
   slug: string        // full path passed in (e.g. kit/my-slug or just my-slug)
   price: number
+  originalPrice?: number | null
   discountedPrice?: number | null
   discountPct?: number
   lineName?: string | null
@@ -20,13 +21,22 @@ type Props = {
 }
 
 export default function ProductCard({
-  name, slug, price, discountedPrice, discountPct, lineName, productType,
+  name, slug, price, originalPrice, discountedPrice, discountPct, lineName, productType,
   images, proOnly, outOfStock, badgeLabel, badgeColor,
 }: Props) {
   const coverImage = images?.[0] ?? null
-  const displayPrice = discountedPrice ?? price
   // slug may be a full relative path like "kit/my-slug" or just "my-slug"
   const href = slug.startsWith('kit/') || slug.startsWith('/') ? `/${slug}` : `/produto/${slug}`
+
+  const hasOriginalPrice = originalPrice != null && originalPrice > price
+  const hasProDiscount = discountedPrice != null && discountedPrice < price
+
+  const displayOriginalPrice = hasProDiscount ? price : (hasOriginalPrice ? originalPrice : null)
+  const displaySellingPrice = hasProDiscount ? discountedPrice! : price
+
+  const displayDiscountPct = hasProDiscount
+    ? (discountPct ?? Math.round(((price - discountedPrice!) / price) * 100))
+    : (hasOriginalPrice ? Math.round(((originalPrice! - price) / originalPrice!) * 100) : null)
 
   return (
     <div className="card-product" style={{ position: 'relative' }}>
@@ -59,9 +69,9 @@ export default function ProductCard({
                 <Scissors size={7} /> Pro
               </span>
             )}
-            {discountPct && discountPct > 0 ? (
+            {displayDiscountPct && displayDiscountPct > 0 ? (
               <span style={{ background: '#16a34a', color: '#fff', fontSize: '0.52rem', padding: '0.25rem 0.6rem', borderRadius: '999px', fontWeight: 700, letterSpacing: '0.05em' }}>
-                -{discountPct}%
+                -{displayDiscountPct}%
               </span>
             ) : null}
             {outOfStock && (
@@ -96,19 +106,19 @@ export default function ProductCard({
         </Link>
 
         {/* Price */}
-        {discountedPrice ? (
+        {displayOriginalPrice ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textDecoration: 'line-through' }}>
-              R$ {price.toFixed(2).replace('.', ',')}
+              R$ {displayOriginalPrice.toFixed(2).replace('.', ',')}
             </span>
             <span style={{ fontSize: '1rem', fontWeight: 700, color: '#16a34a' }}>
-              R$ {discountedPrice.toFixed(2).replace('.', ',')}
+              R$ {displaySellingPrice.toFixed(2).replace('.', ',')}
             </span>
           </div>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
             <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--navy)', margin: 0 }}>
-              R$ {displayPrice.toFixed(2).replace('.', ',')}
+              R$ {displaySellingPrice.toFixed(2).replace('.', ',')}
             </p>
             {proOnly && (
               <span style={{ fontSize: '0.55rem', color: 'var(--gold)', background: 'var(--navy)', padding: '2px 6px', borderRadius: '4px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>PRO</span>

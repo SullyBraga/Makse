@@ -3,12 +3,13 @@ import { useState, useRef, useCallback } from 'react'
 import { ShoppingBag, Check, Minus, Plus } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 
-type Variant = { id: string; label: string; price: number; pricePro: number | null; priceVendedor: number | null; stock: number }
+type Variant = { id: string; label: string; price: number; originalPrice?: number | null; pricePro: number | null; priceVendedor: number | null; stock: number }
 
 type Props = {
   product: { id: string; name: string; slug: string; proOnly: boolean; weight?: string | null }
   variants: Variant[]
   basePrice: number
+  baseOriginalPrice?: number | null
   discountPct: number
   isPro?: boolean
 }
@@ -17,7 +18,7 @@ type Particle = { id: number; dx: string; dy: string; color: string; size: numbe
 
 const PARTICLE_COLORS = ['#64748b', '#1e293b', '#94a3b8', '#fff', '#e2e8f0', '#475569']
 
-export default function ProductActions({ product, variants, basePrice, discountPct, isPro = false }: Props) {
+export default function ProductActions({ product, variants, basePrice, baseOriginalPrice, discountPct, isPro = false }: Props) {
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(variants[0] ?? null)
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
@@ -38,6 +39,12 @@ export default function ProductActions({ product, variants, basePrice, discountP
   const price = getRolePrice(selectedVariant)
   const discounted = discountPct > 0 ? price * (1 - discountPct / 100) : price
   const originalClientPrice = selectedVariant?.price ?? basePrice
+  const rawOriginalPrice = selectedVariant?.originalPrice ?? baseOriginalPrice
+  const hasOriginalPrice = rawOriginalPrice != null && rawOriginalPrice > price
+  const displayStrikethroughPrice = discountPct > 0 ? price : (hasOriginalPrice ? rawOriginalPrice : null)
+  const effectiveDiscountPct = discountPct > 0
+    ? discountPct
+    : (hasOriginalPrice ? Math.round(((rawOriginalPrice! - price) / rawOriginalPrice!) * 100) : 0)
   const outOfStock = selectedVariant ? selectedVariant.stock === 0 : false
 
   const burst = useCallback(() => {
@@ -131,23 +138,23 @@ export default function ProductActions({ product, variants, basePrice, discountP
             Preço público: R$ {originalClientPrice.toFixed(2).replace('.', ',')}
           </p>
         )}
-        {discountPct > 0 && (
+        {displayStrikethroughPrice != null && (
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textDecoration: 'line-through', marginBottom: '0.15rem' }}>
-            R$ {price.toFixed(2).replace('.', ',')}
+            R$ {displayStrikethroughPrice.toFixed(2).replace('.', ',')}
           </p>
         )}
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', flexWrap: 'wrap' }}>
           <span style={{
             fontFamily: 'var(--font-cormorant), serif',
             fontSize: '2.25rem', fontWeight: 400, lineHeight: 1,
-            color: discountPct > 0 ? '#16a34a' : 'var(--navy)',
+            color: effectiveDiscountPct > 0 ? '#16a34a' : 'var(--navy)',
             transition: 'color 0.3s',
           }}>
             R$ {discounted.toFixed(2).replace('.', ',')}
           </span>
-          {discountPct > 0 && (
+          {effectiveDiscountPct > 0 && (
             <span style={{ fontSize: '0.68rem', background: '#dcfce7', color: '#166534', padding: '0.2rem 0.7rem', borderRadius: '999px', fontWeight: 700, animation: 'popIn 0.4s var(--spring) both' }}>
-              -{discountPct}% desconto
+              -{effectiveDiscountPct}% desconto
             </span>
           )}
         </div>

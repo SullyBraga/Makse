@@ -9,9 +9,10 @@ const PRODUCT_TYPES = ['Shampoo', 'Condicionador', 'Máscara', 'Pó Descolorante
 
 type Variant = {
   label: string
-  price: string       // cliente final
-  pricePro: string    // profissional
-  priceVendedor: string // vendedor
+  price: string          // cliente final (preço de venda)
+  originalPrice: string  // preço original de tabela (opcional, para De X por Y)
+  pricePro: string       // profissional
+  priceVendedor: string  // vendedor
   stock: string
 }
 
@@ -49,11 +50,12 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
       ? initialData.variants.map((v: any) => ({
           label: v.label,
           price: v.price?.toString() ?? '',
+          originalPrice: v.originalPrice?.toString() ?? (initialData?.originalPrice?.toString() ?? ''),
           pricePro: v.pricePro?.toString() ?? '',
           priceVendedor: v.priceVendedor?.toString() ?? '',
           stock: v.stock?.toString() ?? '0',
         }))
-      : [{ label: 'Padrão', price: '', pricePro: '', priceVendedor: '', stock: '0' }]
+      : [{ label: 'Padrão', price: '', originalPrice: '', pricePro: '', priceVendedor: '', stock: '0' }]
   )
 
   // Related products (manual suggestions)
@@ -95,6 +97,7 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
     setVariants(v => [...v, {
       label: '',
       price: first?.price ?? '',
+      originalPrice: first?.originalPrice ?? '',
       pricePro: first?.pricePro ?? '',
       priceVendedor: first?.priceVendedor ?? '',
       stock: '0',
@@ -119,15 +122,18 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
     try {
       // Compute product-level price as the first variant's price (fallback)
       const basePrice = parseFloat(firstVariant.price || firstVariant.pricePro || '0')
+      const baseOriginalPrice = firstVariant.originalPrice ? parseFloat(firstVariant.originalPrice) : null
       const body = {
         ...form,
         price: basePrice,
+        originalPrice: baseOriginalPrice,
         pricePro: firstVariant.pricePro ? parseFloat(firstVariant.pricePro) : null,
         priceVendedor: firstVariant.priceVendedor ? parseFloat(firstVariant.priceVendedor) : null,
         relatedProducts: relatedProducts.map(p => p.id),
         variants: variants.map(v => ({
           label: v.label,
           price: parseFloat(v.price || firstVariant.pricePro || '0'),
+          originalPrice: v.originalPrice ? parseFloat(v.originalPrice) : null,
           pricePro: v.pricePro ? parseFloat(v.pricePro) : null,
           priceVendedor: v.priceVendedor ? parseFloat(v.priceVendedor) : null,
           stock: parseInt(v.stock) || 0,
@@ -256,7 +262,7 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.875rem' }}>
                 <div>
                   <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '0.15rem' }}>Variantes & Preços</h2>
-                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Cada tamanho tem seus próprios preços por perfil de cliente</p>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Cada tamanho tem seus próprios preços por perfil e opção de promoção (De / Por)</p>
                 </div>
                 <button type="button" onClick={addVariant}
                   style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.35rem 0.875rem', border: '1px solid var(--border)', borderRadius: '99px', fontSize: '0.7rem', cursor: 'pointer', background: '#fff', color: 'var(--navy)', whiteSpace: 'nowrap' }}>
@@ -265,11 +271,11 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
               </div>
 
               {/* Column headers */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 80px 32px', gap: '0.5rem', marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--cream)' }}>
-                {['Tamanho / Label', 'Preço Cliente Final', 'Preço Pro', 'Preço Vendedor', 'Estoque', ''].map((h, i) => (
-                  <span key={i} style={{ fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr 1fr 1fr 70px 32px', gap: '0.5rem', marginBottom: '0.5rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--cream)' }}>
+                {['Tamanho / Label', 'Preço De (Original)', 'Preço Por (Venda)', 'Preço Pro', 'Preço Vendedor', 'Estoque', ''].map((h, i) => (
+                  <span key={i} style={{ fontSize: '0.58rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>
                     {h}
-                    {h === 'Preço Cliente Final' && form.proOnly && (
+                    {h === 'Preço Por (Venda)' && form.proOnly && (
                       <span style={{ marginLeft: '0.25rem', color: '#d97706' }}>(opcional)</span>
                     )}
                   </span>
@@ -278,15 +284,25 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
                 {variants.map((v, i) => (
-                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1fr 80px 32px', gap: '0.5rem', alignItems: 'center' }}>
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr 1fr 1fr 70px 32px', gap: '0.5rem', alignItems: 'center' }}>
                     {/* Label */}
-                    <input placeholder="500g, 1Kg, 300ml..." style={inp} value={v.label} onChange={e => updateVariant(i, 'label', e.target.value)} />
+                    <input placeholder="500g, 1Kg..." style={inp} value={v.label} onChange={e => updateVariant(i, 'label', e.target.value)} />
 
-                    {/* Preço cliente final */}
+                    {/* Preço Original (De:) */}
                     <div style={priceCol}>
                       <span style={priceSymbol}>R$</span>
                       <input
-                        type="number" step="0.01" placeholder={form.proOnly ? '—' : '0,00'}
+                        type="number" step="0.01" placeholder="150,00"
+                        style={{ ...priceInp, borderColor: '#fde68a', background: '#fffbeb' }}
+                        value={v.originalPrice} onChange={e => updateVariant(i, 'originalPrice', e.target.value)}
+                      />
+                    </div>
+
+                    {/* Preço Por (Venda) */}
+                    <div style={priceCol}>
+                      <span style={priceSymbol}>R$</span>
+                      <input
+                        type="number" step="0.01" placeholder={form.proOnly ? '—' : '99,00'}
                         style={{ ...priceInp, background: form.proOnly ? '#fafafa' : '#fff', opacity: form.proOnly ? 0.5 : 1 }}
                         value={v.price} onChange={e => updateVariant(i, 'price', e.target.value)}
                         disabled={form.proOnly && !v.price}
@@ -328,7 +344,8 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
               {/* Legend */}
               <div style={{ marginTop: '1rem', display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
                 {[
-                  { color: '#fff', border: 'var(--border)', label: 'Cliente Final — valor público' },
+                  { color: '#fffbeb', border: '#fde68a', label: 'De (Original) — preço sem desconto para selo De/Por (opcional)' },
+                  { color: '#fff', border: 'var(--border)', label: 'Por (Venda) — valor atual praticado para cliente final' },
                   { color: '#faf5ff', border: '#e0d4f7', label: 'Pro — profissionais (cabeleireiras)' },
                   { color: '#f0f7ff', border: '#d4e4f7', label: 'Vendedor — preço de abordagem comercial' },
                 ].map(l => (

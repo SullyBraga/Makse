@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const { name, sku, description, ingredients, howToUse, usage, productType, weight,
-      price, pricePro, priceVendedor, lineId, proOnly, featured, active, variants, relatedProducts } = body
+      price, originalPrice, pricePro, priceVendedor, lineId, proOnly, featured, active, variants, relatedProducts } = body
 
     if (!name || !price) return NextResponse.json({ error: 'Nome e preço são obrigatórios' }, { status: 400 })
 
@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
         productType: productType || null,
         weight: weight || null,
         price: parseFloat(price),
+        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
         pricePro: pricePro ? parseFloat(pricePro) : null,
         priceVendedor: priceVendedor ? parseFloat(priceVendedor) : null,
         lineId: lineId || null,
@@ -79,12 +80,14 @@ export async function POST(req: NextRequest) {
           create: variants.map((v: any) => ({
             label: v.label,
             price: parseFloat(v.price) || parseFloat(price),
+            originalPrice: v.originalPrice ? parseFloat(v.originalPrice) : (originalPrice ? parseFloat(originalPrice) : null),
             pricePro: v.pricePro ? parseFloat(v.pricePro) : null,
             priceVendedor: v.priceVendedor ? parseFloat(v.priceVendedor) : null,
             stock: parseInt(v.stock) || 0,
           }))
         } : {
           create: [{ label: 'Padrão', price: parseFloat(price),
+            originalPrice: originalPrice ? parseFloat(originalPrice) : null,
             pricePro: pricePro ? parseFloat(pricePro) : null,
             priceVendedor: priceVendedor ? parseFloat(priceVendedor) : null,
             stock: 0 }]
@@ -108,6 +111,7 @@ export async function PATCH(req: NextRequest) {
     if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 })
 
     if (updates.price != null) updates.price = parseFloat(updates.price)
+    if (updates.originalPrice != null) updates.originalPrice = updates.originalPrice ? parseFloat(updates.originalPrice) : null
     if (updates.pricePro != null) updates.pricePro = updates.pricePro ? parseFloat(updates.pricePro) : null
     if (updates.priceVendedor != null) updates.priceVendedor = updates.priceVendedor ? parseFloat(updates.priceVendedor) : null
     if (updates.name) updates.slug = toSlug(updates.name)
@@ -131,6 +135,7 @@ export async function PATCH(req: NextRequest) {
           const vData = {
             label: v.label,
             price: parseFloat(v.price) || 0,
+            originalPrice: v.originalPrice ? parseFloat(v.originalPrice) : null,
             pricePro: v.pricePro ? parseFloat(v.pricePro) : null,
             priceVendedor: v.priceVendedor ? parseFloat(v.priceVendedor) : null,
             stock: parseInt(v.stock) || 0,

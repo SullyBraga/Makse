@@ -84,6 +84,7 @@ model Product {
   productType    String?
   weight         String?
   price          Float
+  originalPrice  Float?
   pricePro       Float?
   priceProDesc   Float?
   priceVendedor  Float?
@@ -110,6 +111,7 @@ model ProductVariant {
   productId     String
   label         String
   price         Float
+  originalPrice Float?
   pricePro      Float?
   priceVendedor Float?
   stock         Int         @default(0)
