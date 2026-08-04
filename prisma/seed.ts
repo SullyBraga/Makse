@@ -24,18 +24,21 @@ async function main() {
   console.log('✅ Tabelas de desconto criadas: Bronze (15%), Prata (20%), Ouro (30%)')
 
   // ── Admin padrão ─────────────────────────────────────────────────────
-  const adminHash = await bcrypt.hash('admin123', 10)
+  const adminHash = await bcrypt.hash('12018181Aa@', 10)
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@makse.com.br' },
-    update: {},
+    where: { email: 'bragasullivan@icloud.com' },
+    update: {
+      passwordHash: adminHash,
+      role: 'ADMIN',
+    },
     create: {
       name: 'Administrador Makse',
-      email: 'admin@makse.com.br',
+      email: 'bragasullivan@icloud.com',
       passwordHash: adminHash,
       role: 'ADMIN',
     },
   })
-  console.log(`✅ Admin criado: admin@makse.com.br / admin123`)
+  console.log(`✅ Admin criado/atualizado: bragasullivan@icloud.com / 12018181Aa@`)
 
   // ── Promover primeiro usuário para ADMIN (se não for o admin padrão) ─
   const firstUser = await prisma.user.findFirst({ orderBy: { createdAt: 'asc' } })

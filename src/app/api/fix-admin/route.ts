@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const email = 'admin@makse.com.br'
+  const email = 'bragasullivan@icloud.com'
 
   try {
     const user = await prisma.user.findUnique({
@@ -17,12 +17,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 })
     }
 
-    // Testar se 'admin123' bate com o hash atual
     const t0 = Date.now()
-    const matchAdmin123 = await bcrypt.compare('admin123', user.passwordHash)
+    const matchPassword = await bcrypt.compare('12018181Aa@', user.passwordHash)
     const elapsed = Date.now() - t0
 
-    // Primeiros e últimos chars do hash (para identificar sem expor)
     const hashPreview = user.passwordHash.substring(0, 20) + '...' + user.passwordHash.slice(-4)
 
     return NextResponse.json({
@@ -31,7 +29,7 @@ export async function GET() {
       role: user.role,
       hashPreview,
       bcryptRounds: user.passwordHash.split('$')[2] ?? 'desconhecido',
-      passwordIsAdmin123: matchAdmin123,
+      passwordMatches: matchPassword,
       bcryptTimeMs: elapsed,
     })
   } catch (e) {
@@ -40,25 +38,33 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  // Resetar a senha do admin para um valor conhecido
   const body = await request.json().catch(() => ({}))
-  const newPassword: string = body.password ?? 'Makse2026!'
+  const targetEmail: string = body.email ?? 'bragasullivan@icloud.com'
+  const newPassword: string = body.password ?? '12018181Aa@'
   const secret: string = body.secret ?? ''
 
-  // Proteção simples: exige um "token" para não expor como endpoint aberto
   if (secret !== 'reset-makse-admin') {
     return NextResponse.json({ error: 'Token inválido' }, { status: 403 })
   }
 
   const hash = await bcrypt.hash(newPassword, 10)
 
-  await prisma.user.update({
-    where: { email: 'admin@makse.com.br' },
-    data: { passwordHash: hash },
+  const adminUser = await prisma.user.upsert({
+    where: { email: targetEmail },
+    update: {
+      passwordHash: hash,
+      role: 'ADMIN',
+    },
+    create: {
+      name: 'Administrador Makse',
+      email: targetEmail,
+      passwordHash: hash,
+      role: 'ADMIN',
+    },
   })
 
   return NextResponse.json({
     success: true,
-    message: `Senha do admin atualizada para: ${newPassword}`,
+    message: `Usuário Admin ${adminUser.email} configurado com sucesso!`,
   })
 }

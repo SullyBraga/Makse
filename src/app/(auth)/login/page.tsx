@@ -31,7 +31,7 @@ function LoginForm() {
       } else {
         // Successful login - redirect to admin with cache buster
         const timestamp = Date.now()
-        if (form.email === 'admin@makse.com.br') {
+        if (form.email.toLowerCase() === 'bragasullivan@icloud.com' || form.email.toLowerCase() === 'admin@makse.com.br') {
           window.location.replace(`/admin?v=${timestamp}`)
         } else {
           const target = redirect.includes('?') ? `${redirect}&v=${timestamp}` : `${redirect}?v=${timestamp}`
