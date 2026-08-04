@@ -34,8 +34,13 @@ export async function POST(req: NextRequest) {
       // Trigger transactional email
       try {
         await sendPasswordResetEmail(cleanEmail, token)
-      } catch (emailErr) {
+      } catch (emailErr: any) {
         console.error('[forgot-password sendEmail error]', emailErr)
+        if (emailErr?.message?.includes('testing emails')) {
+          return NextResponse.json({
+            error: 'Em modo de teste do Resend, e-mails só podem ser enviados para bragasullivan@gmail.com. Para enviar para outros destinatários, verifique seu domínio em resend.com/domains.',
+          }, { status: 400 })
+        }
       }
     }
 

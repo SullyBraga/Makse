@@ -19,6 +19,7 @@ async function sendEmail({ to, subject, html }: { to: string; subject: string; h
       })
       if (error) {
         console.error('[sendEmail Error]', error)
+        throw new Error(error.message || 'Erro ao enviar e-mail via Resend')
       } else {
         console.log('📧 Email enviado via Resend:', data)
       }
