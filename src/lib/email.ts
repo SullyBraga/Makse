@@ -5,7 +5,12 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
   if (resend) {
     try {
-      const from = process.env.EMAIL_FROM || 'Makse Profissional <onboarding@resend.dev>'
+      const rawFrom = process.env.EMAIL_FROM?.trim()
+      let from = 'Makse Profissional <onboarding@resend.dev>'
+      if (rawFrom) {
+        from = rawFrom.includes('<') ? rawFrom : `Makse Profissional <${rawFrom}>`
+      }
+
       const { data, error } = await resend.emails.send({
         from,
         to,
