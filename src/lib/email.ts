@@ -6,7 +6,7 @@ async function sendEmail({ to, subject, html }: { to: string; subject: string; h
   if (resend) {
     try {
       const rawFrom = (process.env.EMAIL_FROM || process.env.RESEND_FROM || process.env.MAIL_FROM)?.trim()
-      let from = 'Makse Profissional <contato@makseprofissional.com.br>'
+      let from = 'Makse Profissional <contato@maksepro.com>'
       if (rawFrom) {
         from = rawFrom.includes('<') ? rawFrom : `Makse Profissional <${rawFrom}>`
       }
