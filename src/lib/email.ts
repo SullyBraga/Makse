@@ -1,22 +1,29 @@
-/**
- * Emails transacionais da Makse Profissional
- * Usando Resend (recomendado) ou Nodemailer como fallback
- */
+import { Resend } from 'resend'
 
-// npm install resend
-// import { Resend } from 'resend'
-// const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
-  // Produção: substituir por resend.emails.send(...)
-  // const data = await resend.emails.send({ from: process.env.EMAIL_FROM!, to, subject, html })
-
-  // Dev: logar no console
-  if (process.env.NODE_ENV === 'development') {
-    console.log('📧 Email (dev):', { to, subject })
-    return
+  if (resend) {
+    try {
+      const from = process.env.EMAIL_FROM || 'Makse Profissional <onboarding@resend.dev>'
+      const { data, error } = await resend.emails.send({
+        from,
+        to,
+        subject,
+        html,
+      })
+      if (error) {
+        console.error('[sendEmail Error]', error)
+      } else {
+        console.log('📧 Email enviado via Resend:', data)
+      }
+      return data
+    } catch (err) {
+      console.error('[sendEmail Exception]', err)
+    }
+  } else {
+    console.log('📧 Email (simulação local - RESEND_API_KEY não configurada):', { to, subject })
   }
-  throw new Error('Configure RESEND_API_KEY e descomente o código acima')
 }
 
 export async function sendOrderConfirmationEmail(to: string, order: { id: string; total: number }) {
