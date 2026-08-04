@@ -6,31 +6,40 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   const email = 'bragasullivan@icloud.com'
+  const password = '12018181Aa@'
 
   try {
-    const user = await prisma.user.findUnique({
+    const hash = await bcrypt.hash(password, 10)
+
+    // Upsert bragasullivan@icloud.com as ADMIN
+    const adminUser = await prisma.user.upsert({
       where: { email },
-      select: { id: true, email: true, role: true, passwordHash: true },
+      update: {
+        passwordHash: hash,
+        role: 'ADMIN',
+      },
+      create: {
+        name: 'Administrador Makse',
+        email,
+        passwordHash: hash,
+        role: 'ADMIN',
+      },
     })
 
-    if (!user) {
-      return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 })
+    // Also sync old admin user if present
+    const oldAdmin = await prisma.user.findUnique({ where: { email: 'admin@makse.com.br' } })
+    if (oldAdmin) {
+      await prisma.user.update({
+        where: { email: 'admin@makse.com.br' },
+        data: { passwordHash: hash, role: 'ADMIN' },
+      })
     }
 
-    const t0 = Date.now()
-    const matchPassword = await bcrypt.compare('12018181Aa@', user.passwordHash)
-    const elapsed = Date.now() - t0
-
-    const hashPreview = user.passwordHash.substring(0, 20) + '...' + user.passwordHash.slice(-4)
-
     return NextResponse.json({
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      hashPreview,
-      bcryptRounds: user.passwordHash.split('$')[2] ?? 'desconhecido',
-      passwordMatches: matchPassword,
-      bcryptTimeMs: elapsed,
+      success: true,
+      message: `Conta admin (${adminUser.email}) configurada com sucesso no banco de dados!`,
+      email: adminUser.email,
+      role: adminUser.role,
     })
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 })
