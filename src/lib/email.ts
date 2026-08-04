@@ -96,3 +96,36 @@ export async function sendProfessionalApprovalEmail(to: string, name: string) {
     `
   })
 }
+
+export async function sendPasswordResetEmail(to: string, token: string) {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+  const resetLink = `${baseUrl}/redefinir-senha?token=${token}`
+
+  await sendEmail({
+    to,
+    subject: 'Redefinição de Senha — Makse Profissional',
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;border:1px solid #e2ddd6;border-radius:12px;overflow:hidden">
+        <div style="background:#0d1b2a;padding:24px;text-align:center">
+          <h1 style="color:#fff;font-size:22px;margin:0;letter-spacing:4px">MAKSE</h1>
+          <p style="color:#c5a059;font-size:10px;letter-spacing:3px;margin:4px 0 0">PROFISSIONAL</p>
+        </div>
+        <div style="padding:32px;background:#fff">
+          <h2 style="color:#0d1b2a;font-size:18px;margin:0 0 12px">Redefinição de Senha</h2>
+          <p style="color:#475569;font-size:14px;line-height:1.5">Recebemos uma solicitação para redefinir a senha da sua conta na Makse Profissional.</p>
+          <p style="color:#475569;font-size:14px;line-height:1.5">Clique no botão abaixo para escolher uma nova senha. O link é válido por 1 hora.</p>
+          <div style="text-align:center;margin:28px 0">
+            <a href="${resetLink}" style="display:inline-block;background:#0d1b2a;color:#c5a059;padding:14px 32px;text-decoration:none;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;border-radius:6px">
+              Redefinir Minha Senha
+            </a>
+          </div>
+          <p style="color:#94a3b8;font-size:12px">Se você não solicitou a alteração de senha, ignore este e-mail.</p>
+        </div>
+        <div style="padding:16px;text-align:center;background:#0d1b2a">
+          <p style="color:#ffffff50;font-size:11px;margin:0">© 2026 Makse Profissional • SS Cosméticos LTDA</p>
+        </div>
+      </div>
+    `
+  })
+}
+
