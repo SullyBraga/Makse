@@ -29,7 +29,7 @@ const SLIDES = [
   {
     image: 'https://images.unsplash.com/photo-1527799863830-55c97d627fb2?q=80&w=1200&auto=format&fit=crop',
     label: 'Linhas Premium',
-    titleLine1: 'Tecnologia Plex',
+    titleLine1: 'Tecnologia CuraBond',
     titleLine2: 'avançada',
     description: 'Tratamento de alto padrão com ativos inteligentes para proteção e regeneração profunda da fibra capilar.',
     primaryCtaText: 'Ver Favoritos',
