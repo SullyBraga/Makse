@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     }, 0);
 
     let couponDiscountValue = 0;
-    let coupon = null;
+    let coupon: any = null;
 
     if (couponId) {
       coupon = await prisma.coupon.findUnique({ where: { id: couponId } });
