@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     })
 
     const withMetrics = coupons.map(c => {
-      const validOrders = c.orders.filter(o => o.status !== 'CANCELLED')
+      const validOrders = c.orders.filter(o => o.status !== 'CANCELADO')
       const totalRevenue = validOrders.reduce((sum, o) => sum + (o.total || 0), 0)
       const commissionRate = c.commissionRate || 0
       const totalCommission = totalRevenue * (commissionRate / 100)
