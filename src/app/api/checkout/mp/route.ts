@@ -44,10 +44,25 @@ export async function POST(req: NextRequest) {
         const minMet = !coupon.minOrderValue || itemsSubtotal >= coupon.minOrderValue;
 
         if (notExpired && limitNotReached && minMet) {
-          if (coupon.discountType === 'PERCENTAGE') {
-            couponDiscountValue = parseFloat((itemsSubtotal * (coupon.value / 100)).toFixed(2));
-          } else {
-            couponDiscountValue = parseFloat(Math.min(coupon.value, itemsSubtotal).toFixed(2));
+          let eligibleSubtotal = itemsSubtotal;
+          if (coupon.productId) {
+            const matchingItems = items.filter((i: any) => i.productId === coupon.productId || i.id === coupon.productId);
+            if (matchingItems.length > 0) {
+              eligibleSubtotal = matchingItems.reduce((acc: number, i: any) => {
+                const itemPrice = isPro ? parseFloat((i.price * (1 - discountPct / 100)).toFixed(2)) : parseFloat(Number(i.price).toFixed(2));
+                return acc + (itemPrice * (parseInt(i.quantity) || 1));
+              }, 0);
+            } else {
+              eligibleSubtotal = 0;
+            }
+          }
+
+          if (eligibleSubtotal > 0) {
+            if (coupon.discountType === 'PERCENTAGE') {
+              couponDiscountValue = parseFloat((eligibleSubtotal * (coupon.value / 100)).toFixed(2));
+            } else {
+              couponDiscountValue = parseFloat(Math.min(coupon.value, eligibleSubtotal).toFixed(2));
+            }
           }
         }
       }

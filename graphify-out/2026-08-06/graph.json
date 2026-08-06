@@ -1666,6 +1666,26 @@
     {
       "label": "route.ts",
       "file_type": "code",
+      "source_file": "src/app/api/admin/kits/export/route.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_app_api_admin_kits_export_route",
+      "community": 7,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/admin/kits/export/route.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_app_api_admin_kits_export_route_get",
+      "community": 7,
+      "norm_label": "get()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
       "source_file": "src/app/api/admin/kits/import/route.ts",
       "source_location": "L1",
       "_origin": "ast",
@@ -1810,7 +1830,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route",
-      "community": 6,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -1820,8 +1840,18 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route_get",
-      "community": 6,
+      "community": 13,
       "norm_label": "get()"
+    },
+    {
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src/app/api/admin/lines/route.ts",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "src_app_api_admin_lines_route_post",
+      "community": 13,
+      "norm_label": "post()"
     },
     {
       "label": "route.ts",
@@ -1852,6 +1882,26 @@
       "id": "src_app_api_admin_orders_route_patch",
       "community": 10,
       "norm_label": "patch()"
+    },
+    {
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src/app/api/admin/products/export/route.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_app_api_admin_products_export_route",
+      "community": 7,
+      "norm_label": "route.ts"
+    },
+    {
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src/app/api/admin/products/export/route.ts",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_app_api_admin_products_export_route_get",
+      "community": 7,
+      "norm_label": "get()"
     },
     {
       "label": "route.ts",
@@ -1967,7 +2017,7 @@
       "label": "normalizeKey()",
       "file_type": "code",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L63",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "src_app_api_admin_products_import_route_normalizekey",
       "community": 7,
@@ -1977,7 +2027,7 @@
       "label": "POST()",
       "file_type": "code",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L72",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "src_app_api_admin_products_import_route_post",
       "community": 7,
@@ -1987,7 +2037,7 @@
       "label": "GET()",
       "file_type": "code",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L596",
+      "source_location": "L610",
       "_origin": "ast",
       "id": "src_app_api_admin_products_import_route_get",
       "community": 7,
@@ -2080,7 +2130,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route",
-      "community": 13,
+      "community": 10,
       "norm_label": "route.ts"
     },
     {
@@ -2090,7 +2140,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_requireseller",
-      "community": 13,
+      "community": 10,
       "norm_label": "requireseller()"
     },
     {
@@ -2100,7 +2150,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_post",
-      "community": 13,
+      "community": 10,
       "norm_label": "post()"
     },
     {
@@ -2110,7 +2160,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_get",
-      "community": 13,
+      "community": 10,
       "norm_label": "get()"
     },
     {
@@ -2270,7 +2320,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route",
-      "community": 6,
+      "community": 8,
       "norm_label": "route.ts"
     },
     {
@@ -2280,7 +2330,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route_post",
-      "community": 6,
+      "community": 8,
       "norm_label": "post()"
     },
     {
@@ -2330,7 +2380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_conta_route",
-      "community": 6,
+      "community": 44,
       "norm_label": "route.ts"
     },
     {
@@ -2340,7 +2390,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_conta_route_get",
-      "community": 6,
+      "community": 44,
       "norm_label": "get()"
     },
     {
@@ -2350,7 +2400,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_app_api_conta_route_patch",
-      "community": 6,
+      "community": 44,
       "norm_label": "patch()"
     },
     {
@@ -2400,7 +2450,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_kits_suggestions_route",
-      "community": 8,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2410,7 +2460,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_api_kits_suggestions_route_get",
-      "community": 8,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2420,7 +2470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_professional_route",
-      "community": 8,
+      "community": 46,
       "norm_label": "route.ts"
     },
     {
@@ -2430,7 +2480,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_professional_route_post",
-      "community": 8,
+      "community": 46,
       "norm_label": "post()"
     },
     {
@@ -2440,7 +2490,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_app_api_professional_route_rationale_29",
-      "community": 8,
+      "community": 46,
       "norm_label": "todo: enviar email de notificacao para o admin"
     },
     {
@@ -2590,7 +2640,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_catalogo_page",
-      "community": 46,
+      "community": 11,
       "norm_label": "page.tsx"
     },
     {
@@ -2600,7 +2650,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_catalogo_page_catalogopage",
-      "community": 46,
+      "community": 11,
       "norm_label": "catalogopage()"
     },
     {
@@ -4080,7 +4130,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_proxy",
-      "community": 44,
+      "community": 6,
       "norm_label": "proxy.ts"
     },
     {
@@ -4090,7 +4140,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_proxy_proxy",
-      "community": 44,
+      "community": 6,
       "norm_label": "proxy"
     },
     {
@@ -4100,7 +4150,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_proxy_config",
-      "community": 44,
+      "community": 6,
       "norm_label": "config"
     },
     {
@@ -5111,6 +5161,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "src/app/api/admin/kits/export/route.ts",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "src_app_api_admin_kits_export_route_get",
+      "target": "package_dependencies_xlsx"
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "src/app/api/admin/kits/import/route.ts",
       "source_location": "L48",
       "weight": 1.0,
@@ -5133,8 +5194,19 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "src/app/api/admin/products/export/route.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "src_app_api_admin_products_export_route_get",
+      "target": "package_dependencies_xlsx"
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L621",
+      "source_location": "L635",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route_get",
       "target": "package_dependencies_xlsx"
@@ -5145,7 +5217,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L151",
+      "source_location": "L157",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route_post",
       "target": "package_dependencies_xlsx"
@@ -6643,6 +6715,38 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/kits/export/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_api_admin_kits_export_route",
+      "target": "src_app_api_admin_kits_export_route_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/kits/export/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_api_admin_kits_export_route",
+      "target": "src_lib_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/kits/export/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_api_admin_kits_export_route",
+      "target": "src_lib_prisma",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/kits/import/route.ts",
       "source_location": "L33",
       "weight": 1.0,
@@ -6925,6 +7029,16 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/lines/route.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_app_api_admin_lines_route",
+      "target": "src_app_api_admin_lines_route_post",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -7009,6 +7123,38 @@
       "weight": 1.0,
       "source": "src_app_api_admin_orders_route_patch",
       "target": "src_lib_shipping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/products/export/route.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_api_admin_products_export_route",
+      "target": "src_app_api_admin_products_export_route_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/products/export/route.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_app_api_admin_products_export_route",
+      "target": "src_lib_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/products/export/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_api_admin_products_export_route",
+      "target": "src_lib_prisma",
       "confidence_score": 1.0
     },
     {
@@ -7185,7 +7331,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L596",
+      "source_location": "L610",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route",
       "target": "src_app_api_admin_products_import_route_get",
@@ -7195,7 +7341,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L63",
+      "source_location": "L69",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route",
       "target": "src_app_api_admin_products_import_route_normalizekey",
@@ -7215,7 +7361,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L72",
+      "source_location": "L78",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route",
       "target": "src_app_api_admin_products_import_route_post",
@@ -7268,7 +7414,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L597",
+      "source_location": "L611",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route_get",
       "target": "src_app_api_admin_products_import_route_requireadmin",
@@ -7279,7 +7425,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L73",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route_post",
       "target": "src_app_api_admin_products_import_route_requireadmin",
@@ -7290,7 +7436,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L244",
+      "source_location": "L254",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route_post",
       "target": "src_app_api_admin_products_import_route_toslug",
@@ -7301,7 +7447,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L104",
+      "source_location": "L110",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route_post",
       "target": "src_app_api_admin_products_import_route_parseboolean",
@@ -7312,7 +7458,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/products/import/route.ts",
-      "source_location": "L161",
+      "source_location": "L167",
       "weight": 1.0,
       "source": "src_app_api_admin_products_import_route_post",
       "target": "src_app_api_admin_products_import_route_normalizekey",
@@ -10671,5 +10817,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "7891d6d98d280354433b39d6621742c77d96ae1b"
+  "built_at_commit": "7ffd4fa2468e8faafce3800ccd2e5b886f850b2b"
 }

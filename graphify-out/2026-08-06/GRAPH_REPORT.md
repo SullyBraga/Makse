@@ -1,16 +1,16 @@
-# Graph Report - Makse-main  (2026-08-04)
+# Graph Report - Makse-main  (2026-08-06)
 
 ## Corpus Check
-- 115 files · ~592,642 words
+- 117 files · ~593,791 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 475 nodes · 570 edges · 60 communities (41 shown, 19 thin omitted)
+- 480 nodes · 579 edges · 60 communities (42 shown, 18 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7891d6d9`
+- Built from commit: `7ffd4fa2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,7 +28,6 @@
 - shipping.ts
 - CatalogoClient.tsx
 - route.ts
-- ProductForm.tsx
 - layout.tsx
 - page.tsx
 - page.tsx
@@ -70,29 +69,29 @@
 2. `compilerOptions` - 16 edges
 3. `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` - 10 edges
 4. `🚀 Configuração Completa - Makse Ecommerce` - 9 edges
-5. `compressImage()` - 7 edges
-6. `POST()` - 6 edges
+5. `xlsx` - 7 edges
+6. `compressImage()` - 7 edges
 7. `POST()` - 6 edges
-8. `🔧 <a id="local"></a> 1. Configuração Local para Testes` - 6 edges
-9. `🌍 <a id="vercel-supabase"></a> 2. Deploy no Vercel + Supabase (Testes em Produção)` - 6 edges
-10. `scripts` - 5 edges
+8. `POST()` - 6 edges
+9. `🔧 <a id="local"></a> 1. Configuração Local para Testes` - 6 edges
+10. `🌍 <a id="vercel-supabase"></a> 2. Deploy no Vercel + Supabase (Testes em Produção)` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `GET()` --references--> `xlsx`  [EXTRACTED]
+  src/app/api/admin/kits/export/route.ts → package.json
+- `GET()` --references--> `xlsx`  [EXTRACTED]
+  src/app/api/admin/products/export/route.ts → package.json
 - `SmoothScroll()` --references--> `lenis`  [EXTRACTED]
   src/components/SmoothScroll.tsx → package.json
 - `GET()` --references--> `xlsx`  [EXTRACTED]
   src/app/api/admin/kits/import/route.ts → package.json
 - `POST()` --references--> `xlsx`  [EXTRACTED]
   src/app/api/admin/kits/import/route.ts → package.json
-- `GET()` --references--> `xlsx`  [EXTRACTED]
-  src/app/api/admin/products/import/route.ts → package.json
-- `POST()` --references--> `xlsx`  [EXTRACTED]
-  src/app/api/admin/products/import/route.ts → package.json
 
 ## Import Cycles
 - None detected.
 
-## Communities (60 total, 19 thin omitted)
+## Communities (60 total, 18 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -118,29 +117,29 @@ Nodes (16): KitFormEdit(), Props, KitComponent, KitForm(), Product, Props, COLUM
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
+### Community 6 - "auth.ts"
+Cohesion: 0.12
+Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
+
 ### Community 7 - "route.ts"
-Cohesion: 0.21
-Nodes (15): xlsx, GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug(), COL_MAP (+7 more)
+Cohesion: 0.15
+Nodes (17): xlsx, GET(), GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug() (+9 more)
 
 ### Community 9 - "UserActions.tsx"
 Cohesion: 0.13
 Nodes (11): DiscountTable, roleConfig, User, DiscountTable, Props, DiscountTable, Props, ROLE_OPTIONS (+3 more)
 
 ### Community 10 - "shipping.ts"
-Cohesion: 0.20
-Nodes (6): PATCH(), requireAdmin(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque, TODO: Enviar email de confirmação
+Cohesion: 0.16
+Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque (+1 more)
 
 ### Community 11 - "CatalogoClient.tsx"
-Cohesion: 0.15
+Cohesion: 0.13
 Nodes (7): Item, Line, Props, HomePage(), S, SLIDES, Props
 
 ### Community 12 - "route.ts"
 Cohesion: 0.36
 Nodes (9): DELETE(), POST(), requireAdmin(), DELETE(), PATCH(), POST(), requireAdmin(), deleteUploadedFile() (+1 more)
-
-### Community 13 - "ProductForm.tsx"
-Cohesion: 0.83
-Nodes (3): GET(), POST(), requireSeller()
 
 ### Community 14 - "layout.tsx"
 Cohesion: 0.28
@@ -217,15 +216,15 @@ Nodes (3): C, sec(), SobrePage()
 ## Knowledge Gaps
 - **179 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+174 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
-  _High betweenness centrality (0.051) - this node is a cross-community bridge._
+  _High betweenness centrality (0.052) - this node is a cross-community bridge._
 - **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
   _182 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**

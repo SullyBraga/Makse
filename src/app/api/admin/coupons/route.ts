@@ -14,9 +14,30 @@ export async function GET(req: NextRequest) {
 
   try {
     const coupons = await prisma.coupon.findMany({
+      include: {
+        product: { select: { id: true, name: true } },
+        orders: {
+          select: { id: true, total: true, status: true },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     })
-    return NextResponse.json(coupons)
+
+    const withMetrics = coupons.map(c => {
+      const validOrders = c.orders.filter(o => o.status !== 'CANCELLED')
+      const totalRevenue = validOrders.reduce((sum, o) => sum + (o.total || 0), 0)
+      const commissionRate = c.commissionRate || 0
+      const totalCommission = totalRevenue * (commissionRate / 100)
+
+      return {
+        ...c,
+        totalSales: validOrders.length,
+        totalRevenue,
+        totalCommission,
+      }
+    })
+
+    return NextResponse.json(withMetrics)
   } catch (err) {
     console.error('[coupons GET]', err)
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
@@ -29,7 +50,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { code, discountType, value, minOrderValue, expiresAt, usageLimit } = body
+    const { code, discountType, value, minOrderValue, expiresAt, usageLimit, partnerName, commissionRate, productId } = body
 
     if (!code || !discountType || value === undefined) {
       return NextResponse.json({ error: 'Código, tipo de desconto e valor são obrigatórios' }, { status: 400 })
@@ -59,6 +80,12 @@ export async function POST(req: NextRequest) {
         minOrderValue: minOrderValue ? parseFloat(minOrderValue) : null,
         expiresAt: expiresAt ? new Date(expiresAt) : null,
         usageLimit: usageLimit ? parseInt(usageLimit) : null,
+        partnerName: partnerName?.trim() || null,
+        commissionRate: commissionRate != null && !isNaN(parseFloat(commissionRate)) ? parseFloat(commissionRate) : null,
+        productId: productId?.trim() || null,
+      },
+      include: {
+        product: { select: { id: true, name: true } },
       },
     })
 

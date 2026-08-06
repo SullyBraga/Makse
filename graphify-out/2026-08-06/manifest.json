@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/kits/page.tsx": {
-    "mtime": 1778863624.0,
-    "ast_hash": "7809cd756ad605546ddacb62aed2603c",
+    "mtime": 1786027623.0124743,
+    "ast_hash": "852105ff1df42edb5c6ae6802e0f1109",
     "semantic_hash": ""
   },
   "src/app/admin/layout.tsx": {
@@ -145,8 +145,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/produtos/page.tsx": {
-    "mtime": 1781543235.2701678,
-    "ast_hash": "993d6ff4fc2760a200e7319b79d804a6",
+    "mtime": 1786027614.7608624,
+    "ast_hash": "cc888e1593ff39f064432d0df8c1aa41",
     "semantic_hash": ""
   },
   "src/app/admin/usuarios/page.tsx": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/lines/route.ts": {
-    "mtime": 1778863624.0,
-    "ast_hash": "37f865eb2a870cd5abc8da796a9de809",
+    "mtime": 1786027544.6999083,
+    "ast_hash": "112f7b876bbfb96e371a8265d5b9dc9e",
     "semantic_hash": ""
   },
   "src/app/api/admin/orders/route.ts": {
@@ -210,8 +210,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/products/import/route.ts": {
-    "mtime": 1780932965.3971274,
-    "ast_hash": "fd1befccc0eb1fb4958d2d37afa1fa0a",
+    "mtime": 1786027664.9793277,
+    "ast_hash": "5cb57ec632f4819d0bc6e7efc1a5e3d7",
     "semantic_hash": ""
   },
   "src/app/api/admin/products/route.ts": {
@@ -415,8 +415,8 @@
     "semantic_hash": ""
   },
   "src/components/admin/ProductForm.tsx": {
-    "mtime": 1785419237.8840122,
-    "ast_hash": "ceaea4950fba8194b6e382fa9ecc77ef",
+    "mtime": 1786027577.5226908,
+    "ast_hash": "7d48cff7b2fb10fe2d036f32700c9aac",
     "semantic_hash": ""
   },
   "src/components/admin/ProductImageManager.tsx": {
@@ -642,6 +642,16 @@
   "src/app/api/auth/reset-password/route.ts": {
     "mtime": 1785849047.7151234,
     "ast_hash": "ffe89d44ef7e89c93d6c1e1b1a178449",
+    "semantic_hash": ""
+  },
+  "src/app/api/admin/kits/export/route.ts": {
+    "mtime": 1786027595.3331895,
+    "ast_hash": "77d7803d502aefa21569f9e34f7ae203",
+    "semantic_hash": ""
+  },
+  "src/app/api/admin/products/export/route.ts": {
+    "mtime": 1786027591.093188,
+    "ast_hash": "be780c53549ff0436968c0b625b415af",
     "semantic_hash": ""
   }
 }

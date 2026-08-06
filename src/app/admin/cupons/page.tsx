@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react'
 import { Percent, Plus, Trash2, RefreshCw, Calendar, Sparkles } from 'lucide-react'
 
+type ProductOption = { id: string; name: string }
+
 type Coupon = {
   id: string
   code: string
@@ -13,10 +15,18 @@ type Coupon = {
   usageCount: number
   active: boolean
   createdAt: string
+  partnerName?: string | null
+  commissionRate?: number | null
+  productId?: string | null
+  product?: { id: string; name: string } | null
+  totalSales?: number
+  totalRevenue?: number
+  totalCommission?: number
 }
 
 export default function AdminCuponsPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([])
+  const [products, setProducts] = useState<ProductOption[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -29,6 +39,11 @@ export default function AdminCuponsPage() {
   const [minOrderValue, setMinOrderValue] = useState('')
   const [expiresAt, setExpiresAt] = useState('')
   const [usageLimit, setUsageLimit] = useState('')
+  
+  // Influenciador & Restrição
+  const [partnerName, setPartnerName] = useState('')
+  const [commissionRate, setCommissionRate] = useState('')
+  const [productId, setProductId] = useState('')
 
   const fetchCoupons = async () => {
     setLoading(true)
@@ -49,6 +64,12 @@ export default function AdminCuponsPage() {
 
   useEffect(() => {
     fetchCoupons()
+    fetch('/api/admin/products?limit=200')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) setProducts(data.map(p => ({ id: p.id, name: p.name })))
+      })
+      .catch(err => console.error('Error fetching products for coupons:', err))
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,6 +89,9 @@ export default function AdminCuponsPage() {
           minOrderValue: minOrderValue ? parseFloat(minOrderValue) : null,
           expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
           usageLimit: usageLimit ? parseInt(usageLimit) : null,
+          partnerName: partnerName.trim() || null,
+          commissionRate: commissionRate ? parseFloat(commissionRate) : null,
+          productId: productId || null,
         }),
       })
 
@@ -81,6 +105,9 @@ export default function AdminCuponsPage() {
         setMinOrderValue('')
         setExpiresAt('')
         setUsageLimit('')
+        setPartnerName('')
+        setCommissionRate('')
+        setProductId('')
         fetchCoupons()
       }
     } catch {
@@ -137,8 +164,8 @@ export default function AdminCuponsPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '0.2rem' }}>Cupons de Desconto</h1>
-          <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Crie códigos promocionais para campanhas e clientes</p>
+          <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '0.2rem' }}>Cupons & Comissões</h1>
+          <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Crie códigos promocionais, cupons de influenciadores e ofertas exclusivas</p>
         </div>
         <button onClick={fetchCoupons} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', cursor: 'pointer', color: 'var(--text-muted)' }}>
           <RefreshCw size={13} /> Atualizar
@@ -154,7 +181,7 @@ export default function AdminCuponsPage() {
         <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>
           <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Percent size={14} style={{ color: 'var(--gold)' }} />
-            <h2 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--navy)' }}>Cupons Ativos ({coupons.length})</h2>
+            <h2 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--navy)' }}>Cupons Cadastrados ({coupons.length})</h2>
           </div>
 
           {loading ? (
@@ -171,7 +198,7 @@ export default function AdminCuponsPage() {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ background: 'var(--cream)', borderBottom: '1px solid var(--border)' }}>
-                    {['Código', 'Desconto', 'Mínimo', 'Limite Uso', 'Expiração', ''].map(h => (
+                    {['Código', 'Desconto / Aplicação', 'Parceiro / Comissão', 'Vendas (R$)', 'Comissão (R$)', 'Usos / Limite', ''].map(h => (
                       <th key={h} style={{ textAlign: 'left', padding: '0.7rem 1.25rem', fontSize: '0.62rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600 }}>{h}</th>
                     ))}
                   </tr>
@@ -185,26 +212,49 @@ export default function AdminCuponsPage() {
                     return (
                       <tr key={coupon.id} style={{ borderBottom: '1px solid var(--cream)' }}>
                         <td style={{ padding: '0.875rem 1.25rem' }}>
-                          <span style={{ fontSize: '0.8rem', fontFamily: 'monospace', fontWeight: 600, color: 'var(--navy)', background: 'var(--cream)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
+                          <span style={{ fontSize: '0.8rem', fontFamily: 'monospace', fontWeight: 600, color: 'var(--navy)', background: 'var(--cream)', padding: '0.2rem 0.5rem', borderRadius: '6px', display: 'inline-block' }}>
                             {coupon.code}
                           </span>
                         </td>
                         <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.82rem', fontWeight: 500, color: 'var(--navy)' }}>
-                          {coupon.discountType === 'PERCENTAGE' ? `${coupon.value}%` : `R$ ${coupon.value.toFixed(2).replace('.', ',')}`}
+                          <div>
+                            {coupon.discountType === 'PERCENTAGE' ? `${coupon.value}% OFF` : `R$ ${coupon.value.toFixed(2).replace('.', ',')} OFF`}
+                          </div>
+                          {coupon.product ? (
+                            <div style={{ fontSize: '0.7rem', color: 'var(--gold)', fontWeight: 600, marginTop: '2px' }}>
+                              🏷️ Exclusivo: {coupon.product.name}
+                            </div>
+                          ) : (
+                            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                              Loja inteira
+                            </div>
+                          )}
                         </td>
-                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                          {coupon.minOrderValue ? `R$ ${coupon.minOrderValue.toFixed(2).replace('.', ',')}` : '—'}
+                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8rem' }}>
+                          {coupon.partnerName ? (
+                            <div>
+                              <span style={{ fontWeight: 600, color: 'var(--navy)' }}>{coupon.partnerName}</span>
+                              <div style={{ fontSize: '0.7rem', color: '#166534', fontWeight: 600 }}>
+                                {coupon.commissionRate ?? 0}% comissão
+                              </div>
+                            </div>
+                          ) : (
+                            <span style={{ color: 'var(--text-muted)' }}>—</span>
+                          )}
+                        </td>
+                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8rem' }}>
+                          <div style={{ fontWeight: 600, color: 'var(--navy)' }}>
+                            R$ {(coupon.totalRevenue || 0).toFixed(2).replace('.', ',')}
+                          </div>
+                          <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                            {coupon.totalSales || coupon.usageCount} vendas
+                          </div>
+                        </td>
+                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.82rem', fontWeight: 700, color: coupon.partnerName ? '#166534' : 'var(--text-muted)' }}>
+                          {coupon.partnerName ? `R$ ${(coupon.totalCommission || 0).toFixed(2).replace('.', ',')}` : '—'}
                         </td>
                         <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                           {coupon.usageLimit ? `${coupon.usageCount} / ${coupon.usageLimit}` : `${coupon.usageCount} usos`}
-                        </td>
-                        <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.78rem', color: isExpired ? '#dc2626' : 'var(--text-muted)' }}>
-                          {coupon.expiresAt ? (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                              <Calendar size={12} />
-                              {new Date(coupon.expiresAt).toLocaleDateString('pt-BR')}
-                            </div>
-                          ) : '—'}
                         </td>
                         <td style={{ padding: '0.875rem 1.25rem', textAlign: 'right' }}>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.75rem' }}>
@@ -234,21 +284,50 @@ export default function AdminCuponsPage() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
-              <label style={lblStyle}>Código do Cupom</label>
-              <input required type="text" placeholder="Ex: CAMPANHA10" value={code} onChange={e => setCode(e.target.value.toUpperCase())} style={inpStyle} />
+              <label style={lblStyle}>Código do Cupom *</label>
+              <input required type="text" placeholder="Ex: JOAOLUCAS10 ou PROMOSEXY" value={code} onChange={e => setCode(e.target.value.toUpperCase())} style={inpStyle} />
             </div>
 
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div>
+                <label style={lblStyle}>Tipo</label>
+                <select value={discountType} onChange={e => setDiscountType(e.target.value)} style={inpStyle}>
+                  <option value="PERCENTAGE">% Desconto</option>
+                  <option value="FIXED">R$ Fixo</option>
+                </select>
+              </div>
+              <div>
+                <label style={lblStyle}>Valor *</label>
+                <input required type="number" step="0.01" min="0.01" placeholder={discountType === 'PERCENTAGE' ? '10' : '15.00'} value={value} onChange={e => setValue(e.target.value)} style={inpStyle} />
+              </div>
+            </div>
+
+            {/* Influenciador / Revendedor */}
+            <div style={{ background: 'var(--cream)', padding: '0.875rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--navy)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.625rem' }}>
+                🤝 Influenciador / Revendedor (Opcional)
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+                <div>
+                  <label style={lblStyle}>Nome do Parceiro</label>
+                  <input type="text" placeholder="Ex: João Lucas" value={partnerName} onChange={e => setPartnerName(e.target.value)} style={inpStyle} />
+                </div>
+                <div>
+                  <label style={lblStyle}>Comissão do Parceiro (%)</label>
+                  <input type="number" step="0.1" min="0" max="100" placeholder="Ex: 10" value={commissionRate} onChange={e => setCommissionRate(e.target.value)} style={inpStyle} />
+                </div>
+              </div>
+            </div>
+
+            {/* Restrição de Produto */}
             <div>
-              <label style={lblStyle}>Tipo de Desconto</label>
-              <select value={discountType} onChange={e => setDiscountType(e.target.value)} style={inpStyle}>
-                <option value="PERCENTAGE">Porcentagem (%)</option>
-                <option value="FIXED">Valor Fixo (R$)</option>
+              <label style={lblStyle}>Restrito a Produto Específico (Opcional)</label>
+              <select value={productId} onChange={e => setProductId(e.target.value)} style={inpStyle}>
+                <option value="">Aplicar a toda a loja</option>
+                {products.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
               </select>
-            </div>
-
-            <div>
-              <label style={lblStyle}>Valor do Desconto</label>
-              <input required type="number" step="0.01" min="0.01" placeholder={discountType === 'PERCENTAGE' ? 'Ex: 10' : 'Ex: 15.00'} value={value} onChange={e => setValue(e.target.value)} style={inpStyle} />
             </div>
 
             <div>
@@ -256,17 +335,18 @@ export default function AdminCuponsPage() {
               <input type="number" step="0.01" min="0" placeholder="Ex: 100.00" value={minOrderValue} onChange={e => setMinOrderValue(e.target.value)} style={inpStyle} />
             </div>
 
-            <div>
-              <label style={lblStyle}>Limite de Usos (Opcional)</label>
-              <input type="number" min="1" placeholder="Ex: 50" value={usageLimit} onChange={e => setUsageLimit(e.target.value)} style={inpStyle} />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div>
+                <label style={lblStyle}>Limite Usos</label>
+                <input type="number" min="1" placeholder="Ex: 50" value={usageLimit} onChange={e => setUsageLimit(e.target.value)} style={inpStyle} />
+              </div>
+              <div>
+                <label style={lblStyle}>Expiração</label>
+                <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)} style={inpStyle} />
+              </div>
             </div>
 
-            <div>
-              <label style={lblStyle}>Data de Expiração (Opcional)</label>
-              <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)} style={inpStyle} />
-            </div>
-
-            <button type="submit" disabled={submitting} style={{ width: '100%', padding: '0.7rem', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-dm-sans), sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', opacity: submitting ? 0.7 : 1 }}>
+            <button type="submit" disabled={submitting} style={{ width: '100%', padding: '0.75rem', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-dm-sans), sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', opacity: submitting ? 0.7 : 1, marginTop: '0.5rem' }}>
               {submitting ? <><RefreshCw size={14} style={{ animation: 'spin 0.7s linear infinite' }} /> Criando...</> : <><Plus size={14} /> Criar Cupom</>}
             </button>
           </form>

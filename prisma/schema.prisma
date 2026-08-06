@@ -100,6 +100,7 @@ model Product {
   variants        ProductVariant[]
   orderItems      OrderItem[]
   kitItems        KitItem[]
+  coupons         Coupon[]
   createdAt       DateTime         @default(now())
 
   @@index([active, archived, featured])
@@ -209,17 +210,26 @@ model OrderItem {
 }
 
 model Coupon {
-  id            String    @id @default(cuid())
-  code          String    @unique
-  discountType  String    // "PERCENTAGE" or "FIXED"
-  value         Float
-  minOrderValue Float?
-  expiresAt     DateTime?
-  usageLimit    Int?
-  usageCount    Int       @default(0)
-  active        Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  orders        Order[]
+  id             String    @id @default(cuid())
+  code           String    @unique
+  discountType   String    // "PERCENTAGE" or "FIXED"
+  value          Float
+  minOrderValue  Float?
+  expiresAt      DateTime?
+  usageLimit     Int?
+  usageCount     Int       @default(0)
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+
+  // Revendedor / Influenciador & Comissão
+  partnerName    String?
+  commissionRate Float?
+
+  // Restrição de Produto Específico
+  product        Product?  @relation(fields: [productId], references: [id])
+  productId      String?
+
+  orders         Order[]
 }
 
 model PasswordResetToken {

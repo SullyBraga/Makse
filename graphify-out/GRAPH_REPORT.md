@@ -1,16 +1,16 @@
 # Graph Report - Makse-main  (2026-08-06)
 
 ## Corpus Check
-- 117 files · ~593,791 words
+- 117 files · ~594,419 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 480 nodes · 579 edges · 60 communities (42 shown, 18 thin omitted)
+- 481 nodes · 580 edges · 63 communities (44 shown, 19 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7ffd4fa2`
+- Built from commit: `6d1222c2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -58,6 +58,7 @@
 - page.tsx
 - route.ts
 - route.ts
+- route.ts
 - eslint.config.mjs
 - next.config.ts
 - postcss.config.mjs
@@ -91,11 +92,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (60 total, 18 thin omitted)
+## Communities (63 total, 19 thin omitted)
 
 ### Community 0 - "useCartStore"
-Cohesion: 0.07
-Nodes (25): Address, CheckoutPage(), ShippingOption, KitData, KitItem, KitPageClient(), CartDrawer(), Header() (+17 more)
+Cohesion: 0.08
+Nodes (24): Address, CheckoutPage(), ShippingOption, KitData, KitItem, KitPageClient(), CartDrawer(), Header() (+16 more)
 
 ### Community 1 - "🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js"
 Cohesion: 0.06
@@ -119,11 +120,11 @@ Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModu
 
 ### Community 6 - "auth.ts"
 Cohesion: 0.12
-Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
+Nodes (4): GET(), { handlers, auth, signIn, signOut }, config, proxy
 
 ### Community 7 - "route.ts"
-Cohesion: 0.15
-Nodes (17): xlsx, GET(), GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug() (+9 more)
+Cohesion: 0.21
+Nodes (15): xlsx, GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug(), COL_MAP (+7 more)
 
 ### Community 9 - "UserActions.tsx"
 Cohesion: 0.13
@@ -134,7 +135,7 @@ Cohesion: 0.16
 Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque (+1 more)
 
 ### Community 11 - "CatalogoClient.tsx"
-Cohesion: 0.13
+Cohesion: 0.15
 Nodes (7): Item, Line, Props, HomePage(), S, SLIDES, Props
 
 ### Community 12 - "route.ts"
@@ -214,9 +215,9 @@ Cohesion: 0.67
 Nodes (3): C, sec(), SobrePage()
 
 ## Knowledge Gaps
-- **179 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+174 more)
+- **180 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+175 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -226,9 +227,9 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
   _High betweenness centrality (0.045) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
-  _182 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _183 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
-  _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08258258258258258 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**

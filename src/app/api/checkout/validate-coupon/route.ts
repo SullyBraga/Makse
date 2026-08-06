@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { code, subtotal } = body
+    const { code, subtotal, cartItems } = body
 
     if (!code) {
       return NextResponse.json({ valid: false, error: 'Código do cupom é obrigatório' }, { status: 400 })
@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
     const cleanCode = code.trim().toUpperCase()
     const coupon = await prisma.coupon.findUnique({
       where: { code: cleanCode },
+      include: { product: { select: { id: true, name: true } } },
     })
 
     if (!coupon) {
@@ -39,6 +40,22 @@ export async function POST(req: NextRequest) {
       })
     }
 
+    // Se o cupom for restrito a um produto específico
+    let eligibleSubtotal = orderSubtotal
+    if (coupon.productId) {
+      const items = Array.isArray(cartItems) ? cartItems : []
+      const matchingItems = items.filter((item: any) => item.productId === coupon.productId || item.id === coupon.productId)
+
+      if (matchingItems.length === 0) {
+        const prodName = coupon.product?.name ? `"${coupon.product.name}"` : 'um produto específico'
+        return NextResponse.json({
+          valid: false,
+          error: `Este cupom é válido apenas para o produto ${prodName}.`,
+        })
+      }
+      eligibleSubtotal = matchingItems.reduce((acc: number, item: any) => acc + (parseFloat(item.price) * (parseInt(item.quantity) || 1)), 0)
+    }
+
     return NextResponse.json({
       valid: true,
       coupon: {
@@ -46,6 +63,9 @@ export async function POST(req: NextRequest) {
         code: coupon.code,
         discountType: coupon.discountType,
         value: coupon.value,
+        productId: coupon.productId,
+        productName: coupon.product?.name ?? null,
+        eligibleSubtotal,
       },
     })
   } catch (err) {
