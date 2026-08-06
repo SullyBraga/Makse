@@ -171,6 +171,38 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
     fontSize: '0.75rem', color: 'var(--text-muted)', pointerEvents: 'none',
   }
 
+  const [showAddLineModal, setShowAddLineModal] = useState(false)
+  const [newLineName, setNewLineName] = useState('')
+  const [addingLine, setAddingLine] = useState(false)
+  const [lineError, setLineError] = useState('')
+
+  const handleCreateLine = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newLineName.trim()) return
+    setAddingLine(true)
+    setLineError('')
+    try {
+      const res = await fetch('/api/admin/lines', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newLineName.trim() }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setLineError(data.error || 'Erro ao criar linha')
+        return
+      }
+      setLines(prev => [...prev, data])
+      setForm(f => ({ ...f, lineId: data.id }))
+      setNewLineName('')
+      setShowAddLineModal(false)
+    } catch {
+      setLineError('Erro de conexão ao criar linha')
+    } finally {
+      setAddingLine(false)
+    }
+  }
+
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
@@ -218,13 +250,28 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                   <div>
                     <label style={lbl}>Tipo de Produto</label>
-                    <select style={inp} value={form.productType} onChange={e => setForm(f => ({ ...f, productType: e.target.value }))}>
-                      <option value="">Selecionar...</option>
-                      {PRODUCT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                    </select>
+                    <input
+                      list="product-types-list"
+                      style={inp}
+                      value={form.productType}
+                      onChange={e => setForm(f => ({ ...f, productType: e.target.value }))}
+                      placeholder="Selecione ou digite um novo tipo..."
+                    />
+                    <datalist id="product-types-list">
+                      {PRODUCT_TYPES.map(t => <option key={t} value={t} />)}
+                    </datalist>
                   </div>
                   <div>
-                    <label style={lbl}>Linha</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                      <label style={{ ...lbl, marginBottom: 0 }}>Linha</label>
+                      <button
+                        type="button"
+                        onClick={() => setShowAddLineModal(true)}
+                        style={{ background: 'none', border: 'none', color: 'var(--navy)', fontSize: '0.68rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.2rem', padding: 0 }}
+                      >
+                        <Plus size={11} /> Criar Linha
+                      </button>
+                    </div>
                     <select style={inp} value={form.lineId} onChange={e => setForm(f => ({ ...f, lineId: e.target.value }))}>
                       <option value="">Sem linha</option>
                       {lines.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
@@ -490,6 +537,51 @@ export default function ProductForm({ initialData, mode = 'create' }: Props) {
           </div>
         </div>
       </form>
+
+      {showAddLineModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(13,27,42,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+          <div style={{ background: '#fff', borderRadius: '16px', border: '1px solid var(--border)', padding: '1.75rem', width: '100%', maxWidth: '400px', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.3rem', color: 'var(--navy)', margin: 0 }}>Nova Linha de Produto</h3>
+              <button type="button" onClick={() => setShowAddLineModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                <X size={16} />
+              </button>
+            </div>
+
+            {lineError && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', padding: '0.625rem', fontSize: '0.75rem', color: '#dc2626', marginBottom: '1rem' }}>{lineError}</div>}
+
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label style={lbl}>Nome da Nova Linha *</label>
+              <input
+                autoFocus
+                style={inp}
+                placeholder="Ex: Linha Gold Repair"
+                value={newLineName}
+                onChange={e => setNewLineName(e.target.value)}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+              <button
+                type="button"
+                onClick={() => setShowAddLineModal(false)}
+                style={{ padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.75rem', cursor: 'pointer', color: 'var(--text-muted)' }}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleCreateLine}
+                disabled={addingLine || !newLineName.trim()}
+                style={{ padding: '0.5rem 1.25rem', border: 'none', borderRadius: '99px', background: 'var(--navy)', color: '#fff', fontSize: '0.75rem', fontWeight: 600, cursor: addingLine || !newLineName.trim() ? 'not-allowed' : 'pointer', opacity: addingLine || !newLineName.trim() ? 0.6 : 1 }}
+              >
+                {addingLine ? 'Salvando...' : 'Salvar e Selecionar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )

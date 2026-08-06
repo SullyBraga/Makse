@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Upload, Edit2, Trash2, Search, RefreshCw, Layers, Eye, EyeOff, Tag } from 'lucide-react'
+import { Plus, Upload, Download, Edit2, Trash2, Search, RefreshCw, Layers, Eye, EyeOff, Tag } from 'lucide-react'
 
 type KitItem = {
   id: string
@@ -62,6 +62,9 @@ export default function AdminKitsPage() {
           <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Conjuntos de produtos para venda agrupada</p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <a href="/api/admin/kits/export" download style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', color: 'var(--navy)', textDecoration: 'none', fontWeight: 500 }}>
+            <Download size={13} /> Exportar Kits XLSX
+          </a>
           <Link href="/admin/kits/importar" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', color: 'var(--navy)', textDecoration: 'none', fontWeight: 500 }}>
             <Upload size={13} /> Importar Planilha
           </Link>

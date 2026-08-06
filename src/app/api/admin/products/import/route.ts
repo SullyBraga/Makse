@@ -58,6 +58,12 @@ const EXACT_HEADERS = [
    'exclusivo_profissional':                        'proOnly',
    'profissional':                                  'proOnly',
    'exclusivo_para_profissionais':                  'proOnly',
+   'fotos':                                         'imagens',
+   'foto':                                          'imagens',
+   'imagens':                                       'imagens',
+   'imagem':                                        'imagens',
+   'url_imagem':                                    'imagens',
+   'url_das_imagens':                               'imagens',
  }
 
 function normalizeKey(key: string): string {
@@ -210,6 +216,9 @@ export async function POST(req: NextRequest) {
           price = 0
         }
 
+        const rawImgs = String(row.imagens || '').trim()
+        const images = rawImgs ? rawImgs.split(/[;,|\n]/).map((s: string) => s.trim()).filter(Boolean) : null
+
         return {
           row: i + 2,
           name: String(row.nome || '').trim(),
@@ -222,6 +231,7 @@ export async function POST(req: NextRequest) {
           ingredients: String(row.ingredientes || '').trim() || null,
           usage: String(row.indicacao || '').trim() || null,
           relatedProducts,
+          images,
           price,
           pricePro,
           priceProDesc,
@@ -352,7 +362,7 @@ export async function POST(req: NextRequest) {
           continue
         }
 
-        const productData = {
+        const productData: any = {
           name: p.name,
           slug,
           sku: p.sku,
@@ -371,6 +381,10 @@ export async function POST(req: NextRequest) {
           active: p.active,
           archived: false,
           lineId: p.lineId,
+        }
+
+        if (p.images && p.images.length > 0) {
+          productData.images = p.images
         }
 
         if (existing && overwrite) {
@@ -400,7 +414,7 @@ export async function POST(req: NextRequest) {
               data: {
                 ...productData,
                 lineId: p.lineId,
-                images: [],
+                images: (p.images && p.images.length > 0) ? p.images : [],
                 variants: {
                   create: [{
                     label: 'Padrão',

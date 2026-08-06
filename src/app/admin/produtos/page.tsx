@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Upload, Edit2, Trash2, Search, RefreshCw, Package, Star, ChevronDown } from 'lucide-react'
+import { Plus, Upload, Download, Edit2, Trash2, Search, RefreshCw, Package, Star, ChevronDown } from 'lucide-react'
 
 type Product = {
   id: string; name: string; sku: string | null; price: number
@@ -88,13 +88,11 @@ export default function AdminProdutosPage() {
   const allSelected = filtered.length > 0 && filtered.every(p => selectedIds.includes(p.id))
   const someSelected = filtered.some(p => selectedIds.includes(p.id)) && !allSelected
 
-  const handleSelectAll = () => {
-    if (allSelected) {
-      const filteredIds = filtered.map(p => p.id)
-      setSelectedIds(prev => prev.filter(id => !filteredIds.includes(id)))
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedIds(filtered.map(p => p.id))
     } else {
-      const newSelection = Array.from(new Set([...selectedIds, ...filtered.map(p => p.id)]))
-      setSelectedIds(newSelection)
+      setSelectedIds([])
     }
   }
 
@@ -131,6 +129,9 @@ export default function AdminProdutosPage() {
               <Trash2 size={13} /> Excluir Selecionados ({selectedIds.length})
             </button>
           )}
+          <a href="/api/admin/products/export" download style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', color: 'var(--navy)', textDecoration: 'none', fontWeight: 500 }}>
+            <Download size={13} /> Exportar XLSX
+          </a>
           <Link href="/admin/produtos/importar" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', color: 'var(--navy)', textDecoration: 'none', fontWeight: 500 }}>
             <Upload size={13} /> Importar Planilha
           </Link>
