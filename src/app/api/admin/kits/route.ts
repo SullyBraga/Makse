@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const {
       name, sku, description, images,
-      price, pricePro, priceVendedor,
+      price, originalPrice, pricePro, priceVendedor,
       showInCatalog, showAsSuggestion, active,
       items, // [{ productId, variantId?, quantity }]
     } = body
@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
         description: description || null,
         images: images || [],
         price: parseFloat(price),
+        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
         pricePro: pricePro ? parseFloat(pricePro) : null,
         priceVendedor: priceVendedor ? parseFloat(priceVendedor) : null,
         showInCatalog: !!showInCatalog,
@@ -112,8 +113,9 @@ export async function PATCH(req: NextRequest) {
     if (!id) return NextResponse.json({ error: 'ID obrigatório' }, { status: 400 })
 
     if (updates.price) updates.price = parseFloat(updates.price)
-    if (updates.pricePro) updates.pricePro = parseFloat(updates.pricePro)
-    if (updates.priceVendedor) updates.priceVendedor = parseFloat(updates.priceVendedor)
+    if (updates.originalPrice !== undefined) updates.originalPrice = updates.originalPrice ? parseFloat(updates.originalPrice) : null
+    if (updates.pricePro !== undefined) updates.pricePro = updates.pricePro ? parseFloat(updates.pricePro) : null
+    if (updates.priceVendedor !== undefined) updates.priceVendedor = updates.priceVendedor ? parseFloat(updates.priceVendedor) : null
     if (updates.name) updates.slug = toSlug(updates.name)
     if (relatedProducts !== undefined) updates.relatedProducts = Array.isArray(relatedProducts) ? relatedProducts : []
 

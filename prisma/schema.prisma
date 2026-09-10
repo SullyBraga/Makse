@@ -127,6 +127,7 @@ model Kit {
   description      String?
   images           Json       @default("[]")
   price            Float
+  originalPrice    Float?
   pricePro         Float?
   priceVendedor    Float?
   showInCatalog    Boolean    @default(false)

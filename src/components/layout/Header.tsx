@@ -80,7 +80,17 @@ export default function Header() {
           <div className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {status === 'authenticated' ? (
               <>
-                <Link href={role === 'ADMIN' ? '/admin' : '/conta'} style={{
+                {(role === 'VENDEDOR' || role === 'ADMIN') && (
+                  <Link href="/admin/vendas" style={{
+                    display: 'flex', alignItems: 'center', gap: '0.35rem',
+                    padding: '0.35rem 0.85rem', background: 'var(--navy)', color: '#fff',
+                    borderRadius: '99px', fontSize: '0.65rem', letterSpacing: '0.12em',
+                    textTransform: 'uppercase', textDecoration: 'none', fontWeight: 600,
+                  }}>
+                    🛒 Painel de Vendas
+                  </Link>
+                )}
+                <Link href={role === 'ADMIN' ? '/admin' : role === 'VENDEDOR' ? '/admin/vendas' : '/conta'} style={{
                   display: 'flex', alignItems: 'center', gap: '0.3rem',
                   fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase',
                   color: 'var(--navy)', textDecoration: 'none',

@@ -31,6 +31,7 @@ export default async function EditarKitPage({ params }: { params: Promise<{ id: 
     sku: kit.sku ?? '',
     description: kit.description ?? '',
     price: kit.price.toString(),
+    originalPrice: kit.originalPrice?.toString() ?? '',
     pricePro: kit.pricePro?.toString() ?? '',
     priceVendedor: kit.priceVendedor?.toString() ?? '',
     showInCatalog: kit.showInCatalog,

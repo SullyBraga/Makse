@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Upload, Download, Edit2, Trash2, Search, RefreshCw, Package, Star, ChevronDown } from 'lucide-react'
+import { Plus, Upload, Download, Edit2, Trash2, Search, RefreshCw, Package, Star, ChevronDown, FileText } from 'lucide-react'
 
 type Product = {
   id: string; name: string; sku: string | null; price: number
@@ -129,6 +129,9 @@ export default function AdminProdutosPage() {
               <Trash2 size={13} /> Excluir Selecionados ({selectedIds.length})
             </button>
           )}
+          <Link href="/admin/estoque/xml" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', border: '1px solid var(--gold)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', color: 'var(--navy)', textDecoration: 'none', fontWeight: 600 }}>
+            <FileText size={13} style={{ color: 'var(--gold)' }} /> Entrada por NF-e (XML)
+          </Link>
           <a href="/api/admin/products/export" download style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.25rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', color: 'var(--navy)', textDecoration: 'none', fontWeight: 500 }}>
             <Download size={13} /> Exportar XLSX
           </a>

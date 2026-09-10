@@ -21,9 +21,20 @@ export async function GET() {
   })
   if (!user) return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 })
 
+  // If user is VENDEDOR or ADMIN, fetch sales registered by this seller
+  let sales: any[] = []
+  if (user.role === 'VENDEDOR' || user.role === 'ADMIN') {
+    sales = await prisma.order.findMany({
+      where: { sellerId: userId },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      include: { items: true, user: { select: { name: true, email: true } } },
+    })
+  }
+
   // Exclude passwordHash from response
   const { passwordHash: _, ...safeUser } = user
-  return NextResponse.json(safeUser)
+  return NextResponse.json({ ...safeUser, sales })
 }
 
 export async function PATCH(req: NextRequest) {

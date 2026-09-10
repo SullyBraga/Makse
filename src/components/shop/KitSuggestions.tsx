@@ -11,7 +11,7 @@ type KitItem = {
 
 type Kit = {
   id: string; name: string; sku: string | null; description: string | null
-  price: number; pricePro: number | null; priceVendedor: number | null; images: string[]
+  price: number; originalPrice?: number | null; pricePro: number | null; priceVendedor: number | null; images: string[]
   items: KitItem[]
 }
 
@@ -61,8 +61,9 @@ export default function KitSuggestions({ kits, isPro, discountPct }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
         {kits.map(kit => {
           const price = getKitPrice(kit)
-          const originalPrice = isPro ? (kit.pricePro ?? kit.price) : kit.price
-          const hasDiscount = isPro && discountPct > 0
+          const strikethroughPrice = kit.originalPrice && kit.originalPrice > price ? kit.originalPrice : (isPro ? (kit.pricePro ?? kit.price) : null)
+          const hasDiscount = (strikethroughPrice && strikethroughPrice > price) || (isPro && discountPct > 0)
+          const discountPercent = kit.originalPrice && kit.originalPrice > price ? Math.round(((kit.originalPrice - price) / kit.originalPrice) * 100) : discountPct
 
           return (
             <div key={kit.id} style={{ background: '#fff', borderRadius: '20px', border: '1px solid var(--cream)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
@@ -108,16 +109,16 @@ export default function KitSuggestions({ kits, isPro, discountPct }: Props) {
               {/* Price + CTA */}
               <div style={{ padding: '0.875rem 1.25rem', borderTop: '1px solid var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
                 <div>
-                  {hasDiscount && (
+                  {hasDiscount && strikethroughPrice && (
                     <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textDecoration: 'line-through', margin: 0 }}>
-                      R$ {originalPrice.toFixed(2).replace('.', ',')}
+                      R$ {strikethroughPrice.toFixed(2).replace('.', ',')}
                     </p>
                   )}
                   <p style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.25rem', fontWeight: 400, color: hasDiscount ? '#16a34a' : 'var(--navy)', margin: 0 }}>
                     R$ {price.toFixed(2).replace('.', ',')}
                   </p>
-                  {hasDiscount && (
-                    <p style={{ fontSize: '0.65rem', color: '#16a34a', margin: 0 }}>{discountPct}% de desconto</p>
+                  {hasDiscount && discountPercent > 0 && (
+                    <p style={{ fontSize: '0.65rem', color: '#16a34a', margin: 0 }}>{discountPercent}% de desconto</p>
                   )}
                 </div>
                 <button

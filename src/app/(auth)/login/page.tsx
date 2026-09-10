@@ -29,8 +29,20 @@ function LoginForm() {
       if (result?.error) {
         setError('E-mail ou senha incorretos. Verifique seus dados.')
       } else {
-        // Successful login - redirect to admin with cache buster
         const timestamp = Date.now()
+        try {
+          const sessionRes = await fetch('/api/auth/session')
+          const sessionData = await sessionRes.json()
+          const userRole = sessionData?.user?.role
+
+          if (userRole === 'VENDEDOR') {
+            window.location.replace(`/admin/vendas?v=${timestamp}`)
+            return
+          }
+        } catch (e) {
+          console.error(e)
+        }
+
         if (form.email.toLowerCase() === 'bragasullivan@icloud.com' || form.email.toLowerCase() === 'admin@makse.com.br') {
           window.location.replace(`/admin?v=${timestamp}`)
         } else {

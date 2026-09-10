@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
-import { Package, User, LogOut, Edit3, Check, X, Eye, EyeOff, Scissors, RefreshCw, MapPin, Plus, Trash2 } from 'lucide-react'
+import { Package, User, LogOut, Edit3, Check, X, Eye, EyeOff, Scissors, RefreshCw, MapPin, Plus, Trash2, ShoppingCart, ShoppingBag, DollarSign } from 'lucide-react'
 
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   PAGO:                 { bg: 'var(--cream)', color: 'var(--navy)', label: 'Pago' },
@@ -15,6 +15,7 @@ const statusColors: Record<string, { bg: string; color: string; label: string }>
 
 const roleLabel: Record<string, string> = {
   ADMIN: 'Admin',
+  VENDEDOR: 'Vendedor',
   CABELEIREIRA: 'Profissional',
   CLIENTE_FINAL: 'Cliente Final',
   PENDENTE: 'Pendente',
@@ -24,6 +25,7 @@ type UserData = {
   id: string; name: string; email: string; role: string
   discountTable: { name: string; percentage: number } | null
   orders: { id: string; total: number; status: string; createdAt: string; items: any[] }[]
+  sales?: any[]
 }
 
 export default function ContaPage() {
@@ -36,7 +38,7 @@ export default function ContaPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  const [tab, setTab] = useState<'pedidos' | 'enderecos'>('pedidos')
+  const [tab, setTab] = useState<'pedidos' | 'vendas' | 'enderecos'>('pedidos')
   const [addresses, setAddresses] = useState<any[]>([])
   const [loadingAddresses, setLoadingAddresses] = useState(true)
   const [editingAddress, setEditingAddress] = useState<any | null>(null)
@@ -188,8 +190,7 @@ export default function ContaPage() {
   if (loading) {
     return (
       <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <RefreshCw size={24} style={{ animation: 'spin 1s linear infinite', color: 'var(--gold)' }} />
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <RefreshCw size={24} style={{ color: 'var(--gold)', animation: 'spin 1s linear infinite' }} />
       </div>
     )
   }
@@ -204,6 +205,7 @@ export default function ContaPage() {
   }
 
   const initial = user.name.charAt(0).toUpperCase()
+  const isSeller = user.role === 'VENDEDOR' || user.role === 'ADMIN'
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--cream)' }}>
@@ -213,6 +215,20 @@ export default function ContaPage() {
           Minha Conta
         </h1>
 
+        {/* Banner Vendedor */}
+        {isSeller && (
+          <div style={{ background: 'linear-gradient(135deg, var(--navy) 0%, #1a365d 100%)', borderRadius: 'var(--radius-lg)', padding: '1.5rem 1.75rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem', boxShadow: '0 10px 30px rgba(13,27,42,0.15)', border: '1px solid rgba(197,160,89,0.3)', marginBottom: '2rem' }}>
+            <div>
+              <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.35rem' }}>💼 Perfil Vendedor Ativo</div>
+              <h3 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.4rem', fontWeight: 400, margin: 0, color: '#fff' }}>Painel Comercial de Vendas</h3>
+              <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)', margin: '0.35rem 0 0' }}>Acesse a ferramenta de registro de vendas comerciais para clientes com a tabela de vendedor.</p>
+            </div>
+            <Link href="/admin/vendas" style={{ background: 'var(--gold)', color: 'var(--navy)', padding: '0.75rem 1.4rem', borderRadius: '99px', fontWeight: 600, fontSize: '0.78rem', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>
+              <ShoppingCart size={15} /> Acessar Painel de Vendas
+            </Link>
+          </div>
+        )}
+
         <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', alignItems: 'start' }}>
 
           {/* Sidebar */}
@@ -220,40 +236,24 @@ export default function ContaPage() {
 
             {/* Avatar card */}
             <div style={{ background: '#fff', borderRadius: 'var(--radius-lg)', padding: '1.75rem', border: '1px solid var(--border)', textAlign: 'center' }}>
-              {/* Avatar */}
-              <div style={{
-                width: 72, height: 72, borderRadius: '50%',
-                background: 'linear-gradient(135deg, var(--gold), var(--cream-dark))',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '1.75rem', fontFamily: 'var(--font-cormorant), serif', fontWeight: 400,
-                color: 'var(--navy)', margin: '0 auto 1rem', flexShrink: 0,
-              }}>
+              <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, var(--gold), var(--cream-dark))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.75rem', fontFamily: 'var(--font-cormorant), serif', fontWeight: 400, color: 'var(--navy)', margin: '0 auto 1rem' }}>
                 {initial}
               </div>
               <p style={{ fontWeight: 500, color: 'var(--navy)', marginBottom: '0.25rem' }}>{user.name}</p>
               <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.875rem' }}>{user.email}</p>
-              <span style={{
-                display: 'inline-block', fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase',
-                padding: '0.3rem 0.75rem', borderRadius: '99px',
-                background: 'var(--cream)', color: 'var(--navy)', fontWeight: 600,
-                border: '1px solid var(--border)',
-              }}>
+              <span style={{ display: 'inline-block', fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '0.3rem 0.75rem', borderRadius: '99px', background: 'var(--cream)', color: 'var(--navy)', fontWeight: 600, border: '1px solid var(--border)' }}>
                 {user.role === 'CABELEIREIRA' ? <><Scissors size={10} style={{ display: 'inline', marginRight: 4 }} />Profissional</> : roleLabel[user.role] ?? user.role}
               </span>
-              {user.discountTable && (
-                <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                  ✦ {user.discountTable.name} — {user.discountTable.percentage}% de desconto
-                </p>
-              )}
             </div>
 
             {/* Nav */}
             <div style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', overflow: 'hidden' }}>
               {[
                 { icon: <Package size={14} />, label: 'Meus Pedidos', active: tab === 'pedidos' && !editing, onClick: () => { setTab('pedidos'); setEditing(false) } },
+                ...(isSeller ? [{ icon: <DollarSign size={14} />, label: 'Minhas Vendas', active: tab === 'vendas' && !editing, onClick: () => { setTab('vendas'); setEditing(false) } }] : []),
                 { icon: <MapPin size={14} />, label: 'Meus Endereços', active: tab === 'enderecos' && !editing, onClick: () => { setTab('enderecos'); setEditing(false) } },
                 { icon: <User size={14} />, label: 'Dados Pessoais', active: editing, onClick: () => setEditing(true) },
-              ].map((item, i) => (
+              ].map((item, i, arr) => (
                 <button
                   key={item.label}
                   onClick={item.onClick}
@@ -262,7 +262,7 @@ export default function ContaPage() {
                     padding: '0.875rem 1.25rem', width: '100%', background: 'none', border: 'none',
                     fontSize: '0.82rem', color: item.active ? 'var(--navy)' : 'var(--text-muted)',
                     fontWeight: item.active ? 600 : 400,
-                    borderBottom: i < 2 ? '1px solid var(--border)' : 'none',
+                    borderBottom: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
                     borderLeft: item.active ? '3px solid var(--gold)' : '3px solid transparent',
                     cursor: 'pointer',
                     textAlign: 'left',
@@ -396,6 +396,72 @@ export default function ContaPage() {
                               R$ {order.total.toFixed(2).replace('.', ',')}
                             </p>
                           </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!editing && tab === 'vendas' && (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                  <h2 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>
+                    Vendas Registradas ({user.sales?.length || 0})
+                  </h2>
+                  <Link href="/admin/vendas" className="btn-primary" style={{ fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1rem' }}>
+                    <Plus size={14} /> Registrar Venda
+                  </Link>
+                </div>
+
+                {!user.sales || user.sales.length === 0 ? (
+                  <div style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', padding: '3rem 2rem', textAlign: 'center' }}>
+                    <ShoppingCart size={32} style={{ color: 'var(--border)', margin: '0 auto 1rem', display: 'block' }} />
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>Você ainda não registrou nenhuma venda comercial.</p>
+                    <Link href="/admin/vendas" className="btn-primary" style={{ display: 'inline-flex', fontSize: '0.75rem' }}>
+                      Registrar Primeira Venda
+                    </Link>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {user.sales.map((sale: any) => {
+                      const st = statusColors[sale.status] ?? { bg: 'var(--cream)', color: 'var(--navy)', label: sale.status }
+                      return (
+                        <div key={sale.id} style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', padding: '1.5rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                            <div>
+                              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'monospace' }}>
+                                Venda #{sale.id.slice(-8).toUpperCase()} · {new Date(sale.createdAt).toLocaleDateString('pt-BR')}
+                              </span>
+                              <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--navy)', marginTop: '0.2rem' }}>
+                                Cliente: {sale.customerName || sale.user?.name || 'Cliente Geral'}
+                              </p>
+                              {sale.customerPhone && (
+                                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                  Telefone: {sale.customerPhone}
+                                </p>
+                              )}
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                              <span style={{ fontSize: '0.65rem', padding: '0.3rem 0.75rem', borderRadius: '99px', background: st.bg, color: st.color, fontWeight: 500, letterSpacing: '0.05em', display: 'inline-block', marginBottom: '0.5rem' }}>
+                                {st.label}
+                              </span>
+                              <p style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--navy)', fontFamily: 'var(--font-cormorant), serif', margin: 0 }}>
+                                R$ {(sale.total || 0).toFixed(2).replace('.', ',')}
+                              </p>
+                            </div>
+                          </div>
+                          {sale.items && sale.items.length > 0 && (
+                            <div style={{ borderTop: '1px dashed var(--border)', paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                              {sale.items.map((item: any, idx: number) => (
+                                <div key={idx} style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                                  <span>{item.quantity}x {item.productName || item.kitName || 'Item'} {item.variantLabel ? `(${item.variantLabel})` : ''}</span>
+                                  <span>R$ {((item.unitPrice || 0) * item.quantity).toFixed(2).replace('.', ',')}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )
                     })}

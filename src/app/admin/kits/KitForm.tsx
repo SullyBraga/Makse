@@ -18,7 +18,7 @@ type KitComponent = {
 type Props = {
   kitId?: string
   defaultValues?: {
-    name: string; sku: string; description: string; price: string; pricePro: string
+    name: string; sku: string; description: string; price: string; originalPrice?: string; pricePro: string
     priceVendedor: string; showInCatalog: boolean; showAsSuggestion: boolean; active: boolean
     items: KitComponent[]
     images?: string[]
@@ -34,6 +34,7 @@ export default function KitForm({ kitId, defaultValues }: Props) {
   const [sku, setSku] = useState(defaultValues?.sku ?? '')
   const [description, setDescription] = useState(defaultValues?.description ?? '')
   const [price, setPrice] = useState(defaultValues?.price ?? '')
+  const [originalPrice, setOriginalPrice] = useState(defaultValues?.originalPrice ?? '')
   const [pricePro, setPricePro] = useState(defaultValues?.pricePro ?? '')
   const [priceVendedor, setPriceVendedor] = useState(defaultValues?.priceVendedor ?? '')
   const [showInCatalog, setShowInCatalog] = useState(defaultValues?.showInCatalog ?? false)
@@ -117,7 +118,7 @@ export default function KitForm({ kitId, defaultValues }: Props) {
     setSaving(true); setError('')
 
     const body = {
-      name, sku: sku || null, description, price, pricePro: pricePro || null,
+      name, sku: sku || null, description, price, originalPrice: originalPrice || null, pricePro: pricePro || null,
       priceVendedor: priceVendedor || null, showInCatalog, showAsSuggestion, active,
       relatedProducts: relatedProducts.map(p => p.id),
       items: components.map(c => ({ productId: c.productId, variantId: c.variantId, quantity: c.quantity })),
@@ -202,9 +203,16 @@ export default function KitForm({ kitId, defaultValues }: Props) {
           {/* Preços */}
           <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem' }}>
             <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '1.25rem' }}>Preços</h2>
-            <div className="kit-prices-grid">
+            <div className="kit-prices-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
               <div>
-                <label style={labelStyle}>Preço Cliente Final *</label>
+                <label style={labelStyle}>Preço Original (De: R$)</label>
+                <div style={{ position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.78rem', color: 'var(--text-muted)' }}>R$</span>
+                  <input style={{ ...fieldStyle, paddingLeft: '2rem' }} type="number" step="0.01" value={originalPrice} onChange={e => setOriginalPrice(e.target.value)} placeholder="Ex: 350,00" />
+                </div>
+              </div>
+              <div>
+                <label style={labelStyle}>Preço de Venda (Por: R$) *</label>
                 <div style={{ position: 'relative' }}>
                   <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', fontSize: '0.78rem', color: 'var(--text-muted)' }}>R$</span>
                   <input style={{ ...fieldStyle, paddingLeft: '2rem' }} type="number" step="0.01" value={price} onChange={e => setPrice(e.target.value)} placeholder="0,00" />

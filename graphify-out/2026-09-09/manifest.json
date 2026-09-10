@@ -70,8 +70,8 @@
     "semantic_hash": ""
   },
   "src/app/(auth)/login/page.tsx": {
-    "mtime": 1788999846.0507586,
-    "ast_hash": "ace21d0fb8ccfe3399f1116019abc577",
+    "mtime": 1785868399.2161014,
+    "ast_hash": "bc77335a9288da3a50e17d7b5e90530f",
     "semantic_hash": ""
   },
   "src/app/admin/cupons/page.tsx": {
@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/kits/KitForm.tsx": {
-    "mtime": 1789000015.5628543,
-    "ast_hash": "e25c89391768661c66b1f935a689a602",
+    "mtime": 1781110777.8706105,
+    "ast_hash": "c6d24731ba43d5886bf2b2044ab24ff5",
     "semantic_hash": ""
   },
   "src/app/admin/kits/[id]/editar/KitFormEdit.tsx": {
@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/kits/[id]/editar/page.tsx": {
-    "mtime": 1789000025.9510424,
-    "ast_hash": "4d5176a9015470d284ac438eed93d64f",
+    "mtime": 1780932958.7577932,
+    "ast_hash": "124202ef5a14310ee09c00c0d9fabe81",
     "semantic_hash": ""
   },
   "src/app/admin/kits/importar/page.tsx": {
@@ -145,8 +145,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/produtos/page.tsx": {
-    "mtime": 1789000105.154664,
-    "ast_hash": "5efa31669a9b309e95ef18cafd776e57",
+    "mtime": 1786027614.7608624,
+    "ast_hash": "cc888e1593ff39f064432d0df8c1aa41",
     "semantic_hash": ""
   },
   "src/app/admin/usuarios/page.tsx": {
@@ -170,8 +170,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/coupons/route.ts": {
-    "mtime": 1786030699.997777,
-    "ast_hash": "2ce1f8925dfd1a0724eeb94c53219a6e",
+    "mtime": 1786030376.3357737,
+    "ast_hash": "f577e1955629ba6b49b34d427f1c148a",
     "semantic_hash": ""
   },
   "src/app/api/admin/discount-tables/route.ts": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/kits/route.ts": {
-    "mtime": 1788999961.084588,
-    "ast_hash": "6567807226acbc2e4095548301035532",
+    "mtime": 1780932945.1892145,
+    "ast_hash": "c13eb313d6f437cb9cb8effaa074fe46",
     "semantic_hash": ""
   },
   "src/app/api/admin/lines/route.ts": {
@@ -250,8 +250,8 @@
     "semantic_hash": ""
   },
   "src/app/api/checkout/mp/route.ts": {
-    "mtime": 1786030923.7077155,
-    "ast_hash": "44ecd79248243e87324b9d50eec7399d",
+    "mtime": 1786030394.3955996,
+    "ast_hash": "ca37f1e57550aea60a65a46b29be87ed",
     "semantic_hash": ""
   },
   "src/app/api/checkout/route.ts": {
@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "src/app/api/conta/route.ts": {
-    "mtime": 1789000154.7021961,
-    "ast_hash": "c2f860616b0da55c3ffe5a37ebe0e78e",
+    "mtime": 1778863624.0,
+    "ast_hash": "6fcecb91720bfab5bcce689d110e20a6",
     "semantic_hash": ""
   },
   "src/app/api/kits/route.ts": {
@@ -330,8 +330,8 @@
     "semantic_hash": ""
   },
   "src/app/conta/page.tsx": {
-    "mtime": 1789000171.8550124,
-    "ast_hash": "6fc1e12d4ecbf2414aa7205b76ee4f5e",
+    "mtime": 1781808654.916474,
+    "ast_hash": "9becf0e07db6a7b66e1ccd996715d35e",
     "semantic_hash": ""
   },
   "src/app/kit/[slug]/KitPageClient.tsx": {
@@ -450,8 +450,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/Header.tsx": {
-    "mtime": 1788999860.991809,
-    "ast_hash": "a2f1fd896d6af95e2aeadd1cbf937674",
+    "mtime": 1779467599.8621368,
+    "ast_hash": "936f5dab0d4ea048830db6d5ad817782",
     "semantic_hash": ""
   },
   "src/components/providers/SessionProvider.tsx": {
@@ -470,8 +470,8 @@
     "semantic_hash": ""
   },
   "src/components/shop/KitSuggestions.tsx": {
-    "mtime": 1789000054.4384465,
-    "ast_hash": "9f685b6c7a3c0f0710310918d7fa75a2",
+    "mtime": 1778863624.0,
+    "ast_hash": "679d65e677b89ab3e2b868e985bb3a17",
     "semantic_hash": ""
   },
   "src/components/shop/ProductActions.tsx": {
@@ -652,16 +652,6 @@
   "src/app/api/admin/products/export/route.ts": {
     "mtime": 1786027591.093188,
     "ast_hash": "be780c53549ff0436968c0b625b415af",
-    "semantic_hash": ""
-  },
-  "src/app/admin/estoque/xml/page.tsx": {
-    "mtime": 1789000076.5148675,
-    "ast_hash": "8a9c699ed362a4de101afd356a3b4ff2",
-    "semantic_hash": ""
-  },
-  "src/app/api/admin/stock/import-xml/route.ts": {
-    "mtime": 1789000068.3358946,
-    "ast_hash": "b6652149cb2c7f9c07191afeb24e5e0e",
     "semantic_hash": ""
   }
 }
