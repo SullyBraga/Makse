@@ -50,6 +50,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.role = (user as any).role
         token.discountPct = (user as any).discountPct ?? 0
+      } else if (token.sub) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.sub as string },
+            select: { role: true, discountTable: { select: { percentage: true } } },
+          })
+          if (dbUser) {
+            token.role = dbUser.role
+            token.discountPct = dbUser.discountTable?.percentage ?? 0
+          }
+        } catch (e) {
+          console.error('[auth jwt refresh error]', e)
+        }
       }
       return token
     },

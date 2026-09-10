@@ -450,8 +450,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/Header.tsx": {
-    "mtime": 1788999860.991809,
-    "ast_hash": "a2f1fd896d6af95e2aeadd1cbf937674",
+    "mtime": 1789002390.6662135,
+    "ast_hash": "a2cd7879a7125e2b961006c91e35d48c",
     "semantic_hash": ""
   },
   "src/components/providers/SessionProvider.tsx": {
@@ -495,8 +495,8 @@
     "semantic_hash": ""
   },
   "src/lib/auth.ts": {
-    "mtime": 1778863624.0,
-    "ast_hash": "9ce45dd196c9f499f9e515af84c04540",
+    "mtime": 1789002378.1381297,
+    "ast_hash": "e4b34729ecd9fce8552d69e823f5b46d",
     "semantic_hash": ""
   },
   "src/lib/bling.ts": {

@@ -224,8 +224,13 @@ export default function Header() {
             <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {status === 'authenticated' ? (
                 <>
-                  <Link href={role === 'ADMIN' ? '/admin' : '/conta'} onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--navy)', textDecoration: 'none' }}>
-                    <User size={15} /> Minha Conta
+                  {(role === 'VENDEDOR' || role === 'ADMIN') && (
+                    <Link href="/admin/vendas" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#fff', background: 'var(--navy)', padding: '0.6rem 1rem', borderRadius: '99px', textDecoration: 'none', fontWeight: 600, justifyContent: 'center' }}>
+                      🛒 Painel de Vendas
+                    </Link>
+                  )}
+                  <Link href={role === 'ADMIN' ? '/admin' : role === 'VENDEDOR' ? '/admin/vendas' : '/conta'} onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--navy)', textDecoration: 'none' }}>
+                    <User size={15} /> {role === 'VENDEDOR' ? 'Painel Vendedor' : 'Minha Conta'}
                   </Link>
                   <button onClick={() => { signOut(); setMenuOpen(false) }} style={{ background: 'none', border: 'none', fontSize: '0.8rem', color: 'var(--text-muted)', cursor: 'pointer', textAlign: 'left', padding: 0 }}>
                     Sair
