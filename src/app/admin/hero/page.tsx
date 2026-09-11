@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Plus, Edit2, Trash2, RefreshCw, Eye, EyeOff, Layers, Upload, Image as ImageIcon, Monitor, Smartphone, Tablet, Laptop, Tv } from 'lucide-react'
 import Image from 'next/image'
 import { compressImage } from '@/lib/compress'
@@ -38,6 +39,11 @@ export default function AdminHeroPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Form State
   const [modalOpen, setModalOpen] = useState(false)
@@ -341,7 +347,7 @@ export default function AdminHeroPage() {
       )}
 
       {/* Modal Form */}
-      {modalOpen && (
+      {modalOpen && createPortal(
         <div
           onClick={(e) => {
             if (e.target === e.currentTarget) setModalOpen(false)
@@ -352,9 +358,12 @@ export default function AdminHeroPage() {
             zIndex: 9999,
             background: 'rgba(0,0,0,0.5)',
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start', // Allows scrolling without getting cut at top
             justifyContent: 'center',
-            padding: '1.5rem',
+            padding: '4rem 1.5rem',
+            overflowY: 'auto', // Overlay handles the scroll
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain',
           }}
         >
           <div
@@ -364,22 +373,22 @@ export default function AdminHeroPage() {
               borderRadius: '20px',
               width: '100%',
               maxWidth: '780px',
-              maxHeight: '85vh',
-              display: 'flex',
-              flexDirection: 'column',
               border: '1px solid var(--border)',
               boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
-              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column',
+              margin: 'auto', // vertically center when small
+              position: 'relative'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--border)', flexShrink: 0, background: '#fff' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--border)', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 10, borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }}>
               <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>
                 {editingSlide ? 'Editar Slide da Hero' : 'Novo Slide da Hero'}
               </h2>
               <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
             </div>
 
-            <div style={{ flex: 1, minHeight: 0, overflowY: 'scroll', WebkitOverflowScrolling: 'touch', padding: '1.75rem' }}>
+            <div style={{ padding: '1.75rem' }}>
               <form
                 onSubmit={handleSave}
                 style={{
@@ -527,7 +536,8 @@ export default function AdminHeroPage() {
             </form>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

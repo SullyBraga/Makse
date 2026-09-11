@@ -8,6 +8,10 @@ export default function SmoothScroll() {
   const lenisRef = useRef<Lenis | null>(null)
 
   useEffect(() => {
+    if (pathname?.startsWith('/admin')) {
+      return
+    }
+
     const lenis = new Lenis({
       duration: 1.15,          // levemente mais lento que o padrão
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // ease-out expo
@@ -28,7 +32,7 @@ export default function SmoothScroll() {
       lenis.destroy()
       lenisRef.current = null
     }
-  }, [])
+  }, [pathname])
 
   // Forçar scroll para o topo ao trocar de rota / página
   useEffect(() => {
