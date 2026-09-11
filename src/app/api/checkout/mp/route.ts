@@ -92,12 +92,14 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    if (shipPrice > 0) {
+    const finalShipPrice = coupon?.isFreeShipping ? 0 : shipPrice;
+
+    if (finalShipPrice > 0) {
       mpItems.push({
         id: 'shipping',
         title: `Frete: ${shippingMethod || 'Envio Correios'}`,
         quantity: 1,
-        unit_price: parseFloat(shipPrice.toFixed(2)),
+        unit_price: parseFloat(finalShipPrice.toFixed(2)),
         currency_id: 'BRL',
       })
     }
@@ -110,7 +112,7 @@ export async function POST(req: NextRequest) {
         userId,
         status: 'AGUARDANDO_PAGAMENTO',
         total,
-        shippingPrice: shipPrice,
+        shippingPrice: finalShipPrice,
         shippingMethod: shippingMethod || null,
         addressId: addressId || null,
         paymentMethod: 'MP',

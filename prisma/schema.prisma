@@ -220,6 +220,7 @@ model Coupon {
   usageLimit     Int?
   usageCount     Int       @default(0)
   active         Boolean   @default(true)
+  isFreeShipping Boolean   @default(false)
   createdAt      DateTime  @default(now())
 
   // Revendedor / Influenciador & Comissão

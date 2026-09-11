@@ -139,6 +139,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           zipCode: address.zipCode,
           country: address.country,
+          subtotal: itemsTotal,
           items: items.map(i => ({
             productId: i.productId,
             quantity: i.quantity,
@@ -268,8 +269,8 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           addressId: selectedAddressId,
-          shippingPrice: selectedShipping.price,
-          shippingMethod: selectedShipping.name,
+          shippingPrice: appliedCoupon?.isFreeShipping ? 0 : selectedShipping.price,
+          shippingMethod: appliedCoupon?.isFreeShipping ? `${selectedShipping.name} (Cupom Frete Grátis)` : selectedShipping.name,
           couponId: appliedCoupon?.id || null,
           items: items.map(i => ({
             productId: i.productId,

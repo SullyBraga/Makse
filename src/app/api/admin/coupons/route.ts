@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { code, discountType, value, minOrderValue, expiresAt, usageLimit, partnerName, commissionRate, productId } = body
+    const { code, discountType, value, minOrderValue, expiresAt, usageLimit, partnerName, commissionRate, productId, isFreeShipping } = body
 
     if (!code || !discountType || value === undefined) {
       return NextResponse.json({ error: 'Código, tipo de desconto e valor são obrigatórios' }, { status: 400 })
@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
         partnerName: partnerName?.trim() || null,
         commissionRate: commissionRate != null && !isNaN(parseFloat(commissionRate)) ? parseFloat(commissionRate) : null,
         productId: productId?.trim() || null,
+        isFreeShipping: !!isFreeShipping,
       },
       include: {
         product: { select: { id: true, name: true } },

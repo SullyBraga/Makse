@@ -63,6 +63,7 @@ export async function POST(req: NextRequest) {
         code: coupon.code,
         discountType: coupon.discountType,
         value: coupon.value,
+        isFreeShipping: coupon.isFreeShipping,
         productId: coupon.productId,
         productName: coupon.product?.name ?? null,
         eligibleSubtotal,

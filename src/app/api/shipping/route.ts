@@ -24,7 +24,7 @@ function parseProductWeight(weightStr: string | null): number {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { zipCode, country, items } = body
+    const { zipCode, country, items, subtotal } = body
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: 'Itens do carrinho vazios' }, { status: 400 })
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
         }
       ])
     } else {
-      // Cálculo Nacional via Correios (SEDEX e PAC)
+      // Cálculo Nacional via Correios (SEDEX e PAC) + Frete Grátis Local / Valor Mínimo
       if (!zipCode) {
         return NextResponse.json({ error: 'CEP obrigatório para envio nacional' }, { status: 400 })
       }
@@ -80,13 +80,13 @@ export async function POST(req: NextRequest) {
       }
 
       let state = 'SP' // Fallback default
+      let city = ''
       try {
         const viaCepRes = await fetch(`https://viacep.com.br/ws/${cleanZip}/json/`, { signal: AbortSignal.timeout(3000) })
         if (viaCepRes.ok) {
           const data = await viaCepRes.json()
-          if (data.uf) {
-            state = data.uf.toUpperCase()
-          }
+          if (data.uf) state = data.uf.toUpperCase()
+          if (data.localidade) city = data.localidade.trim()
         }
       } catch (err) {
         console.warn('[shipping API] ViaCEP timeout/erro, usando SP como padrão', err)
@@ -127,9 +127,40 @@ export async function POST(req: NextRequest) {
       }
 
       const pacPrice = pacBase + totalWeight * pacPerKg
-      const sedexPrice = pacPrice * 1.35 + 5.0 // SEDEX geralmente 35% mais caro que PAC + taxa fixa
+      const sedexPrice = pacPrice * 1.35 + 5.0
 
-      return NextResponse.json([
+      const zipNum = parseInt(cleanZip)
+      const isSaoPedro = (zipNum >= 13520000 && zipNum <= 13529999) || city.toLowerCase().includes('são pedro') || city.toLowerCase().includes('sao pedro')
+      const isFreeShippingSubtotal = typeof subtotal === 'number' && subtotal >= 200
+
+      const options: any[] = []
+
+      // 1. São Pedro / Salão: Retirada & Entrega Local Grátis
+      if (isSaoPedro) {
+        options.push(
+          {
+            name: '🏬 Retirar no Salão / Loja (São Pedro)',
+            price: 0,
+            deliveryTime: 'Retirada Imediata',
+            serviceCode: 'RETIRADA'
+          },
+          {
+            name: '🚚 Entrega Local Grátis (São Pedro)',
+            price: 0,
+            deliveryTime: 'Até 1 dia útil',
+            serviceCode: 'LOCAL_FREE'
+          }
+        )
+      } else if (isFreeShippingSubtotal) {
+        options.push({
+          name: '🎉 Frete Grátis (Compras acima de R$ 200,00)',
+          price: 0,
+          deliveryTime: pacDays,
+          serviceCode: 'FREE_SHIP'
+        })
+      }
+
+      options.push(
         {
           name: 'Correios PAC',
           price: parseFloat(pacPrice.toFixed(2)),
@@ -142,7 +173,9 @@ export async function POST(req: NextRequest) {
           deliveryTime: sedexDays,
           serviceCode: 'SEDEX'
         }
-      ])
+      )
+
+      return NextResponse.json(options)
     }
   } catch (err) {
     console.error('[shipping POST]', err)

@@ -44,6 +44,7 @@ export default function AdminCuponsPage() {
   const [partnerName, setPartnerName] = useState('')
   const [commissionRate, setCommissionRate] = useState('')
   const [productId, setProductId] = useState('')
+  const [isFreeShipping, setIsFreeShipping] = useState(false)
 
   const fetchCoupons = async () => {
     setLoading(true)
@@ -92,6 +93,7 @@ export default function AdminCuponsPage() {
           partnerName: partnerName.trim() || null,
           commissionRate: commissionRate ? parseFloat(commissionRate) : null,
           productId: productId || null,
+          isFreeShipping,
         }),
       })
 
@@ -108,6 +110,7 @@ export default function AdminCuponsPage() {
         setPartnerName('')
         setCommissionRate('')
         setProductId('')
+        setIsFreeShipping(false)
         fetchCoupons()
       }
     } catch {
@@ -344,6 +347,19 @@ export default function AdminCuponsPage() {
                 <label style={lblStyle}>Expiração</label>
                 <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)} style={inpStyle} />
               </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid var(--border)' }}>
+              <input
+                type="checkbox"
+                id="isFreeShipping"
+                checked={isFreeShipping}
+                onChange={e => setIsFreeShipping(e.target.checked)}
+                style={{ width: 16, height: 16, cursor: 'pointer', accentColor: 'var(--navy)' }}
+              />
+              <label htmlFor="isFreeShipping" style={{ fontSize: '0.8rem', color: 'var(--navy)', fontWeight: 500, cursor: 'pointer', margin: 0 }}>
+                🎁 Concede Frete Grátis ao cliente
+              </label>
             </div>
 
             <button type="submit" disabled={submitting} style={{ width: '100%', padding: '0.75rem', background: 'var(--navy)', color: '#fff', border: 'none', borderRadius: '10px', fontSize: '0.82rem', fontWeight: 500, cursor: 'pointer', fontFamily: 'var(--font-dm-sans), sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', opacity: submitting ? 0.7 : 1, marginTop: '0.5rem' }}>
