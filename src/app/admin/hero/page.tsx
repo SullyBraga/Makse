@@ -347,8 +347,9 @@ export default function AdminHeroPage() {
       )}
 
       {/* Modal Form */}
-      {modalOpen && createPortal(
+      {modalOpen && mounted && createPortal(
         <div
+          data-lenis-prevent="true"
           onClick={(e) => {
             if (e.target === e.currentTarget) setModalOpen(false)
           }}
@@ -367,6 +368,7 @@ export default function AdminHeroPage() {
           }}
         >
           <div
+            data-lenis-prevent="true"
             onClick={(e) => e.stopPropagation()}
             style={{
               background: '#fff',
@@ -381,11 +383,11 @@ export default function AdminHeroPage() {
               position: 'relative'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--border)', flexShrink: 0, background: '#fff', position: 'sticky', top: 0, zIndex: 10, borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem 1.75rem 1.25rem', borderBottom: '1px solid var(--border)' }}>
               <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>
                 {editingSlide ? 'Editar Slide da Hero' : 'Novo Slide da Hero'}
               </h2>
-              <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
+              <button type="button" onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
             </div>
 
             <div style={{ padding: '1.75rem' }}>
