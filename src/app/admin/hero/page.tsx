@@ -351,9 +351,10 @@ export default function AdminHeroPage() {
             inset: 0,
             zIndex: 9999,
             background: 'rgba(0,0,0,0.5)',
-            overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            padding: '2.5rem 1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem',
           }}
         >
           <div
@@ -363,27 +364,30 @@ export default function AdminHeroPage() {
               borderRadius: '20px',
               width: '100%',
               maxWidth: '780px',
-              margin: '0 auto',
-              padding: '1.75rem',
+              maxHeight: '85vh',
+              display: 'flex',
+              flexDirection: 'column',
               border: '1px solid var(--border)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+              overflow: 'hidden',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--border)', flexShrink: 0, background: '#fff' }}>
               <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>
                 {editingSlide ? 'Editar Slide da Hero' : 'Novo Slide da Hero'}
               </h2>
               <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
             </div>
 
-            <form
-              onSubmit={handleSave}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.25rem',
-              }}
-            >
+            <div style={{ flex: 1, minHeight: 0, overflowY: 'scroll', WebkitOverflowScrolling: 'touch', padding: '1.75rem' }}>
+              <form
+                onSubmit={handleSave}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1.25rem',
+                }}
+              >
               
               {/* Seletor de Modo de Resolução */}
               <div>
@@ -521,6 +525,7 @@ export default function AdminHeroPage() {
                 {saving ? <><RefreshCw size={16} style={{ animation: 'spin 0.7s linear infinite' }} /> Salvando Slide...</> : 'Salvar Slide da Hero'}
               </button>
             </form>
+            </div>
           </div>
         </div>
       )}
