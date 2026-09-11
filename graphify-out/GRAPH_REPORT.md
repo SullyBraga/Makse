@@ -1,7 +1,7 @@
 # Graph Report - Makse-main  (2026-09-11)
 
 ## Corpus Check
-- 123 files · ~600,716 words
+- 123 files · ~600,542 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1367e2a6`
+- Built from commit: `fb2ab1ee`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -114,7 +114,7 @@ Nodes (21): devDependencies, eslint, eslint-config-next, prisma, tailwindcss, @t
 
 ### Community 4 - "KitForm.tsx"
 Cohesion: 0.11
-Nodes (15): AdminHeroPage(), HeroSlide, RESOLUTION_GUIDE, KitFormEdit(), Props, KitComponent, KitForm(), Product (+7 more)
+Nodes (15): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, KitFormEdit(), Props, KitComponent, KitForm(), Product (+7 more)
 
 ### Community 5 - "compilerOptions"
 Cohesion: 0.10

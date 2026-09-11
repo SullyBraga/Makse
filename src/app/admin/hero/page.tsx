@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, RefreshCw, Eye, EyeOff, Layers, Upload, Info, Image as ImageIcon, Monitor, Smartphone, Tablet, Laptop, Tv } from 'lucide-react'
+import { Plus, Edit2, Trash2, RefreshCw, Eye, EyeOff, Layers, Upload, Image as ImageIcon, Monitor, Smartphone, Tablet, Laptop, Tv } from 'lucide-react'
 import Image from 'next/image'
 import { compressImage } from '@/lib/compress'
 
@@ -25,12 +25,12 @@ type HeroSlide = {
   secondaryCtaLink: string | null
 }
 
-const RESOLUTION_GUIDE = [
-  { device: '🖥️ Ultra Wide (Monitores 2K / 4K / Ultrawide)', res: '2560 x 1080 px (ou 3840 x 1600 px)', ratio: 'Proporção 21:9', field: 'imageUltrawide', icon: <Tv size={16} /> },
-  { device: '💻 Full HD (Desktops padrão)', res: '1920 x 1080 px', ratio: 'Proporção 16:9', field: 'imageFullhd', icon: <Monitor size={16} /> },
-  { device: '💻 Notebook (Telas de notebook)', res: '1440 x 900 px (ou 1366 x 768 px)', ratio: 'Proporção 16:10', field: 'imageNotebook', icon: <Laptop size={16} /> },
-  { device: '📱 Tablet (iPads / Tablets)', res: '1024 x 1366 px (Vertical)', ratio: 'Proporção 3:4', field: 'imageTablet', icon: <Tablet size={16} /> },
-  { device: '📱 Celular / Mobile (Smartphones)', res: '1080 x 1920 px (Vertical)', ratio: 'Proporção 9:16', field: 'imageMobile', icon: <Smartphone size={16} /> },
+const DEVICE_FIELDS = [
+  { device: '🖥️ Ultra Wide (Monitores 2K / 4K / Ultrawide)', res: '2560 x 1080 px', field: 'imageUltrawide' },
+  { device: '💻 Full HD (Desktops padrão)', res: '1920 x 1080 px', field: 'imageFullhd' },
+  { device: '💻 Notebook (Telas de notebook)', res: '1440 x 900 px', field: 'imageNotebook' },
+  { device: '📱 Tablet (iPads / Tablets)', res: '1024 x 1366 px', field: 'imageTablet' },
+  { device: '📱 Celular / Mobile (Smartphones)', res: '1080 x 1920 px', field: 'imageMobile' },
 ]
 
 export default function AdminHeroPage() {
@@ -79,6 +79,17 @@ export default function AdminHeroPage() {
   useEffect(() => {
     fetchSlides()
   }, [])
+
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [modalOpen])
 
   const openNewModal = () => {
     setEditingSlide(null)
@@ -266,29 +277,6 @@ export default function AdminHeroPage() {
         </button>
       </div>
 
-      {/* Guia de Resoluções em Pixels */}
-      <div style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem' }}>
-          <Info size={16} style={{ color: 'var(--gold)' }} />
-          <h3 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.25rem', fontWeight: 500, color: 'var(--navy)', margin: 0 }}>
-            Guia de Resoluções em Pixels (Para Produção de Arte)
-          </h3>
-        </div>
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem', lineHeight: 1.5 }}>
-          Ao optar pelo modo <strong>Resoluções Diversas</strong>, forneça as imagens nas medidas exatas abaixo para garantir o melhor enquadramento e velocidade:
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem' }}>
-          {RESOLUTION_GUIDE.map((g, i) => (
-            <div key={i} style={{ background: '#fff', borderRadius: '12px', padding: '0.85rem 1rem', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--navy)', marginBottom: '0.2rem' }}>{g.device}</div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--gold)', fontFamily: 'monospace' }}>{g.res}</div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>{g.ratio}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {error && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '12px', padding: '0.85rem 1.25rem', fontSize: '0.84rem', color: '#dc2626', marginBottom: '1.5rem' }}>{error}</div>}
       {success && <div style={{ background: '#dcfce7', border: '1px solid #bbf7d0', borderRadius: '12px', padding: '0.85rem 1.25rem', fontSize: '0.84rem', color: '#166534', marginBottom: '1.5rem' }}>{success}</div>}
 
@@ -352,10 +340,25 @@ export default function AdminHeroPage() {
         </div>
       )}
 
-      {/* Modal Modal Form */}
+      {/* Modal Form */}
       {modalOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', backdropFilter: 'blur(4px)' }}>
-          <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '780px', maxHeight: '90vh', overflowY: 'auto', padding: '1.75rem', border: '1px solid var(--border)', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setModalOpen(false)
+          }}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem',
+            backdropFilter: 'blur(4px)', overscrollBehavior: 'contain'
+          }}
+        >
+          <div
+            style={{
+              background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '780px',
+              maxHeight: '90vh', overflowY: 'auto', padding: '1.75rem', border: '1px solid var(--border)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)', overscrollBehavior: 'contain'
+            }}
+          >
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>
@@ -414,7 +417,7 @@ export default function AdminHeroPage() {
                     Upload de Imagens por Dispositivo (Resoluções em Pixels)
                   </p>
 
-                  {RESOLUTION_GUIDE.map(g => {
+                  {DEVICE_FIELDS.map(g => {
                     const val = g.field === 'imageUltrawide' ? imageUltrawide :
                                 g.field === 'imageFullhd' ? imageFullhd :
                                 g.field === 'imageNotebook' ? imageNotebook :
