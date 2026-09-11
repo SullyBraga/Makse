@@ -80,17 +80,6 @@ export default function AdminHeroPage() {
     fetchSlides()
   }, [])
 
-  useEffect(() => {
-    if (modalOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [modalOpen])
-
   const openNewModal = () => {
     setEditingSlide(null)
     setResolutionMode('SINGLE')
@@ -347,9 +336,9 @@ export default function AdminHeroPage() {
             if (e.target === e.currentTarget) setModalOpen(false)
           }}
           style={{
-            position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)',
+            position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.5)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '1.5rem', backdropFilter: 'blur(4px)'
+            padding: '1.5rem'
           }}
         >
           <div
@@ -368,7 +357,20 @@ export default function AdminHeroPage() {
               <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
             </div>
 
-            <form onSubmit={handleSave} style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch', padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <form
+              onSubmit={handleSave}
+              style={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                overscrollBehavior: 'contain',
+                padding: '1.75rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.25rem',
+              }}
+            >
               
               {/* Seletor de Modo de Resolução */}
               <div>
