@@ -348,28 +348,27 @@ export default function AdminHeroPage() {
           }}
           style={{
             position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)',
-            display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-            padding: '2rem 1rem', backdropFilter: 'blur(4px)', overflowY: 'auto',
-            WebkitOverflowScrolling: 'touch',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '1.5rem', backdropFilter: 'blur(4px)'
           }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
               background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '780px',
-              margin: 'auto 0', padding: '1.75rem', border: '1px solid var(--border)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+              maxHeight: '85vh', display: 'flex', flexDirection: 'column',
+              border: '1px solid var(--border)', boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+              overflow: 'hidden'
             }}
           >
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem 1.75rem 1.25rem', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
               <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>
                 {editingSlide ? 'Editar Slide da Hero' : 'Novo Slide da Hero'}
               </h2>
               <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
             </div>
 
-            <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <form onSubmit={handleSave} style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch', padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               {/* Seletor de Modo de Resolução */}
               <div>
