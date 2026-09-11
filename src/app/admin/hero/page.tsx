@@ -80,6 +80,17 @@ export default function AdminHeroPage() {
     fetchSlides()
   }, [])
 
+  useEffect(() => {
+    if (modalOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [modalOpen])
+
   const openNewModal = () => {
     setEditingSlide(null)
     setResolutionMode('SINGLE')
@@ -336,21 +347,29 @@ export default function AdminHeroPage() {
             if (e.target === e.currentTarget) setModalOpen(false)
           }}
           style={{
-            position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.5)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '1.5rem'
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            background: 'rgba(0,0,0,0.5)',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            padding: '2.5rem 1rem',
           }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '780px',
-              maxHeight: '85vh', display: 'flex', flexDirection: 'column',
-              border: '1px solid var(--border)', boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-              overflow: 'hidden'
+              background: '#fff',
+              borderRadius: '20px',
+              width: '100%',
+              maxWidth: '780px',
+              margin: '0 auto',
+              padding: '1.75rem',
+              border: '1px solid var(--border)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem 1.75rem 1.25rem', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.5rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>
                 {editingSlide ? 'Editar Slide da Hero' : 'Novo Slide da Hero'}
               </h2>
@@ -360,12 +379,6 @@ export default function AdminHeroPage() {
             <form
               onSubmit={handleSave}
               style={{
-                flex: 1,
-                minHeight: 0,
-                overflowY: 'auto',
-                WebkitOverflowScrolling: 'touch',
-                overscrollBehavior: 'contain',
-                padding: '1.75rem',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '1.25rem',
