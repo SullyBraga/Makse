@@ -348,15 +348,17 @@ export default function AdminHeroPage() {
           }}
           style={{
             position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem',
-            backdropFilter: 'blur(4px)', overscrollBehavior: 'contain'
+            display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+            padding: '2rem 1rem', backdropFilter: 'blur(4px)', overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
           }}
         >
           <div
+            onClick={(e) => e.stopPropagation()}
             style={{
               background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '780px',
-              maxHeight: '90vh', overflowY: 'auto', padding: '1.75rem', border: '1px solid var(--border)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.2)', overscrollBehavior: 'contain'
+              margin: 'auto 0', padding: '1.75rem', border: '1px solid var(--border)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
             }}
           >
             
