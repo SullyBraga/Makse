@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 
-const SLIDES = [
+const DEFAULT_SLIDES = [
   {
     image: '/foto-hero.jpeg',
     label: 'Cosmética Avançada',
@@ -14,6 +14,7 @@ const SLIDES = [
     primaryCtaLink: '/catalogo',
     secondaryCtaText: 'Cadastro Pro',
     secondaryCtaLink: '/cadastro',
+    resolutionMode: 'SINGLE',
   },
   {
     image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1200&auto=format&fit=crop',
@@ -25,6 +26,7 @@ const SLIDES = [
     primaryCtaLink: '/cadastro',
     secondaryCtaText: 'Ver Linhas',
     secondaryCtaLink: '/linhas',
+    resolutionMode: 'SINGLE',
   },
   {
     image: 'https://images.unsplash.com/photo-1527799863830-55c97d627fb2?q=80&w=1200&auto=format&fit=crop',
@@ -36,43 +38,80 @@ const SLIDES = [
     primaryCtaLink: '/catalogo',
     secondaryCtaText: 'Sobre Nós',
     secondaryCtaLink: '/sobre',
+    resolutionMode: 'SINGLE',
   }
 ]
 
 export default function HeroSection() {
+  const [slides, setSlides] = useState<any[]>(DEFAULT_SLIDES)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isMinimized, setIsMinimized] = useState(false)
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % SLIDES.length)
-    }, 6000) // auto-play every 6 seconds
-    return () => clearInterval(timer)
+    fetch('/api/hero-slides')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data)
+        }
+      })
+      .catch(err => console.error('Error fetching hero slides:', err))
   }, [])
 
+  useEffect(() => {
+    if (slides.length <= 1) return
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % slides.length)
+    }, 6000)
+    return () => clearInterval(timer)
+  }, [slides.length])
+
   const nextSlide = () => {
-    setCurrentSlide(prev => (prev + 1) % SLIDES.length)
+    setCurrentSlide(prev => (prev + 1) % slides.length)
   }
 
   const prevSlide = () => {
-    setCurrentSlide(prev => (prev - 1 + SLIDES.length) % SLIDES.length)
+    setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length)
   }
+
+  const active = slides[currentSlide] || DEFAULT_SLIDES[0]
 
   return (
     <section className="hero-section">
       {/* Slides Background Container */}
       <div className="hero-slides-container">
-        {SLIDES.map((slide, idx) => (
-          <div
-            key={idx}
-            className={`hero-slide ${idx === currentSlide ? 'active' : ''}`}
-            style={{
-              backgroundImage: `url(${slide.image})`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
-          />
-        ))}
+        {slides.map((slide, idx) => {
+          const isActive = idx === currentSlide
+          const isMulti = slide.resolutionMode === 'MULTI'
+          const mainImg = slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageMobile || '/foto-hero.jpeg'
+
+          return (
+            <div
+              key={slide.id || idx}
+              className={`hero-slide ${isActive ? 'active' : ''}`}
+              style={{
+                backgroundImage: isMulti ? 'none' : `url(${mainImg})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+              }}
+            >
+              {isMulti && (
+                <picture style={{ width: '100%', height: '100%', display: 'block' }}>
+                  {slide.imageMobile && <source media="(max-width: 640px)" srcSet={slide.imageMobile} />}
+                  {slide.imageTablet && <source media="(max-width: 1024px)" srcSet={slide.imageTablet} />}
+                  {slide.imageNotebook && <source media="(max-width: 1440px)" srcSet={slide.imageNotebook} />}
+                  {slide.imageFullhd && <source media="(max-width: 2000px)" srcSet={slide.imageFullhd} />}
+                  {slide.imageUltrawide && <source media="(min-width: 2001px)" srcSet={slide.imageUltrawide} />}
+                  <img
+                    src={mainImg}
+                    alt={slide.titleLine1 || 'Makse Hero'}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </picture>
+              )}
+            </div>
+          )
+        })}
         {/* Soft overlay gradient */}
         <div className="hero-overlay" />
       </div>
@@ -90,21 +129,27 @@ export default function HeroSection() {
             <Minus size={15} strokeWidth={2.5} />
           </button>
 
-          <span className="section-label animate-fade">{SLIDES[currentSlide].label}</span>
+          {active.label && <span className="section-label animate-fade">{active.label}</span>}
           <h1 className="hero-title animate-up">
-            <span className="hero-title-line-1">{SLIDES[currentSlide].titleLine1}</span>
-            <span className="hero-title-line-2">{SLIDES[currentSlide].titleLine2}</span>
+            {active.titleLine1 && <span className="hero-title-line-1">{active.titleLine1}</span>}
+            {active.titleLine2 && <span className="hero-title-line-2">{active.titleLine2}</span>}
           </h1>
-          <p className="hero-description animate-up">
-            {SLIDES[currentSlide].description}
-          </p>
+          {active.description && (
+            <p className="hero-description animate-up">
+              {active.description}
+            </p>
+          )}
           <div className="hero-buttons animate-up">
-            <Link href={SLIDES[currentSlide].primaryCtaLink} className="btn-primary">
-              {SLIDES[currentSlide].primaryCtaText}
-            </Link>
-            <Link href={SLIDES[currentSlide].secondaryCtaLink} className="btn-outline">
-              {SLIDES[currentSlide].secondaryCtaText}
-            </Link>
+            {active.primaryCtaText && (
+              <Link href={active.primaryCtaLink || '/catalogo'} className="btn-primary">
+                {active.primaryCtaText}
+              </Link>
+            )}
+            {active.secondaryCtaText && (
+              <Link href={active.secondaryCtaLink || '/cadastro'} className="btn-outline">
+                {active.secondaryCtaText}
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -119,7 +164,7 @@ export default function HeroSection() {
 
       {/* Dots Indicator */}
       <div className="hero-dots">
-        {SLIDES.map((_, idx) => (
+        {slides.map((_, idx: number) => (
           <button
             key={idx}
             onClick={() => setCurrentSlide(idx)}

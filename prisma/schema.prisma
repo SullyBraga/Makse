@@ -244,3 +244,33 @@ model PasswordResetToken {
   @@index([email])
 }
 
+model HeroSlide {
+  id               String   @id @default(cuid())
+  order            Int      @default(0)
+  active           Boolean  @default(true)
+  resolutionMode  String   @default("SINGLE") // "SINGLE" or "MULTI"
+
+  // Single resolution (Resolução Única)
+  image            String?
+
+  // Multi resolution images (Resoluções Diversas)
+  imageUltrawide   String?
+  imageFullhd      String?
+  imageNotebook    String?
+  imageTablet      String?
+  imageMobile      String?
+
+  // Text content & CTAs
+  label            String?
+  titleLine1       String?
+  titleLine2       String?
+  description      String?
+  primaryCtaText   String?
+  primaryCtaLink   String?
+  secondaryCtaText String?
+  secondaryCtaLink String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+

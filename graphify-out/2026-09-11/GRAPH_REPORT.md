@@ -1,16 +1,16 @@
-# Graph Report - Makse-main  (2026-09-11)
+# Graph Report - Makse-main  (2026-09-10)
 
 ## Corpus Check
-- 123 files · ~600,716 words
+- 119 files · ~597,314 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 504 nodes · 616 edges · 63 communities (45 shown, 18 thin omitted)
+- 489 nodes · 590 edges · 62 communities (43 shown, 19 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1367e2a6`
+- Built from commit: `e9b68d19`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -65,19 +65,18 @@
 - check_hash.js
 - route.ts
 - { GET, POST }
-- page.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `useCartStore` - 17 edges
 2. `compilerOptions` - 16 edges
 3. `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` - 10 edges
-4. `compressImage()` - 9 edges
-5. `🚀 Configuração Completa - Makse Ecommerce` - 9 edges
-6. `xlsx` - 7 edges
-7. `saveUploadedFile()` - 7 edges
+4. `🚀 Configuração Completa - Makse Ecommerce` - 9 edges
+5. `xlsx` - 7 edges
+6. `compressImage()` - 7 edges
+7. `POST()` - 6 edges
 8. `POST()` - 6 edges
-9. `POST()` - 6 edges
-10. `🔧 <a id="local"></a> 1. Configuração Local para Testes` - 6 edges
+9. `🔧 <a id="local"></a> 1. Configuração Local para Testes` - 6 edges
+10. `🌍 <a id="vercel-supabase"></a> 2. Deploy no Vercel + Supabase (Testes em Produção)` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `GET()` --references--> `xlsx`  [EXTRACTED]
@@ -94,7 +93,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (63 total, 18 thin omitted)
+## Communities (62 total, 19 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -113,15 +112,15 @@ Cohesion: 0.09
 Nodes (21): devDependencies, eslint, eslint-config-next, prisma, tailwindcss, @tailwindcss/postcss, tsx, @types/node (+13 more)
 
 ### Community 4 - "KitForm.tsx"
-Cohesion: 0.11
-Nodes (15): AdminHeroPage(), HeroSlide, RESOLUTION_GUIDE, KitFormEdit(), Props, KitComponent, KitForm(), Product (+7 more)
+Cohesion: 0.08
+Nodes (16): KitFormEdit(), Props, KitComponent, KitForm(), Product, Props, COLUMNS, ImportarProdutosPage() (+8 more)
 
 ### Community 5 - "compilerOptions"
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
 ### Community 6 - "auth.ts"
-Cohesion: 0.11
+Cohesion: 0.12
 Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
 
 ### Community 7 - "route.ts"
@@ -138,11 +137,11 @@ Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST
 
 ### Community 11 - "CatalogoClient.tsx"
 Cohesion: 0.13
-Nodes (7): Item, Line, Props, HomePage(), S, DEFAULT_SLIDES, Props
+Nodes (7): Item, Line, Props, HomePage(), S, SLIDES, Props
 
 ### Community 12 - "route.ts"
-Cohesion: 0.29
-Nodes (11): POST(), requireAdmin(), DELETE(), POST(), requireAdmin(), DELETE(), PATCH(), POST() (+3 more)
+Cohesion: 0.36
+Nodes (9): DELETE(), POST(), requireAdmin(), DELETE(), PATCH(), POST(), requireAdmin(), deleteUploadedFile() (+1 more)
 
 ### Community 14 - "layout.tsx"
 Cohesion: 0.28
@@ -216,32 +215,24 @@ Nodes (3): DELETE(), PATCH(), requireAdmin()
 Cohesion: 0.67
 Nodes (3): C, sec(), SobrePage()
 
-### Community 46 - "route.ts"
-Cohesion: 0.20
-Nodes (4): Line, PRODUCT_TYPES, Props, Variant
-
 ### Community 53 - "route.ts"
 Cohesion: 0.83
 Nodes (3): parseNfeXml(), POST(), requireAdmin()
 
-### Community 61 - "page.tsx"
-Cohesion: 0.60
-Nodes (5): DELETE(), GET(), PATCH(), POST(), requireAdmin()
-
 ## Knowledge Gaps
-- **184 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+179 more)
+- **182 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+177 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
-  _High betweenness centrality (0.050) - this node is a cross-community bridge._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
-  _187 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _185 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
   _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
