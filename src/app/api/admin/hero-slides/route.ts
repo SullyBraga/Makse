@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { ensureDefaultHeroSlides } from '@/lib/hero-slides'
 
 async function requireAdmin() {
   const session = await auth()
@@ -12,6 +13,8 @@ async function requireAdmin() {
 export async function GET() {
   const session = await requireAdmin()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
+
+  await ensureDefaultHeroSlides()
 
   const slides = await prisma.heroSlide.findMany({
     orderBy: { order: 'asc' },

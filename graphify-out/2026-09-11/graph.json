@@ -1004,14 +1004,14 @@
       "norm_label": "heroslide"
     },
     {
-      "label": "RESOLUTION_GUIDE",
+      "label": "DEVICE_FIELDS",
       "file_type": "code",
       "source_file": "src/app/admin/hero/page.tsx",
       "source_location": "L28",
       "_origin": "ast",
-      "id": "src_app_admin_hero_page_resolution_guide",
+      "id": "src_app_admin_hero_page_device_fields",
       "community": 4,
-      "norm_label": "resolution_guide"
+      "norm_label": "device_fields"
     },
     {
       "label": "AdminHeroPage()",
@@ -5959,20 +5959,20 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/hero/page.tsx",
-      "source_location": "L7",
+      "source_location": "L28",
       "weight": 1.0,
       "source": "src_app_admin_hero_page",
-      "target": "src_app_admin_hero_page_heroslide",
+      "target": "src_app_admin_hero_page_device_fields",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/hero/page.tsx",
-      "source_location": "L28",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "src_app_admin_hero_page",
-      "target": "src_app_admin_hero_page_resolution_guide",
+      "target": "src_app_admin_hero_page_heroslide",
       "confidence_score": 1.0
     },
     {
@@ -6003,7 +6003,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/admin/hero/page.tsx",
-      "source_location": "L129",
+      "source_location": "L140",
       "weight": 1.0,
       "source": "src_app_admin_hero_page_adminheropage",
       "target": "src_lib_compress_compressimage"
@@ -11446,5 +11446,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1367e2a66a7b3c7067e8592b395be6534b693ef6"
+  "built_at_commit": "fb2ab1eed14dd18573e5862db16e4ae340313273"
 }

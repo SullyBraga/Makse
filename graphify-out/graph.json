@@ -1560,7 +1560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route",
-      "community": 43,
+      "community": 8,
       "norm_label": "route.ts"
     },
     {
@@ -1570,7 +1570,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_patch",
-      "community": 43,
+      "community": 8,
       "norm_label": "patch()"
     },
     {
@@ -1580,7 +1580,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_delete",
-      "community": 43,
+      "community": 8,
       "norm_label": "delete()"
     },
     {
@@ -1727,7 +1727,7 @@
       "label": "requireAdmin()",
       "file_type": "code",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_requireadmin",
       "community": 61,
@@ -1737,7 +1737,7 @@
       "label": "GET()",
       "file_type": "code",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L12",
+      "source_location": "L13",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_get",
       "community": 61,
@@ -1747,7 +1747,7 @@
       "label": "POST()",
       "file_type": "code",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L24",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_post",
       "community": 61,
@@ -1757,7 +1757,7 @@
       "label": "PATCH()",
       "file_type": "code",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L81",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_patch",
       "community": 61,
@@ -1767,7 +1767,7 @@
       "label": "DELETE()",
       "file_type": "code",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L106",
+      "source_location": "L109",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_delete",
       "community": 61,
@@ -2010,7 +2010,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route",
-      "community": 13,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2020,7 +2020,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route_get",
-      "community": 13,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2030,7 +2030,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route_post",
-      "community": 13,
+      "community": 6,
       "norm_label": "post()"
     },
     {
@@ -2560,7 +2560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_route",
-      "community": 6,
+      "community": 8,
       "norm_label": "route.ts"
     },
     {
@@ -2570,7 +2570,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_route_post",
-      "community": 6,
+      "community": 8,
       "norm_label": "post()"
     },
     {
@@ -2630,17 +2630,17 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_hero_slides_route",
-      "community": 8,
+      "community": 61,
       "norm_label": "route.ts"
     },
     {
       "label": "GET()",
       "file_type": "code",
       "source_file": "src/app/api/hero-slides/route.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_hero_slides_route_get",
-      "community": 8,
+      "community": 61,
       "norm_label": "get()"
     },
     {
@@ -2710,7 +2710,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_professional_route",
-      "community": 8,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2720,7 +2720,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_professional_route_post",
-      "community": 8,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2730,7 +2730,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_app_api_professional_route_rationale_29",
-      "community": 8,
+      "community": 13,
       "norm_label": "todo: enviar email de notificacao para o admin"
     },
     {
@@ -3090,7 +3090,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_kit_slug_page",
-      "community": 62,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
@@ -3100,7 +3100,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_kit_slug_page_kitpage",
-      "community": 62,
+      "community": 6,
       "norm_label": "kitpage()"
     },
     {
@@ -4292,6 +4292,36 @@
       "id": "src_lib_email_sendpasswordresetemail",
       "community": 28,
       "norm_label": "sendpasswordresetemail()"
+    },
+    {
+      "label": "hero-slides.ts",
+      "file_type": "code",
+      "source_file": "src/lib/hero-slides.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_lib_hero_slides",
+      "community": 61,
+      "norm_label": "hero-slides.ts"
+    },
+    {
+      "label": "DEFAULT_HERO_SLIDES",
+      "file_type": "code",
+      "source_file": "src/lib/hero-slides.ts",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "src_lib_hero_slides_default_hero_slides",
+      "community": 61,
+      "norm_label": "default_hero_slides"
+    },
+    {
+      "label": "ensureDefaultHeroSlides()",
+      "file_type": "code",
+      "source_file": "src/lib/hero-slides.ts",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "src_lib_hero_slides_ensuredefaultheroslides",
+      "community": 61,
+      "norm_label": "ensuredefaultheroslides()"
     },
     {
       "label": "prisma.ts",
@@ -6930,7 +6960,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L106",
+      "source_location": "L109",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route",
       "target": "src_app_api_admin_hero_slides_route_delete",
@@ -6940,7 +6970,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route",
       "target": "src_app_api_admin_hero_slides_route_get",
@@ -6950,7 +6980,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L81",
+      "source_location": "L84",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route",
       "target": "src_app_api_admin_hero_slides_route_patch",
@@ -6960,7 +6990,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L24",
+      "source_location": "L27",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route",
       "target": "src_app_api_admin_hero_slides_route_post",
@@ -6970,7 +7000,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route",
       "target": "src_app_api_admin_hero_slides_route_requireadmin",
@@ -6992,6 +7022,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_api_admin_hero_slides_route",
+      "target": "src_lib_hero_slides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/hero-slides/route.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_api_admin_hero_slides_route",
+      "target": "src_lib_hero_slides_ensuredefaultheroslides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/admin/hero-slides/route.ts",
       "source_location": "L3",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route",
@@ -7003,7 +7055,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L107",
+      "source_location": "L110",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route_delete",
       "target": "src_app_api_admin_hero_slides_route_requireadmin",
@@ -7014,7 +7066,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route_get",
       "target": "src_app_api_admin_hero_slides_route_requireadmin",
@@ -7025,7 +7077,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L82",
+      "source_location": "L85",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route_patch",
       "target": "src_app_api_admin_hero_slides_route_requireadmin",
@@ -7036,11 +7088,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/hero-slides/route.ts",
-      "source_location": "L25",
+      "source_location": "L28",
       "weight": 1.0,
       "source": "src_app_api_admin_hero_slides_route_post",
       "target": "src_app_api_admin_hero_slides_route_requireadmin",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/admin/hero-slides/route.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_app_api_admin_hero_slides_route_get",
+      "target": "src_lib_hero_slides_ensuredefaultheroslides"
     },
     {
       "relation": "contains",
@@ -8693,10 +8756,32 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/hero-slides/route.ts",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "src_app_api_hero_slides_route",
       "target": "src_app_api_hero_slides_route_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/hero-slides/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_api_hero_slides_route",
+      "target": "src_lib_hero_slides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/hero-slides/route.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_app_api_hero_slides_route",
+      "target": "src_lib_hero_slides_ensuredefaultheroslides",
       "confidence_score": 1.0
     },
     {
@@ -8709,6 +8794,17 @@
       "source": "src_app_api_hero_slides_route",
       "target": "src_lib_prisma",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/hero-slides/route.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_api_hero_slides_route_get",
+      "target": "src_lib_hero_slides_ensuredefaultheroslides"
     },
     {
       "relation": "contains",
@@ -10776,6 +10872,37 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/lib/hero-slides.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_lib_hero_slides",
+      "target": "src_lib_hero_slides_default_hero_slides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/hero-slides.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "src_lib_hero_slides",
+      "target": "src_lib_hero_slides_ensuredefaultheroslides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/hero-slides.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_lib_hero_slides",
+      "target": "src_lib_prisma",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/lib/prisma.ts",
       "source_location": "L3",
       "weight": 1.0,
@@ -11446,5 +11573,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "fb2ab1eed14dd18573e5862db16e4ae340313273"
+  "built_at_commit": "df9b5248f5dda7c90104e19c0ea05fb46450fc9c"
 }

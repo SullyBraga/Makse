@@ -1,16 +1,16 @@
 # Graph Report - Makse-main  (2026-09-11)
 
 ## Corpus Check
-- 123 files · ~600,542 words
+- 124 files · ~600,742 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 504 nodes · 616 edges · 63 communities (45 shown, 18 thin omitted)
+- 507 nodes · 625 edges · 61 communities (42 shown, 19 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `fb2ab1ee`
+- Built from commit: `df9b5248`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,6 +28,7 @@
 - shipping.ts
 - CatalogoClient.tsx
 - route.ts
+- ProductForm.tsx
 - layout.tsx
 - page.tsx
 - page.tsx
@@ -94,7 +95,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (63 total, 18 thin omitted)
+## Communities (61 total, 19 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -121,7 +122,7 @@ Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
 ### Community 6 - "auth.ts"
-Cohesion: 0.11
+Cohesion: 0.09
 Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
 
 ### Community 7 - "route.ts"
@@ -225,13 +226,13 @@ Cohesion: 0.83
 Nodes (3): parseNfeXml(), POST(), requireAdmin()
 
 ### Community 61 - "page.tsx"
-Cohesion: 0.60
-Nodes (5): DELETE(), GET(), PATCH(), POST(), requireAdmin()
+Cohesion: 0.33
+Nodes (8): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), DEFAULT_HERO_SLIDES, ensureDefaultHeroSlides()
 
 ## Knowledge Gaps
-- **184 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+179 more)
+- **185 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+180 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -241,7 +242,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
-  _187 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _188 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
   _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
