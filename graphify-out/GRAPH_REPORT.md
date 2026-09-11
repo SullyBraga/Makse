@@ -1,16 +1,16 @@
 # Graph Report - Makse-main  (2026-09-11)
 
 ## Corpus Check
-- 124 files · ~600,812 words
+- 124 files · ~602,225 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 507 nodes · 625 edges · 61 communities (42 shown, 19 thin omitted)
+- 508 nodes · 627 edges · 62 communities (44 shown, 18 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2d5c7095`
+- Built from commit: `0215610f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,7 +28,6 @@
 - shipping.ts
 - CatalogoClient.tsx
 - route.ts
-- ProductForm.tsx
 - layout.tsx
 - page.tsx
 - page.tsx
@@ -95,7 +94,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (61 total, 19 thin omitted)
+## Communities (62 total, 18 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -122,7 +121,7 @@ Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
 ### Community 6 - "auth.ts"
-Cohesion: 0.09
+Cohesion: 0.11
 Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
 
 ### Community 7 - "route.ts"
@@ -186,8 +185,8 @@ Cohesion: 0.60
 Nodes (5): blingRequest(), decrementBlingStock(), getBlingStock(), processSaleStock(), syncAllStock()
 
 ### Community 24 - "route.ts"
-Cohesion: 0.70
-Nodes (4): DELETE(), GET(), POST(), requireAdmin()
+Cohesion: 0.60
+Nodes (5): DELETE(), GET(), POST(), PUT(), requireAdmin()
 
 ### Community 25 - "route.ts"
 Cohesion: 0.70
@@ -232,7 +231,7 @@ Nodes (8): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), DEFAULT_HERO
 ## Knowledge Gaps
 - **185 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+180 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

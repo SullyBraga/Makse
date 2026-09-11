@@ -13,18 +13,38 @@ export async function GET(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
 
   try {
+    const { searchParams } = new URL(req.url)
+    const startDateStr = searchParams.get('startDate')
+    const endDateStr = searchParams.get('endDate')
+
+    const dateFilter: any = {}
+    if (startDateStr) {
+      dateFilter.gte = new Date(`${startDateStr}T00:00:00.000Z`)
+    }
+    if (endDateStr) {
+      dateFilter.lte = new Date(`${endDateStr}T23:59:59.999Z`)
+    }
+
+    const orderWhereClause: any = {
+      status: { not: 'CANCELADO' },
+    }
+    if (startDateStr || endDateStr) {
+      orderWhereClause.createdAt = dateFilter
+    }
+
     const coupons = await prisma.coupon.findMany({
       include: {
         product: { select: { id: true, name: true } },
         orders: {
-          select: { id: true, total: true, status: true },
+          where: orderWhereClause,
+          select: { id: true, total: true, status: true, createdAt: true },
         },
       },
       orderBy: { createdAt: 'desc' },
     })
 
     const withMetrics = coupons.map(c => {
-      const validOrders = c.orders.filter(o => o.status !== 'CANCELADO')
+      const validOrders = c.orders
       const totalRevenue = validOrders.reduce((sum, o) => sum + (o.total || 0), 0)
       const commissionRate = c.commissionRate || 0
       const totalCommission = totalRevenue * (commissionRate / 100)
@@ -40,7 +60,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(withMetrics)
   } catch (err) {
     console.error('[coupons GET]', err)
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro interno ao buscar cupons' }, { status: 500 })
   }
 }
 
@@ -93,7 +113,71 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(coupon, { status: 201 })
   } catch (err) {
     console.error('[coupons POST]', err)
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro interno ao criar cupom' }, { status: 500 })
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  const session = await requireAdmin()
+  if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
+
+  try {
+    const body = await req.json()
+    const { id, code, discountType, value, minOrderValue, expiresAt, usageLimit, partnerName, commissionRate, productId, isFreeShipping, active } = body
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID do cupom é obrigatório' }, { status: 400 })
+    }
+
+    if (!code || !discountType || value === undefined) {
+      return NextResponse.json({ error: 'Código, tipo de desconto e valor são obrigatórios' }, { status: 400 })
+    }
+
+    const cleanCode = code.trim().toUpperCase()
+    if (!['PERCENTAGE', 'FIXED'].includes(discountType)) {
+      return NextResponse.json({ error: 'Tipo de desconto inválido' }, { status: 400 })
+    }
+
+    const numValue = parseFloat(value)
+    if (isNaN(numValue) || numValue <= 0) {
+      return NextResponse.json({ error: 'O valor do desconto deve ser maior que zero' }, { status: 400 })
+    }
+
+    // Check unique code excluding current coupon
+    const existing = await prisma.coupon.findFirst({
+      where: {
+        code: cleanCode,
+        NOT: { id },
+      },
+    })
+    if (existing) {
+      return NextResponse.json({ error: 'Já existe outro cupom com este código' }, { status: 409 })
+    }
+
+    const updated = await prisma.coupon.update({
+      where: { id },
+      data: {
+        code: cleanCode,
+        discountType,
+        value: numValue,
+        minOrderValue: minOrderValue ? parseFloat(minOrderValue) : null,
+        expiresAt: expiresAt ? new Date(expiresAt) : null,
+        usageLimit: usageLimit ? parseInt(usageLimit) : null,
+        partnerName: partnerName?.trim() || null,
+        commissionRate: commissionRate != null && !isNaN(parseFloat(commissionRate)) ? parseFloat(commissionRate) : null,
+        productId: productId?.trim() || null,
+        isFreeShipping: !!isFreeShipping,
+        ...(active !== undefined ? { active: !!active } : {}),
+      },
+      include: {
+        product: { select: { id: true, name: true } },
+      },
+    })
+
+    return NextResponse.json(updated)
+  } catch (err) {
+    console.error('[coupons PUT]', err)
+    return NextResponse.json({ error: 'Erro interno ao atualizar cupom' }, { status: 500 })
   }
 }
 
@@ -113,6 +197,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[coupons DELETE]', err)
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro interno ao excluir cupom' }, { status: 500 })
   }
 }
