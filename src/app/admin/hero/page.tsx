@@ -306,8 +306,8 @@ export default function AdminHeroPage() {
             <div key={slide.id} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
               {/* Image Preview */}
               <div style={{ width: 120, height: 75, background: 'var(--navy)', borderRadius: '10px', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
-                {slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageMobile ? (
-                  <img src={(slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageMobile)!} alt={slide.titleLine1 || 'Slide'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                {slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageNotebook || slide.imageTablet || slide.imageMobile ? (
+                  <img src={(slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageNotebook || slide.imageTablet || slide.imageMobile)!} alt={slide.titleLine1 || 'Slide'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--gold)' }}><ImageIcon size={24} /></div>
                 )}
@@ -434,7 +434,12 @@ export default function AdminHeroPage() {
               {resolutionMode === 'SINGLE' ? (
                 <div style={{ background: '#f8fafc', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
                   <label style={lblStyle}>Imagem Principal (Resolução Única)</label>
-                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                    {image && (
+                      <div style={{ width: 44, height: 32, borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)', flexShrink: 0, background: '#e2e8f0' }}>
+                        <img src={image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      </div>
+                    )}
                     <input type="text" value={image} onChange={e => setImage(e.target.value)} placeholder="Ex: /foto-hero.jpeg ou URL" style={inpStyle} />
                     <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', padding: '0.65rem 1rem', background: 'var(--navy)', color: '#fff', borderRadius: '10px', fontSize: '0.78rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                       <Upload size={14} /> {uploadingField === 'image' ? 'Enviando...' : 'Upload Imagem'}
@@ -466,6 +471,11 @@ export default function AdminHeroPage() {
                           <span style={{ fontSize: '0.72rem', color: 'var(--gold)', fontFamily: 'monospace', fontWeight: 600 }}>{g.res}</span>
                         </div>
                         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                          {val && (
+                            <div style={{ width: 44, height: 32, borderRadius: '6px', overflow: 'hidden', border: '1px solid var(--border)', flexShrink: 0, background: '#e2e8f0' }}>
+                              <img src={val} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                          )}
                           <input type="text" value={val} onChange={e => setter(e.target.value)} placeholder={`URL da imagem ${g.res}`} style={inpStyle} />
                           <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', padding: '0.65rem 0.85rem', background: 'var(--navy)', color: '#fff', borderRadius: '10px', fontSize: '0.75rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                             <Upload size={13} /> {uploadingField === g.field ? '...' : 'Upload'}
