@@ -75,6 +75,16 @@ export default function HeroSection() {
   }
 
   const active = slides[currentSlide] || DEFAULT_SLIDES[0]
+  const hasContent = Boolean(
+    active && (
+      active.label ||
+      active.titleLine1 ||
+      active.titleLine2 ||
+      active.description ||
+      active.primaryCtaText ||
+      active.secondaryCtaText
+    )
+  )
 
   return (
     <section className="hero-section">
@@ -83,7 +93,7 @@ export default function HeroSection() {
         {slides.map((slide, idx) => {
           const isActive = idx === currentSlide
           const isMulti = slide.resolutionMode === 'MULTI'
-          const mainImg = slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageMobile || '/foto-hero.jpeg'
+          const mainImg = slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageNotebook || slide.imageTablet || slide.imageMobile || '/foto-hero.jpeg'
 
           return (
             <div
@@ -97,11 +107,11 @@ export default function HeroSection() {
             >
               {isMulti && (
                 <picture style={{ width: '100%', height: '100%', display: 'block' }}>
+                  {slide.imageUltrawide && <source media="(min-width: 1921px)" srcSet={slide.imageUltrawide} />}
+                  {slide.imageFullhd && <source media="(min-width: 1367px)" srcSet={slide.imageFullhd} />}
+                  {slide.imageNotebook && <source media="(min-width: 1025px)" srcSet={slide.imageNotebook} />}
+                  {slide.imageTablet && <source media="(min-width: 641px)" srcSet={slide.imageTablet} />}
                   {slide.imageMobile && <source media="(max-width: 640px)" srcSet={slide.imageMobile} />}
-                  {slide.imageTablet && <source media="(max-width: 1024px)" srcSet={slide.imageTablet} />}
-                  {slide.imageNotebook && <source media="(max-width: 1440px)" srcSet={slide.imageNotebook} />}
-                  {slide.imageFullhd && <source media="(max-width: 2000px)" srcSet={slide.imageFullhd} />}
-                  {slide.imageUltrawide && <source media="(min-width: 2001px)" srcSet={slide.imageUltrawide} />}
                   <img
                     src={mainImg}
                     alt={slide.titleLine1 || 'Makse Hero'}
@@ -117,42 +127,44 @@ export default function HeroSection() {
       </div>
 
       {/* Main Content Container */}
-      <div className="hero-main-container">
-        <div className={`hero-box ${isMinimized ? 'minimized' : ''}`}>
-          {/* Minimize Button (-) */}
-          <button
-            onClick={() => setIsMinimized(true)}
-            className="hero-minimize-btn"
-            aria-label="Minimizar conteúdo"
-            title="Minimizar conteúdo"
-          >
-            <Minus size={15} strokeWidth={2.5} />
-          </button>
+      {hasContent && (
+        <div className="hero-main-container">
+          <div className={`hero-box ${isMinimized ? 'minimized' : ''}`}>
+            {/* Minimize Button (-) */}
+            <button
+              onClick={() => setIsMinimized(true)}
+              className="hero-minimize-btn"
+              aria-label="Minimizar conteúdo"
+              title="Minimizar conteúdo"
+            >
+              <Minus size={15} strokeWidth={2.5} />
+            </button>
 
-          {active.label && <span className="section-label animate-fade">{active.label}</span>}
-          <h1 className="hero-title animate-up">
-            {active.titleLine1 && <span className="hero-title-line-1">{active.titleLine1}</span>}
-            {active.titleLine2 && <span className="hero-title-line-2">{active.titleLine2}</span>}
-          </h1>
-          {active.description && (
-            <p className="hero-description animate-up">
-              {active.description}
-            </p>
-          )}
-          <div className="hero-buttons animate-up">
-            {active.primaryCtaText && (
-              <Link href={active.primaryCtaLink || '/catalogo'} className="btn-primary">
-                {active.primaryCtaText}
-              </Link>
+            {active.label && <span className="section-label animate-fade">{active.label}</span>}
+            <h1 className="hero-title animate-up">
+              {active.titleLine1 && <span className="hero-title-line-1">{active.titleLine1}</span>}
+              {active.titleLine2 && <span className="hero-title-line-2">{active.titleLine2}</span>}
+            </h1>
+            {active.description && (
+              <p className="hero-description animate-up">
+                {active.description}
+              </p>
             )}
-            {active.secondaryCtaText && (
-              <Link href={active.secondaryCtaLink || '/cadastro'} className="btn-outline">
-                {active.secondaryCtaText}
-              </Link>
-            )}
+            <div className="hero-buttons animate-up">
+              {active.primaryCtaText && (
+                <Link href={active.primaryCtaLink || '/catalogo'} className="btn-primary">
+                  {active.primaryCtaText}
+                </Link>
+              )}
+              {active.secondaryCtaText && (
+                <Link href={active.secondaryCtaLink || '/cadastro'} className="btn-outline">
+                  {active.secondaryCtaText}
+                </Link>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Slide Navigation Arrows */}
       <button onClick={prevSlide} className="hero-arrow-btn prev" aria-label="Slide anterior">

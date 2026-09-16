@@ -139,6 +139,10 @@ export async function POST(req: NextRequest) {
           email: session.user?.email ?? undefined,
           name: session.user?.name ?? undefined,
         },
+        payment_methods: {
+          excluded_payment_methods: [],
+          excluded_payment_types: [],
+        },
         back_urls: {
           success: `${baseUrl}/checkout/sucesso?orderId=${order.id}`,
           failure: `${baseUrl}/checkout/falha?orderId=${order.id}`,
