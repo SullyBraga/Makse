@@ -67,7 +67,7 @@ model ProductLine {
   name        String
   slug        String    @unique
   description String
-  image       String?
+  image       String?   @db.LongText
   products    Product[]
   order       Int       @default(0)
 }
@@ -251,20 +251,20 @@ model HeroSlide {
   resolutionMode  String   @default("SINGLE") // "SINGLE" or "MULTI"
 
   // Single resolution (Resolução Única)
-  image            String?
+  image            String?  @db.LongText
 
   // Multi resolution images (Resoluções Diversas)
-  imageUltrawide   String?
-  imageFullhd      String?
-  imageNotebook    String?
-  imageTablet      String?
-  imageMobile      String?
+  imageUltrawide   String?  @db.LongText
+  imageFullhd      String?  @db.LongText
+  imageNotebook    String?  @db.LongText
+  imageTablet      String?  @db.LongText
+  imageMobile      String?  @db.LongText
 
   // Text content & CTAs
   label            String?
   titleLine1       String?
   titleLine2       String?
-  description      String?
+  description      String?  @db.Text
   primaryCtaText   String?
   primaryCtaLink   String?
   secondaryCtaText String?

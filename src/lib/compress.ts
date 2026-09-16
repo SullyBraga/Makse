@@ -15,8 +15,8 @@ export function compressImage(file: File): Promise<Blob> {
       img.src = event.target?.result as string
       img.onload = () => {
         const canvas = document.createElement('canvas')
-        const MAX_WIDTH = 1000
-        const MAX_HEIGHT = 1000
+        const MAX_WIDTH = 2560
+        const MAX_HEIGHT = 1600
         let width = img.width
         let height = img.height
 
@@ -47,7 +47,7 @@ export function compressImage(file: File): Promise<Blob> {
             }
           },
           'image/jpeg',
-          0.82 // Qualidade da compressão (82%)
+          0.85 // Qualidade da compressão (85%)
         )
       }
       img.onerror = () => resolve(file)

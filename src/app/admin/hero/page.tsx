@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 import { Plus, Edit2, Trash2, RefreshCw, Eye, EyeOff, Layers, Upload, Image as ImageIcon, Monitor, Smartphone, Tablet, Laptop, Tv } from 'lucide-react'
 import Image from 'next/image'
 import { compressImage } from '@/lib/compress'
+import { isValidImageUrl } from '@/lib/hero-slides'
 
 type HeroSlide = {
   id: string
@@ -302,16 +303,20 @@ export default function AdminHeroPage() {
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {slides.map(slide => (
-            <div key={slide.id} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-              {/* Image Preview */}
-              <div style={{ width: 120, height: 75, background: 'var(--navy)', borderRadius: '10px', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
-                {slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageNotebook || slide.imageTablet || slide.imageMobile ? (
-                  <img src={(slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageNotebook || slide.imageTablet || slide.imageMobile)!} alt={slide.titleLine1 || 'Slide'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--gold)' }}><ImageIcon size={24} /></div>
-                )}
-              </div>
+          {slides.map(slide => {
+            const valid = (url: string | null) => isValidImageUrl(url) ? url : null
+            const thumbSrc = valid(slide.image) || valid(slide.imageFullhd) || valid(slide.imageUltrawide) || valid(slide.imageNotebook) || valid(slide.imageTablet) || valid(slide.imageMobile)
+
+            return (
+              <div key={slide.id} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+                {/* Image Preview */}
+                <div style={{ width: 120, height: 75, background: 'var(--navy)', borderRadius: '10px', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
+                  {thumbSrc ? (
+                    <img src={thumbSrc} alt={slide.titleLine1 || 'Slide'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--gold)' }}><ImageIcon size={24} /></div>
+                  )}
+                </div>
 
               {/* Slide Meta */}
               <div style={{ flex: 1, minWidth: '220px' }}>
@@ -342,7 +347,8 @@ export default function AdminHeroPage() {
                 </button>
               </div>
             </div>
-          ))}
+          )
+        })}
         </div>
       )}
 

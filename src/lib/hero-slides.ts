@@ -45,11 +45,56 @@ export const DEFAULT_HERO_SLIDES = [
   },
 ]
 
+export function isValidImageUrl(url: string | null | undefined): boolean {
+  if (!url) return false
+  const trimmed = url.trim()
+  if (!trimmed) return false
+  if (trimmed.startsWith('data:image/')) {
+    return trimmed.length >= 500
+  }
+  return true
+}
+
 export async function ensureDefaultHeroSlides() {
   const count = await prisma.heroSlide.count()
   if (count === 0) {
     for (const slide of DEFAULT_HERO_SLIDES) {
       await prisma.heroSlide.create({ data: slide })
     }
+    return
+  }
+
+  // Auto-repair any slides that had truncated base64 images due to previous DB column limits
+  try {
+    const slides = await prisma.heroSlide.findMany()
+    const fields = ['image', 'imageUltrawide', 'imageFullhd', 'imageNotebook', 'imageTablet', 'imageMobile'] as const
+
+    for (const slide of slides) {
+      let needsUpdate = false
+      const updates: Record<string, string | null> = {}
+
+      for (const field of fields) {
+        const val = slide[field]
+        if (val && val.startsWith('data:image/') && val.length < 500) {
+          updates[field] = null
+          needsUpdate = true
+        }
+      }
+
+      if (needsUpdate) {
+        const currentVals = { ...slide, ...updates }
+        const hasValid = fields.some(f => isValidImageUrl(currentVals[f]))
+        if (!hasValid) {
+          updates.image = '/foto-hero.jpeg'
+        }
+
+        await prisma.heroSlide.update({
+          where: { id: slide.id },
+          data: updates,
+        })
+      }
+    }
+  } catch (err) {
+    console.error('Error repairing corrupted hero slides:', err)
   }
 }

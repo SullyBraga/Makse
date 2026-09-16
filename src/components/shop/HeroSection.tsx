@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
+import { isValidImageUrl } from '@/lib/hero-slides'
 
 const DEFAULT_SLIDES = [
   {
@@ -93,7 +94,16 @@ export default function HeroSection() {
         {slides.map((slide, idx) => {
           const isActive = idx === currentSlide
           const isMulti = slide.resolutionMode === 'MULTI'
-          const mainImg = slide.image || slide.imageFullhd || slide.imageUltrawide || slide.imageNotebook || slide.imageTablet || slide.imageMobile || '/foto-hero.jpeg'
+
+          const validImg = (url: string | null | undefined) => isValidImageUrl(url) ? url : null
+          const imgUltrawide = validImg(slide.imageUltrawide)
+          const imgFullhd = validImg(slide.imageFullhd)
+          const imgNotebook = validImg(slide.imageNotebook)
+          const imgTablet = validImg(slide.imageTablet)
+          const imgMobile = validImg(slide.imageMobile)
+          const imgSingle = validImg(slide.image)
+
+          const mainImg = imgSingle || imgFullhd || imgUltrawide || imgNotebook || imgTablet || imgMobile || '/foto-hero.jpeg'
 
           return (
             <div
@@ -107,11 +117,11 @@ export default function HeroSection() {
             >
               {isMulti && (
                 <picture style={{ width: '100%', height: '100%', display: 'block' }}>
-                  {slide.imageUltrawide && <source media="(min-width: 1921px)" srcSet={slide.imageUltrawide} />}
-                  {slide.imageFullhd && <source media="(min-width: 1367px)" srcSet={slide.imageFullhd} />}
-                  {slide.imageNotebook && <source media="(min-width: 1025px)" srcSet={slide.imageNotebook} />}
-                  {slide.imageTablet && <source media="(min-width: 641px)" srcSet={slide.imageTablet} />}
-                  {slide.imageMobile && <source media="(max-width: 640px)" srcSet={slide.imageMobile} />}
+                  {imgUltrawide && <source media="(min-width: 1921px)" srcSet={imgUltrawide} />}
+                  {imgFullhd && <source media="(min-width: 1367px)" srcSet={imgFullhd} />}
+                  {imgNotebook && <source media="(min-width: 1025px)" srcSet={imgNotebook} />}
+                  {imgTablet && <source media="(min-width: 641px)" srcSet={imgTablet} />}
+                  {imgMobile && <source media="(max-width: 640px)" srcSet={imgMobile} />}
                   <img
                     src={mainImg}
                     alt={slide.titleLine1 || 'Makse Hero'}

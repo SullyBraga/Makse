@@ -1,16 +1,16 @@
-# Graph Report - Makse-main  (2026-09-16)
+# Graph Report - Makse-main  (2026-09-11)
 
 ## Corpus Check
-- 124 files · ~602,559 words
+- 124 files · ~602,225 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 509 nodes · 635 edges · 63 communities (44 shown, 19 thin omitted)
+- 508 nodes · 627 edges · 62 communities (44 shown, 18 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8706def0`
+- Built from commit: `0215610f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -58,6 +58,7 @@
 - page.tsx
 - route.ts
 - route.ts
+- route.ts
 - eslint.config.mjs
 - next.config.ts
 - postcss.config.mjs
@@ -65,7 +66,6 @@
 - route.ts
 - { GET, POST }
 - page.tsx
-- route.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `useCartStore` - 17 edges
@@ -77,7 +77,7 @@
 7. `saveUploadedFile()` - 7 edges
 8. `POST()` - 6 edges
 9. `POST()` - 6 edges
-10. `isValidImageUrl()` - 6 edges
+10. `🔧 <a id="local"></a> 1. Configuração Local para Testes` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `GET()` --references--> `xlsx`  [EXTRACTED]
@@ -94,7 +94,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (63 total, 19 thin omitted)
+## Communities (62 total, 18 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -113,15 +113,15 @@ Cohesion: 0.09
 Nodes (21): devDependencies, eslint, eslint-config-next, prisma, tailwindcss, @tailwindcss/postcss, tsx, @types/node (+13 more)
 
 ### Community 4 - "KitForm.tsx"
-Cohesion: 0.08
-Nodes (16): KitFormEdit(), Props, KitComponent, KitForm(), Product, Props, COLUMNS, ImportarProdutosPage() (+8 more)
+Cohesion: 0.11
+Nodes (15): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, KitFormEdit(), Props, KitComponent, KitForm(), Product (+7 more)
 
 ### Community 5 - "compilerOptions"
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
 ### Community 6 - "auth.ts"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
 
 ### Community 7 - "route.ts"
@@ -137,8 +137,8 @@ Cohesion: 0.16
 Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque (+1 more)
 
 ### Community 11 - "CatalogoClient.tsx"
-Cohesion: 0.17
-Nodes (6): Item, Line, Props, HomePage(), S, Props
+Cohesion: 0.13
+Nodes (7): Item, Line, Props, HomePage(), S, DEFAULT_SLIDES, Props
 
 ### Community 12 - "route.ts"
 Cohesion: 0.29
@@ -216,24 +216,28 @@ Nodes (3): DELETE(), PATCH(), requireAdmin()
 Cohesion: 0.67
 Nodes (3): C, sec(), SobrePage()
 
+### Community 46 - "route.ts"
+Cohesion: 0.20
+Nodes (4): Line, PRODUCT_TYPES, Props, Variant
+
 ### Community 53 - "route.ts"
 Cohesion: 0.83
 Nodes (3): parseNfeXml(), POST(), requireAdmin()
 
 ### Community 61 - "page.tsx"
-Cohesion: 0.18
-Nodes (14): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, DELETE(), GET(), PATCH(), POST(), requireAdmin() (+6 more)
+Cohesion: 0.33
+Nodes (8): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), DEFAULT_HERO_SLIDES, ensureDefaultHeroSlides()
 
 ## Knowledge Gaps
 - **185 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+180 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
 - **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
