@@ -990,7 +990,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_hero_page",
-      "community": 61,
+      "community": 4,
       "norm_label": "page.tsx"
     },
     {
@@ -1000,7 +1000,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_admin_hero_page_heroslide",
-      "community": 61,
+      "community": 4,
       "norm_label": "heroslide"
     },
     {
@@ -1010,7 +1010,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_admin_hero_page_device_fields",
-      "community": 61,
+      "community": 4,
       "norm_label": "device_fields"
     },
     {
@@ -1020,7 +1020,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_app_admin_hero_page_adminheropage",
-      "community": 61,
+      "community": 4,
       "norm_label": "adminheropage()"
     },
     {
@@ -1320,7 +1320,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_produtos_id_editar_page",
-      "community": 4,
+      "community": 11,
       "norm_label": "page.tsx"
     },
     {
@@ -1330,7 +1330,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_admin_produtos_id_editar_page_editarprodutopage",
-      "community": 4,
+      "community": 11,
       "norm_label": "editarprodutopage()"
     },
     {
@@ -1380,7 +1380,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_produtos_novo_page",
-      "community": 4,
+      "community": 11,
       "norm_label": "page.tsx"
     },
     {
@@ -1390,7 +1390,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_app_admin_produtos_novo_page_novoprodutopage",
-      "community": 4,
+      "community": 11,
       "norm_label": "novoprodutopage()"
     },
     {
@@ -1560,7 +1560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route",
-      "community": 13,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -1570,7 +1570,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_patch",
-      "community": 13,
+      "community": 6,
       "norm_label": "patch()"
     },
     {
@@ -1580,7 +1580,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_delete",
-      "community": 13,
+      "community": 6,
       "norm_label": "delete()"
     },
     {
@@ -1860,7 +1860,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_kits_export_route",
-      "community": 7,
+      "community": 63,
       "norm_label": "route.ts"
     },
     {
@@ -1870,7 +1870,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_admin_kits_export_route_get",
-      "community": 7,
+      "community": 63,
       "norm_label": "get()"
     },
     {
@@ -2020,7 +2020,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route",
-      "community": 43,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2030,7 +2030,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route_get",
-      "community": 43,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2040,7 +2040,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_app_api_admin_lines_route_post",
-      "community": 43,
+      "community": 6,
       "norm_label": "post()"
     },
     {
@@ -2080,7 +2080,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_products_export_route",
-      "community": 7,
+      "community": 64,
       "norm_label": "route.ts"
     },
     {
@@ -2090,7 +2090,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_admin_products_export_route_get",
-      "community": 7,
+      "community": 64,
       "norm_label": "get()"
     },
     {
@@ -2400,7 +2400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route",
-      "community": 6,
+      "community": 8,
       "norm_label": "route.ts"
     },
     {
@@ -2410,7 +2410,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route_get",
-      "community": 6,
+      "community": 8,
       "norm_label": "get()"
     },
     {
@@ -2550,7 +2550,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route",
-      "community": 6,
+      "community": 65,
       "norm_label": "route.ts"
     },
     {
@@ -2560,7 +2560,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route_post",
-      "community": 6,
+      "community": 65,
       "norm_label": "post()"
     },
     {
@@ -2570,7 +2570,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_route",
-      "community": 8,
+      "community": 66,
       "norm_label": "route.ts"
     },
     {
@@ -2580,7 +2580,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_route_post",
-      "community": 8,
+      "community": 66,
       "norm_label": "post()"
     },
     {
@@ -2840,7 +2840,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient",
-      "community": 11,
+      "community": 61,
       "norm_label": "catalogoclient.tsx"
     },
     {
@@ -2850,7 +2850,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_item",
-      "community": 11,
+      "community": 61,
       "norm_label": "item"
     },
     {
@@ -2860,7 +2860,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_line",
-      "community": 11,
+      "community": 61,
       "norm_label": "line"
     },
     {
@@ -2870,7 +2870,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_props",
-      "community": 11,
+      "community": 61,
       "norm_label": "props"
     },
     {
@@ -2880,7 +2880,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_catalogoclient",
-      "community": 11,
+      "community": 61,
       "norm_label": "catalogoclient()"
     },
     {
@@ -2890,7 +2890,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_catalogo_page",
-      "community": 11,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
@@ -2900,7 +2900,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_catalogo_page_catalogopage",
-      "community": 11,
+      "community": 6,
       "norm_label": "catalogopage()"
     },
     {
@@ -3100,7 +3100,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_kit_slug_page",
-      "community": 6,
+      "community": 67,
       "norm_label": "page.tsx"
     },
     {
@@ -3110,7 +3110,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_kit_slug_page_kitpage",
-      "community": 6,
+      "community": 67,
       "norm_label": "kitpage()"
     },
     {
@@ -3230,27 +3230,27 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_page",
-      "community": 11,
+      "community": 61,
       "norm_label": "page.tsx"
     },
     {
       "label": "S",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L8",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_page_s",
-      "community": 11,
+      "community": 61,
       "norm_label": "s"
     },
     {
       "label": "HomePage()",
       "file_type": "code",
       "source_file": "src/app/page.tsx",
-      "source_location": "L15",
+      "source_location": "L17",
       "_origin": "ast",
       "id": "src_app_page_homepage",
-      "community": 11,
+      "community": 61,
       "norm_label": "homepage()"
     },
     {
@@ -3300,7 +3300,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_produto_slug_page",
-      "community": 0,
+      "community": 13,
       "norm_label": "page.tsx"
     },
     {
@@ -3310,7 +3310,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_produto_slug_page_productpage",
-      "community": 0,
+      "community": 13,
       "norm_label": "productpage()"
     },
     {
@@ -3590,7 +3590,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_admin_productform",
-      "community": 4,
+      "community": 11,
       "norm_label": "productform.tsx"
     },
     {
@@ -3600,7 +3600,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_admin_productform_product_types",
-      "community": 4,
+      "community": 11,
       "norm_label": "product_types"
     },
     {
@@ -3610,7 +3610,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_admin_productform_variant",
-      "community": 4,
+      "community": 11,
       "norm_label": "variant"
     },
     {
@@ -3620,7 +3620,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_components_admin_productform_line",
-      "community": 4,
+      "community": 11,
       "norm_label": "line"
     },
     {
@@ -3630,7 +3630,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_components_admin_productform_props",
-      "community": 4,
+      "community": 11,
       "norm_label": "props"
     },
     {
@@ -3640,7 +3640,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_components_admin_productform_productform",
-      "community": 4,
+      "community": 11,
       "norm_label": "productform()"
     },
     {
@@ -4070,7 +4070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_shop_productcard",
-      "community": 11,
+      "community": 61,
       "norm_label": "productcard.tsx"
     },
     {
@@ -4080,7 +4080,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_shop_productcard_props",
-      "community": 11,
+      "community": 61,
       "norm_label": "props"
     },
     {
@@ -4090,7 +4090,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_shop_productcard_productcard",
-      "community": 11,
+      "community": 61,
       "norm_label": "productcard()"
     },
     {
@@ -4100,7 +4100,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_shop_productgallery",
-      "community": 0,
+      "community": 13,
       "norm_label": "productgallery.tsx"
     },
     {
@@ -4110,7 +4110,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_shop_productgallery_props",
-      "community": 0,
+      "community": 13,
       "norm_label": "props"
     },
     {
@@ -4120,7 +4120,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_components_shop_productgallery_productgallery",
-      "community": 0,
+      "community": 13,
       "norm_label": "productgallery()"
     },
     {
@@ -4420,7 +4420,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_proxy",
-      "community": 6,
+      "community": 43,
       "norm_label": "proxy.ts"
     },
     {
@@ -4430,7 +4430,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_proxy_proxy",
-      "community": 6,
+      "community": 43,
       "norm_label": "proxy"
     },
     {
@@ -4440,7 +4440,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_proxy_config",
-      "community": 6,
+      "community": 43,
       "norm_label": "config"
     },
     {
@@ -9582,7 +9582,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.tsx",
-      "source_location": "L15",
+      "source_location": "L17",
       "weight": 1.0,
       "source": "src_app_page",
       "target": "src_app_page_homepage",
@@ -9592,7 +9592,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.tsx",
-      "source_location": "L8",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "src_app_page",
       "target": "src_app_page_s",
@@ -9636,6 +9636,28 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_page",
+      "target": "src_lib_hero_slides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_page",
+      "target": "src_lib_hero_slides_ensuredefaultheroslides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/page.tsx",
       "source_location": "L3",
       "weight": 1.0,
       "source": "src_app_page",
@@ -9648,10 +9670,21 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/page.tsx",
-      "source_location": "L46",
+      "source_location": "L56",
       "weight": 1.0,
       "source": "src_app_page_homepage",
       "target": "src_app_page_s"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_app_page_homepage",
+      "target": "src_lib_hero_slides_ensuredefaultheroslides"
     },
     {
       "relation": "contains",
@@ -10535,7 +10568,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/shop/HeroSection.tsx",
-      "source_location": "L98",
+      "source_location": "L102",
       "weight": 1.0,
       "source": "src_components_shop_herosection_herosection",
       "target": "src_lib_hero_slides_isvalidimageurl"
@@ -11701,5 +11734,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "8706def07f8fdc0b60941cf90304bbce7c1e151f"
+  "built_at_commit": "13f52f2649be3ba92964ab7c5363c59d5108e918"
 }

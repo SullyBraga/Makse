@@ -5,6 +5,8 @@ import { auth } from '@/lib/auth'
 import ProductCard from '@/components/shop/ProductCard'
 import HeroSection from '@/components/shop/HeroSection'
 
+import { ensureDefaultHeroSlides } from '@/lib/hero-slides'
+
 const S = {
   container: { maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem' } as React.CSSProperties,
   section: (bg = '#fff') => ({ padding: 'clamp(3rem,6vw,5rem) 0', backgroundColor: bg }) as React.CSSProperties,
@@ -18,7 +20,15 @@ export default async function HomePage() {
   const isPro = role === 'CABELEIREIRA' || role === 'ADMIN'
 
   let featuredProducts: any[] = []
+  let heroSlides: any[] = []
+
   try {
+    await ensureDefaultHeroSlides()
+    heroSlides = await prisma.heroSlide.findMany({
+      where: { active: true },
+      orderBy: { order: 'asc' },
+    })
+
     featuredProducts = await prisma.product.findMany({
       where: {
         active: true,
@@ -37,7 +47,7 @@ export default async function HomePage() {
     <div>
 
       {/* ── HERO ── */}
-      <HeroSection />
+      <HeroSection initialSlides={JSON.parse(JSON.stringify(heroSlides))} />
 
 
 

@@ -43,8 +43,10 @@ const DEFAULT_SLIDES = [
   }
 ]
 
-export default function HeroSection() {
-  const [slides, setSlides] = useState<any[]>(DEFAULT_SLIDES)
+export default function HeroSection({ initialSlides }: { initialSlides?: any[] }) {
+  const [slides, setSlides] = useState<any[]>(
+    Array.isArray(initialSlides) && initialSlides.length > 0 ? initialSlides : DEFAULT_SLIDES
+  )
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isMinimized, setIsMinimized] = useState(false)
 
@@ -67,11 +69,13 @@ export default function HeroSection() {
     return () => clearInterval(timer)
   }, [slides.length])
 
-  const nextSlide = () => {
+  const nextSlide = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
     setCurrentSlide(prev => (prev + 1) % slides.length)
   }
 
-  const prevSlide = () => {
+  const prevSlide = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
     setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length)
   }
 
@@ -104,8 +108,9 @@ export default function HeroSection() {
           const imgSingle = validImg(slide.image)
 
           const mainImg = imgSingle || imgFullhd || imgUltrawide || imgNotebook || imgTablet || imgMobile || '/foto-hero.jpeg'
+          const targetLink = slide.primaryCtaLink || slide.secondaryCtaLink || null
 
-          return (
+          const slideInner = (
             <div
               key={slide.id || idx}
               className={`hero-slide ${isActive ? 'active' : ''}`}
@@ -113,9 +118,10 @@ export default function HeroSection() {
                 backgroundImage: isMulti ? 'none' : `url(${mainImg})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
+                cursor: targetLink ? 'pointer' : 'default',
               }}
             >
-              {isMulti && (
+              {isMulti ? (
                 <picture style={{ width: '100%', height: '100%', display: 'block' }}>
                   {imgUltrawide && <source media="(min-width: 1921px)" srcSet={imgUltrawide} />}
                   {imgFullhd && <source media="(min-width: 1367px)" srcSet={imgFullhd} />}
@@ -128,9 +134,23 @@ export default function HeroSection() {
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </picture>
+              ) : (
+                /* Imagem responsiva direta para o modo Single */
+                <img
+                  src={mainImg}
+                  alt={slide.titleLine1 || 'Makse Hero'}
+                  className="hero-single-img"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'none' }}
+                />
               )}
             </div>
           )
+
+          return targetLink ? (
+            <Link key={slide.id || idx} href={targetLink} style={{ display: 'block', textDecoration: 'none' }}>
+              {slideInner}
+            </Link>
+          ) : slideInner
         })}
         {/* Soft overlay gradient */}
         <div className="hero-overlay" />
@@ -189,7 +209,10 @@ export default function HeroSection() {
         {slides.map((_, idx: number) => (
           <button
             key={idx}
-            onClick={() => setCurrentSlide(idx)}
+            onClick={(e) => {
+              e.stopPropagation()
+              setCurrentSlide(idx)
+            }}
             className={`hero-dot ${idx === currentSlide ? 'active' : ''}`}
             aria-label={`Ir para slide ${idx + 1}`}
           />
@@ -480,27 +503,66 @@ export default function HeroSection() {
           box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
         }
 
-        /* ── RESPONSIVE MOBILE STYLING ── */
+        /* ── RESPONSIVE MOBILE STYLING (Zero-crop responsive banner) ── */
         @media (max-width: 768px) {
           .hero-section {
-            min-height: 520px;
-            height: 520px;
-            padding-top: 60px;
-            padding-bottom: 20px;
-            align-items: flex-start; /* Shift content up */
+            min-height: auto !important;
+            height: auto !important;
+            padding-top: 70px !important;
+            padding-bottom: 0 !important;
+            align-items: stretch !important;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .hero-slides-container {
+            position: relative !important;
+            inset: auto !important;
+            width: 100% !important;
+            height: auto !important;
           }
 
           .hero-slide {
-            background-position: center bottom !important; /* Ensure products at bottom are visible */
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            opacity: 0 !important;
+            transition: opacity 0.6s ease-in-out !important;
+            z-index: 0 !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center top !important;
+          }
+
+          .hero-slide.active {
+            position: relative !important;
+            opacity: 1 !important;
+            z-index: 1 !important;
+            height: auto !important;
+          }
+
+          .hero-slide picture,
+          .hero-slide img {
+            width: 100% !important;
+            height: auto !important;
+            display: block !important;
+            object-fit: contain !important;
+          }
+
+          .hero-single-img {
+            display: block !important;
           }
 
           .hero-overlay {
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.15) 100%);
-            z-index: 2;
+            display: none !important; /* Visualização 100% nítida sem sombra no mobile */
           }
 
           .hero-main-container {
-            margin-top: 1.5rem; /* Space from header */
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 4;
+            padding: 0 1rem;
           }
 
           .hero-box {
@@ -509,13 +571,13 @@ export default function HeroSection() {
             -webkit-backdrop-filter: none !important;
             border: none !important;
             box-shadow: none !important;
-            padding: 1rem 0.5rem !important;
+            padding: 0.75rem 0.5rem !important;
             max-width: 100%;
           }
 
           .hero-title {
-            font-size: 2.1rem;
-            margin: 0.25rem auto 0.75rem;
+            font-size: 1.8rem;
+            margin: 0.25rem auto 0.5rem;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
           }
 
@@ -524,30 +586,29 @@ export default function HeroSection() {
           }
 
           .hero-description {
-            font-size: 0.82rem;
-            line-height: 1.5;
-            margin-bottom: 1.25rem;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-            color: var(--navy); /* Make text darker for readability on white/green bg */
+            font-size: 0.8rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            color: var(--navy);
             font-weight: 500;
           }
 
           .hero-arrow-btn {
-            width: 38px;
-            height: 38px;
-            opacity: 0.8;
+            width: 34px;
+            height: 34px;
+            opacity: 0.85;
           }
 
           .hero-arrow-btn.prev {
-            left: 0.5rem;
+            left: 0.25rem;
           }
 
           .hero-arrow-btn.next {
-            right: 0.5rem;
+            right: 0.25rem;
           }
 
           .hero-dots {
-            bottom: 1rem;
+            bottom: 0.5rem;
           }
 
           .hero-buttons {
@@ -555,12 +616,12 @@ export default function HeroSection() {
           }
 
           .hero-buttons a {
-            padding: 0.5rem 1.25rem !important;
-            font-size: 0.78rem !important;
+            padding: 0.45rem 1.1rem !important;
+            font-size: 0.75rem !important;
           }
 
           .hero-minimize-btn {
-            display: none; /* Hide minimize/maximize since we don't have block cards */
+            display: none;
           }
         }
       `}</style>

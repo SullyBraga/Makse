@@ -1,16 +1,16 @@
 # Graph Report - Makse-main  (2026-09-16)
 
 ## Corpus Check
-- 124 files · ~602,559 words
+- 124 files · ~602,734 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 509 nodes · 635 edges · 63 communities (44 shown, 19 thin omitted)
+- 509 nodes · 638 edges · 68 communities (44 shown, 24 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8706def0`
+- Built from commit: `13f52f26`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,6 +28,7 @@
 - shipping.ts
 - CatalogoClient.tsx
 - route.ts
+- ProductForm.tsx
 - layout.tsx
 - page.tsx
 - page.tsx
@@ -58,6 +59,7 @@
 - page.tsx
 - route.ts
 - route.ts
+- route.ts
 - eslint.config.mjs
 - next.config.ts
 - postcss.config.mjs
@@ -66,6 +68,8 @@
 - { GET, POST }
 - page.tsx
 - route.ts
+- route.ts
+- route.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `useCartStore` - 17 edges
@@ -73,11 +77,11 @@
 3. `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` - 10 edges
 4. `compressImage()` - 9 edges
 5. `🚀 Configuração Completa - Makse Ecommerce` - 9 edges
-6. `xlsx` - 7 edges
-7. `saveUploadedFile()` - 7 edges
-8. `POST()` - 6 edges
+6. `ensureDefaultHeroSlides()` - 8 edges
+7. `xlsx` - 7 edges
+8. `saveUploadedFile()` - 7 edges
 9. `POST()` - 6 edges
-10. `isValidImageUrl()` - 6 edges
+10. `POST()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `GET()` --references--> `xlsx`  [EXTRACTED]
@@ -94,11 +98,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (63 total, 19 thin omitted)
+## Communities (68 total, 24 thin omitted)
 
 ### Community 0 - "useCartStore"
-Cohesion: 0.07
-Nodes (25): Address, CheckoutPage(), ShippingOption, KitData, KitItem, KitPageClient(), CartDrawer(), Header() (+17 more)
+Cohesion: 0.08
+Nodes (24): Address, CheckoutPage(), ShippingOption, KitData, KitItem, KitPageClient(), CartDrawer(), Header() (+16 more)
 
 ### Community 1 - "🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js"
 Cohesion: 0.06
@@ -113,20 +117,16 @@ Cohesion: 0.09
 Nodes (21): devDependencies, eslint, eslint-config-next, prisma, tailwindcss, @tailwindcss/postcss, tsx, @types/node (+13 more)
 
 ### Community 4 - "KitForm.tsx"
-Cohesion: 0.08
-Nodes (16): KitFormEdit(), Props, KitComponent, KitForm(), Product, Props, COLUMNS, ImportarProdutosPage() (+8 more)
+Cohesion: 0.11
+Nodes (15): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, KitFormEdit(), Props, KitComponent, KitForm(), Product (+7 more)
 
 ### Community 5 - "compilerOptions"
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
-### Community 6 - "auth.ts"
-Cohesion: 0.12
-Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
-
 ### Community 7 - "route.ts"
-Cohesion: 0.15
-Nodes (17): xlsx, GET(), GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug() (+9 more)
+Cohesion: 0.21
+Nodes (15): xlsx, GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug(), COL_MAP (+7 more)
 
 ### Community 9 - "UserActions.tsx"
 Cohesion: 0.13
@@ -137,8 +137,8 @@ Cohesion: 0.16
 Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque (+1 more)
 
 ### Community 11 - "CatalogoClient.tsx"
-Cohesion: 0.17
-Nodes (6): Item, Line, Props, HomePage(), S, Props
+Cohesion: 0.20
+Nodes (4): Line, PRODUCT_TYPES, Props, Variant
 
 ### Community 12 - "route.ts"
 Cohesion: 0.29
@@ -221,13 +221,13 @@ Cohesion: 0.83
 Nodes (3): parseNfeXml(), POST(), requireAdmin()
 
 ### Community 61 - "page.tsx"
-Cohesion: 0.18
-Nodes (14): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, DELETE(), GET(), PATCH(), POST(), requireAdmin() (+6 more)
+Cohesion: 0.12
+Nodes (17): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), Item, Line (+9 more)
 
 ## Knowledge Gaps
 - **185 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+180 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **24 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -239,7 +239,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
   _188 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
-  _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08258258258258258 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
