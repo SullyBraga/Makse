@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
-import { Package, User, LogOut, Edit3, Check, X, Eye, EyeOff, Scissors, RefreshCw, MapPin, Plus, Trash2, ShoppingCart, ShoppingBag, DollarSign, CreditCard } from 'lucide-react'
+import { Package, User, LogOut, Edit3, Check, X, Eye, EyeOff, Scissors, RefreshCw, MapPin, Plus, Trash2, ShoppingCart, ShoppingBag, DollarSign, CreditCard, Truck, ExternalLink, CheckCircle2, ChevronRight } from 'lucide-react'
 
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   PAGO:                 { bg: 'var(--cream)', color: 'var(--navy)', label: 'Pago' },
@@ -40,6 +40,9 @@ export default function ContaPage() {
 
   const [tab, setTab] = useState<'pedidos' | 'vendas' | 'enderecos'>('pedidos')
   const [payingOrderId, setPayingOrderId] = useState<string | null>(null)
+  const [selectedOrderDetail, setSelectedOrderDetail] = useState<any | null>(null)
+  const [updatingDeliveryStatus, setUpdatingDeliveryStatus] = useState(false)
+
   const [addresses, setAddresses] = useState<any[]>([])
   const [loadingAddresses, setLoadingAddresses] = useState(true)
   const [editingAddress, setEditingAddress] = useState<any | null>(null)
@@ -65,6 +68,34 @@ export default function ContaPage() {
       alert(err.message || 'Erro ao iniciar pagamento')
     } finally {
       setPayingOrderId(null)
+    }
+  }
+
+  const handleMarkAsReceived = async (orderId: string) => {
+    if (!confirm('Confirmar o recebimento deste pedido?')) return
+    setUpdatingDeliveryStatus(true)
+    try {
+      const res = await fetch(`/api/conta/pedidos/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'MARK_DELIVERED' }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erro ao confirmar entrega')
+
+      setUser(prev => {
+        if (!prev) return prev
+        return {
+          ...prev,
+          orders: prev.orders.map(o => o.id === orderId ? { ...o, status: 'ENTREGUE' } : o),
+        }
+      })
+      setSelectedOrderDetail((prev: any) => prev && prev.id === orderId ? { ...prev, status: 'ENTREGUE' } : prev)
+      alert('Entrega confirmada com sucesso!')
+    } catch (err: any) {
+      alert(err.message || 'Erro ao atualizar pedido')
+    } finally {
+      setUpdatingDeliveryStatus(false)
     }
   }
 
@@ -402,7 +433,19 @@ export default function ContaPage() {
                       const isPending = order.status === 'AGUARDANDO_PAGAMENTO'
 
                       return (
-                        <div key={order.id} style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', padding: '1.5rem' }}>
+                        <div
+                          key={order.id}
+                          onClick={() => setSelectedOrderDetail(order)}
+                          style={{
+                            background: '#fff',
+                            borderRadius: 'var(--radius-lg)',
+                            border: '1px solid var(--border)',
+                            padding: '1.5rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                          }}
+                          className="order-card-item"
+                        >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                             <div>
                               <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace', textTransform: 'uppercase' }}>#{order.id.slice(-8).toUpperCase()}</p>
@@ -410,9 +453,14 @@ export default function ContaPage() {
                                 {new Date(order.createdAt).toLocaleDateString('pt-BR')} · {order.items?.length || 0} {(order.items?.length || 0) === 1 ? 'item' : 'itens'}
                               </p>
                             </div>
-                            <span style={{ fontSize: '0.65rem', padding: '0.3rem 0.75rem', borderRadius: '99px', background: st.bg, color: st.color, fontWeight: 600, letterSpacing: '0.05em' }}>
-                              {st.label}
-                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <span style={{ fontSize: '0.65rem', padding: '0.3rem 0.75rem', borderRadius: '99px', background: st.bg, color: st.color, fontWeight: 600, letterSpacing: '0.05em' }}>
+                                {st.label}
+                              </span>
+                              <span style={{ fontSize: '0.75rem', color: 'var(--gold)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.1rem' }}>
+                                Detalhes <ChevronRight size={14} />
+                              </span>
+                            </div>
                           </div>
 
                           {/* Order items summary */}
@@ -441,7 +489,10 @@ export default function ContaPage() {
 
                             {isPending && (
                               <button
-                                onClick={() => handlePayPending(order.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handlePayPending(order.id)
+                                }}
                                 disabled={payingOrderId === order.id}
                                 style={{
                                   fontSize: '0.75rem',
@@ -665,7 +716,292 @@ export default function ContaPage() {
         </div>
       </div>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      {/* MODAL DE DETALHES DO PEDIDO */}
+      {selectedOrderDetail && (
+        <div
+          onClick={() => setSelectedOrderDetail(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(13, 27, 42, 0.65)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+            zIndex: 999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem',
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: '#fff',
+              borderRadius: '24px',
+              maxWidth: '680px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: '2rem',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.5rem',
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+              <div>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Detalhes do Pedido
+                </span>
+                <h2 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.6rem', fontWeight: 600, color: 'var(--navy)', margin: '0.2rem 0' }}>
+                  #{selectedOrderDetail.id.slice(-8).toUpperCase()}
+                </h2>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>
+                  Realizado em {new Date(selectedOrderDetail.createdAt).toLocaleDateString('pt-BR')} às {new Date(selectedOrderDetail.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span style={{
+                  fontSize: '0.7rem',
+                  padding: '0.35rem 0.85rem',
+                  borderRadius: '99px',
+                  background: (statusColors[selectedOrderDetail.status] ?? {}).bg || 'var(--cream)',
+                  color: (statusColors[selectedOrderDetail.status] ?? {}).color || 'var(--navy)',
+                  fontWeight: 600,
+                }}>
+                  {(statusColors[selectedOrderDetail.status] ?? {}).label || selectedOrderDetail.status}
+                </span>
+                <button
+                  onClick={() => setSelectedOrderDetail(null)}
+                  style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '50%', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)' }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* RASTREIO E STATUS DE ENVIO */}
+            <div style={{ background: '#f8fafc', borderRadius: '16px', border: '1px solid #e2e8f0', padding: '1.25rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <Truck size={18} style={{ color: 'var(--gold)' }} />
+                <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>
+                  Status de Envio & Rastreamento
+                </h3>
+              </div>
+
+              {selectedOrderDetail.trackingCode ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #cbd5e1', padding: '0.85rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <div>
+                      <span style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, display: 'block' }}>Código de Rastreio (Correios)</span>
+                      <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--navy)', fontFamily: 'monospace' }}>{selectedOrderDetail.trackingCode}</span>
+                    </div>
+                    <a
+                      href={`https://rastreamento.correios.com.br/app/index.php?codigo=${selectedOrderDetail.trackingCode}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        padding: '0.5rem 1rem',
+                        background: 'var(--navy)',
+                        color: '#fff',
+                        borderRadius: '99px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                      }}
+                    >
+                      Rastrear nos Correios <ExternalLink size={13} />
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: 0 }}>
+                  {selectedOrderDetail.status === 'AGUARDANDO_PAGAMENTO'
+                    ? 'Aguardando confirmação do pagamento para iniciar a separação do produto.'
+                    : selectedOrderDetail.status === 'PAGO' || selectedOrderDetail.status === 'EM_SEPARACAO'
+                    ? 'Seu pedido está em separação no nosso centro de distribuição. O código de rastreio será disponibilizado assim que for postado.'
+                    : selectedOrderDetail.status === 'ENTREGUE'
+                    ? 'Pedido entregue e finalizado.'
+                    : 'Informações de rastreamento pendentes.'}
+                </p>
+              )}
+
+              {/* Botão de Marcar como Recebido */}
+              {selectedOrderDetail.status === 'ENVIADO' && (
+                <div style={{ marginTop: '1rem', paddingTop: '0.85rem', borderTop: '1px dashed #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  <p style={{ fontSize: '0.8rem', color: '#15803d', margin: 0, fontWeight: 500 }}>
+                    Seu pedido já foi enviado! Caso já tenha recebido em mãos, confirme abaixo:
+                  </p>
+                  <button
+                    onClick={() => handleMarkAsReceived(selectedOrderDetail.id)}
+                    disabled={updatingDeliveryStatus}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      padding: '0.6rem 1.25rem',
+                      background: '#166534',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '99px',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      opacity: updatingDeliveryStatus ? 0.7 : 1,
+                    }}
+                  >
+                    {updatingDeliveryStatus ? (
+                      <RefreshCw size={14} style={{ animation: 'spin 0.7s linear infinite' }} />
+                    ) : (
+                      <CheckCircle2 size={15} />
+                    )}
+                    Marcar como Recebido
+                  </button>
+                </div>
+              )}
+
+              {selectedOrderDetail.status === 'ENTREGUE' && (
+                <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#166534', fontSize: '0.82rem', fontWeight: 600 }}>
+                  <CheckCircle2 size={16} /> Entregue e confirmado pelo cliente
+                </div>
+              )}
+            </div>
+
+            {/* ITENS COMPRADOS */}
+            <div>
+              <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--navy)', marginBottom: '0.75rem' }}>
+                Itens Comprados ({selectedOrderDetail.items?.length || 0})
+              </h3>
+              <div style={{ border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                {selectedOrderDetail.items?.map((item: any, idx: number) => {
+                  const name = item.product?.name || item.productId || 'Produto'
+                  const variant = item.variant?.label ? ` (${item.variant.label})` : ''
+                  const img = item.product?.images?.[0] || null
+
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0.85rem 1rem',
+                        borderBottom: idx < selectedOrderDetail.items.length - 1 ? '1px solid var(--border)' : 'none',
+                        background: '#fff',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        <div style={{ width: 44, height: 44, borderRadius: '8px', background: 'var(--cream)', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {img ? <img src={img} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <Package size={18} style={{ color: 'var(--text-muted)' }} />}
+                        </div>
+                        <div>
+                          <p style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>{name}{variant}</p>
+                          <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', margin: '0.1rem 0 0' }}>Qtd: {item.quantity} · R$ {(item.unitPrice || 0).toFixed(2).replace('.', ',')} cada</p>
+                        </div>
+                      </div>
+                      <p style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>
+                        R$ {((item.unitPrice || 0) * item.quantity).toFixed(2).replace('.', ',')}
+                      </p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* ENDEREÇO DE ENTREGA */}
+            {selectedOrderDetail.address || selectedOrderDetail.customerAddress ? (
+              <div style={{ background: '#fafafa', borderRadius: '14px', border: '1px solid var(--border)', padding: '1rem 1.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
+                  <MapPin size={15} style={{ color: 'var(--gold)' }} />
+                  <h4 style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>Endereço de Entrega</h4>
+                </div>
+                {selectedOrderDetail.address ? (
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
+                    {selectedOrderDetail.address.street}, {selectedOrderDetail.address.number}
+                    {selectedOrderDetail.address.complement && ` — ${selectedOrderDetail.address.complement}`}
+                    <br />
+                    {selectedOrderDetail.address.city} - {selectedOrderDetail.address.state}, CEP: {selectedOrderDetail.address.zipCode} ({selectedOrderDetail.address.country})
+                  </p>
+                ) : (
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>{selectedOrderDetail.customerAddress}</p>
+                )}
+              </div>
+            ) : null}
+
+            {/* RESUMO FINANCEIRO */}
+            <div style={{ background: '#fff', borderRadius: '14px', border: '1px solid var(--border)', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                <span>Forma de Pagamento</span>
+                <span style={{ fontWeight: 600, color: 'var(--navy)' }}>{selectedOrderDetail.paymentMethod || 'Mercado Pago'}</span>
+              </div>
+              {selectedOrderDetail.couponDiscount > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#16a34a' }}>
+                  <span>Desconto do Cupom ({selectedOrderDetail.coupon?.code || 'Cupom'})</span>
+                  <span>-R$ {selectedOrderDetail.couponDiscount.toFixed(2).replace('.', ',')}</span>
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                <span>Frete ({selectedOrderDetail.shippingMethod || 'Envio'})</span>
+                <span>{selectedOrderDetail.shippingPrice === 0 ? 'Grátis' : `R$ ${selectedOrderDetail.shippingPrice.toFixed(2).replace('.', ',')}`}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.5rem', borderTop: '1px solid var(--border)', marginTop: '0.25rem' }}>
+                <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--navy)' }}>Total Geral</span>
+                <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--navy)', fontFamily: 'var(--font-cormorant), serif' }}>
+                  R$ {selectedOrderDetail.total.toFixed(2).replace('.', ',')}
+                </span>
+              </div>
+            </div>
+
+            {/* FOOTER ACTIONS */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <button
+                onClick={() => setSelectedOrderDetail(null)}
+                className="btn-outline"
+                style={{ fontSize: '0.75rem', padding: '0.6rem 1.25rem' }}
+              >
+                Fechar
+              </button>
+
+              {selectedOrderDetail.status === 'AGUARDANDO_PAGAMENTO' && (
+                <button
+                  onClick={() => {
+                    const id = selectedOrderDetail.id
+                    setSelectedOrderDetail(null)
+                    handlePayPending(id)
+                  }}
+                  style={{
+                    fontSize: '0.78rem',
+                    padding: '0.65rem 1.5rem',
+                    background: '#009EE3',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '99px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    boxShadow: '0 4px 12px rgba(0, 158, 227, 0.25)',
+                  }}
+                >
+                  <CreditCard size={15} /> Efetuar Pagamento
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .order-card-item:hover { border-color: var(--navy) !important; box-shadow: 0 8px 24px rgba(13,27,42,0.06); }
+      `}</style>
     </div>
   )
 }

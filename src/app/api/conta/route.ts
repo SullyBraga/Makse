@@ -16,6 +16,7 @@ export async function GET() {
         orderBy: { createdAt: 'desc' },
         take: 20,
         include: {
+          address: true,
           items: {
             include: {
               product: { select: { name: true, images: true, price: true } },

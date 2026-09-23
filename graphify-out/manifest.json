@@ -265,8 +265,8 @@
     "semantic_hash": ""
   },
   "src/app/api/conta/route.ts": {
-    "mtime": 1790170795.3152914,
-    "ast_hash": "d6226859028024c4a372239a7bf984b4",
+    "mtime": 1790171593.5535698,
+    "ast_hash": "edf36a534d6d591d347c0665676c5d31",
     "semantic_hash": ""
   },
   "src/app/api/kits/route.ts": {
@@ -330,8 +330,8 @@
     "semantic_hash": ""
   },
   "src/app/conta/page.tsx": {
-    "mtime": 1790170968.9721653,
-    "ast_hash": "af0f7a079c4f560166a7ef1f337499a4",
+    "mtime": 1790172241.379672,
+    "ast_hash": "d35973e0ff60674e772046dbf47bee0c",
     "semantic_hash": ""
   },
   "src/app/kit/[slug]/KitPageClient.tsx": {
@@ -692,6 +692,11 @@
   "src/app/api/checkout/mp/repay/route.ts": {
     "mtime": 1790170747.2701862,
     "ast_hash": "fc8c3dc654001a5427ebfaa7cc5c5cfa",
+    "semantic_hash": ""
+  },
+  "src/app/api/conta/pedidos/[id]/route.ts": {
+    "mtime": 1790171633.6017642,
+    "ast_hash": "ed79788b82ab3a68a23c94b7a8222cca",
     "semantic_hash": ""
   }
 }
