@@ -2,6 +2,44 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session?.user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+
+  const { id } = await params
+  const userId = (session.user as any).id
+
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        address: true,
+        items: {
+          include: {
+            product: { select: { id: true, name: true, images: true, price: true, slug: true } },
+            variant: { select: { id: true, label: true, price: true } },
+            kit: { select: { id: true, name: true, images: true, price: true } },
+          },
+        },
+        coupon: true,
+      },
+    })
+
+    if (!order) {
+      return NextResponse.json({ error: 'Pedido não encontrado' }, { status: 404 })
+    }
+
+    if (order.userId !== userId && (session.user as any).role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
+    }
+
+    return NextResponse.json(order)
+  } catch (err: any) {
+    console.error('[pedidos GET]', err)
+    return NextResponse.json({ error: 'Erro ao buscar pedido' }, { status: 500 })
+  }
+}
+
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if (!session?.user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })

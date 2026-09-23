@@ -1,16 +1,16 @@
 # Graph Report - Makse-main  (2026-09-23)
 
 ## Corpus Check
-- 126 files · ~605,066 words
+- 127 files · ~605,809 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 513 nodes · 644 edges · 62 communities (43 shown, 19 thin omitted)
+- 517 nodes · 648 edges · 66 communities (46 shown, 20 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d92b3d9a`
+- Built from commit: `a67378e0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -40,7 +40,6 @@
 - page.tsx
 - bling.ts
 - route.ts
-- route.ts
 - page.tsx
 - page.tsx
 - email.ts
@@ -65,9 +64,9 @@
 - next.config.ts
 - postcss.config.mjs
 - check_hash.js
-- route.ts
 - { GET, POST }
 - page.tsx
+- proxy.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `useCartStore` - 17 edges
@@ -88,15 +87,15 @@
   src/app/api/admin/products/export/route.ts → package.json
 - `SmoothScroll()` --references--> `lenis`  [EXTRACTED]
   src/components/SmoothScroll.tsx → package.json
+- `OrderDetailsPage()` --references--> `react`  [EXTRACTED]
+  src/app/conta/pedidos/[id]/page.tsx → package.json
 - `GET()` --references--> `xlsx`  [EXTRACTED]
-  src/app/api/admin/kits/import/route.ts → package.json
-- `POST()` --references--> `xlsx`  [EXTRACTED]
   src/app/api/admin/kits/import/route.ts → package.json
 
 ## Import Cycles
 - None detected.
 
-## Communities (62 total, 19 thin omitted)
+## Communities (66 total, 20 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -108,7 +107,7 @@ Nodes (32): 1.1 Clonar e Instalar, 1.2 Configurar Banco de Dados Local, 1.3 Setu
 
 ### Community 2 - "dependencies"
 Cohesion: 0.07
-Nodes (25): dependencies, bcryptjs, framer-motion, http-proxy, lenis, lucide-react, mercadopago, next (+17 more)
+Nodes (27): dependencies, bcryptjs, framer-motion, http-proxy, lenis, lucide-react, mercadopago, next (+19 more)
 
 ### Community 3 - "devDependencies"
 Cohesion: 0.09
@@ -121,10 +120,6 @@ Nodes (15): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, KitFormEdit(), Props, Kit
 ### Community 5 - "compilerOptions"
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
-
-### Community 6 - "auth.ts"
-Cohesion: 0.09
-Nodes (3): { handlers, auth, signIn, signOut }, config, proxy
 
 ### Community 7 - "route.ts"
 Cohesion: 0.15
@@ -147,8 +142,8 @@ Cohesion: 0.29
 Nodes (11): POST(), requireAdmin(), DELETE(), POST(), requireAdmin(), DELETE(), PATCH(), POST() (+3 more)
 
 ### Community 13 - "hero-slides.ts"
-Cohesion: 0.30
-Nodes (8): GET(), HomePage(), S, DEFAULT_SLIDES, HeroSection(), DEFAULT_HERO_SLIDES, ensureDefaultHeroSlides(), isValidImageUrl()
+Cohesion: 0.21
+Nodes (13): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), HomePage(), S (+5 more)
 
 ### Community 14 - "layout.tsx"
 Cohesion: 0.28
@@ -194,10 +189,6 @@ Nodes (5): blingRequest(), decrementBlingStock(), getBlingStock(), processSaleSt
 Cohesion: 0.60
 Nodes (5): DELETE(), GET(), POST(), PUT(), requireAdmin()
 
-### Community 25 - "route.ts"
-Cohesion: 0.60
-Nodes (5): DELETE(), GET(), PATCH(), POST(), requireAdmin()
-
 ### Community 26 - "page.tsx"
 Cohesion: 0.40
 Nodes (3): AccountType, labelStyle, sectionLabelStyle
@@ -237,22 +228,22 @@ Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST
 ## Knowledge Gaps
 - **185 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+180 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
   _188 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
-  _Cohesion score 0.06659619450317125 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.07389162561576355 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06653225806451613 - nodes in this community are weakly interconnected._
 - **Should `devDependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._

@@ -330,8 +330,8 @@
     "semantic_hash": ""
   },
   "src/app/conta/page.tsx": {
-    "mtime": 1790172241.379672,
-    "ast_hash": "d35973e0ff60674e772046dbf47bee0c",
+    "mtime": 1790173028.406144,
+    "ast_hash": "fb82c3b7935f7ded9f2a3e298c28afcd",
     "semantic_hash": ""
   },
   "src/app/kit/[slug]/KitPageClient.tsx": {
@@ -695,8 +695,13 @@
     "semantic_hash": ""
   },
   "src/app/api/conta/pedidos/[id]/route.ts": {
-    "mtime": 1790171633.6017642,
-    "ast_hash": "ed79788b82ab3a68a23c94b7a8222cca",
+    "mtime": 1790173087.1413293,
+    "ast_hash": "28c6c15fd4a90cf8b58db56417b245ec",
+    "semantic_hash": ""
+  },
+  "src/app/conta/pedidos/[id]/page.tsx": {
+    "mtime": 1790173098.186351,
+    "ast_hash": "509262bc61d0c7dfd3669d398f0f8a94",
     "semantic_hash": ""
   }
 }
