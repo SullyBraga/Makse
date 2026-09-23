@@ -1560,7 +1560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route",
-      "community": 6,
+      "community": 25,
       "norm_label": "route.ts"
     },
     {
@@ -1570,7 +1570,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_patch",
-      "community": 6,
+      "community": 25,
       "norm_label": "patch()"
     },
     {
@@ -1580,7 +1580,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_delete",
-      "community": 6,
+      "community": 25,
       "norm_label": "delete()"
     },
     {
@@ -1590,7 +1590,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_route",
-      "community": 6,
+      "community": 53,
       "norm_label": "route.ts"
     },
     {
@@ -1600,7 +1600,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_addresses_route_get",
-      "community": 6,
+      "community": 53,
       "norm_label": "get()"
     },
     {
@@ -1610,7 +1610,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_app_api_addresses_route_post",
-      "community": 6,
+      "community": 53,
       "norm_label": "post()"
     },
     {
@@ -1730,7 +1730,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route",
-      "community": 25,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -1740,7 +1740,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_requireadmin",
-      "community": 25,
+      "community": 13,
       "norm_label": "requireadmin()"
     },
     {
@@ -1750,7 +1750,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_get",
-      "community": 25,
+      "community": 13,
       "norm_label": "get()"
     },
     {
@@ -1760,7 +1760,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_post",
-      "community": 25,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -1770,7 +1770,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_patch",
-      "community": 25,
+      "community": 13,
       "norm_label": "patch()"
     },
     {
@@ -1780,7 +1780,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_delete",
-      "community": 25,
+      "community": 13,
       "norm_label": "delete()"
     },
     {
@@ -2400,7 +2400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route",
-      "community": 10,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2410,7 +2410,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route_get",
-      "community": 10,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2550,7 +2550,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_repay_route",
-      "community": 10,
+      "community": 64,
       "norm_label": "route.ts"
     },
     {
@@ -2560,7 +2560,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_repay_route_post",
-      "community": 10,
+      "community": 64,
       "norm_label": "post()"
     },
     {
@@ -2570,7 +2570,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route",
-      "community": 6,
+      "community": 65,
       "norm_label": "route.ts"
     },
     {
@@ -2580,7 +2580,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route_post",
-      "community": 6,
+      "community": 65,
       "norm_label": "post()"
     },
     {
@@ -2634,10 +2634,20 @@
       "norm_label": "route.ts"
     },
     {
-      "label": "PATCH()",
+      "label": "GET()",
       "file_type": "code",
       "source_file": "src/app/api/conta/pedidos/[id]/route.ts",
       "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_app_api_conta_pedidos_id_route_get",
+      "community": 6,
+      "norm_label": "get()"
+    },
+    {
+      "label": "PATCH()",
+      "file_type": "code",
+      "source_file": "src/app/api/conta/pedidos/[id]/route.ts",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "src_app_api_conta_pedidos_id_route_patch",
       "community": 6,
@@ -2650,7 +2660,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_conta_route",
-      "community": 10,
+      "community": 62,
       "norm_label": "route.ts"
     },
     {
@@ -2660,7 +2670,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_conta_route_get",
-      "community": 10,
+      "community": 62,
       "norm_label": "get()"
     },
     {
@@ -2670,7 +2680,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_api_conta_route_patch",
-      "community": 10,
+      "community": 62,
       "norm_label": "patch()"
     },
     {
@@ -2760,7 +2770,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_professional_route",
-      "community": 53,
+      "community": 10,
       "norm_label": "route.ts"
     },
     {
@@ -2770,7 +2780,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_professional_route_post",
-      "community": 53,
+      "community": 10,
       "norm_label": "post()"
     },
     {
@@ -2780,7 +2790,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_app_api_professional_route_rationale_29",
-      "community": 53,
+      "community": 10,
       "norm_label": "todo: enviar email de notificacao para o admin"
     },
     {
@@ -3094,6 +3104,36 @@
       "norm_label": "contapage()"
     },
     {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_app_conta_pedidos_id_page",
+      "community": 2,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "statusColors",
+      "file_type": "code",
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "src_app_conta_pedidos_id_page_statuscolors",
+      "community": 2,
+      "norm_label": "statuscolors"
+    },
+    {
+      "label": "OrderDetailsPage()",
+      "file_type": "code",
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_app_conta_pedidos_id_page_orderdetailspage",
+      "community": 2,
+      "norm_label": "orderdetailspage()"
+    },
+    {
       "label": "KitPageClient.tsx",
       "file_type": "code",
       "source_file": "src/app/kit/[slug]/KitPageClient.tsx",
@@ -3140,7 +3180,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_kit_slug_page",
-      "community": 0,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
@@ -3150,7 +3190,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_kit_slug_page_kitpage",
-      "community": 0,
+      "community": 6,
       "norm_label": "kitpage()"
     },
     {
@@ -4460,7 +4500,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_proxy",
-      "community": 6,
+      "community": 63,
       "norm_label": "proxy.ts"
     },
     {
@@ -4470,7 +4510,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_proxy_proxy",
-      "community": 6,
+      "community": 63,
       "norm_label": "proxy"
     },
     {
@@ -4480,7 +4520,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_proxy_config",
-      "community": 6,
+      "community": 63,
       "norm_label": "config"
     },
     {
@@ -5485,6 +5525,17 @@
       "weight": 1.0,
       "source": "src_components_smoothscroll_smoothscroll",
       "target": "package_dependencies_lenis"
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_app_conta_pedidos_id_page_orderdetailspage",
+      "target": "package_dependencies_react"
     },
     {
       "relation": "references",
@@ -8863,6 +8914,16 @@
       "source_location": "L5",
       "weight": 1.0,
       "source": "src_app_api_conta_pedidos_id_route",
+      "target": "src_app_api_conta_pedidos_id_route_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/api/conta/pedidos/[id]/route.ts",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "src_app_api_conta_pedidos_id_route",
       "target": "src_app_api_conta_pedidos_id_route_patch",
       "confidence_score": 1.0
     },
@@ -9429,6 +9490,26 @@
       "weight": 1.0,
       "source": "src_app_conta_page",
       "target": "src_app_conta_page_userdata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_app_conta_pedidos_id_page",
+      "target": "src_app_conta_pedidos_id_page_orderdetailspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "src_app_conta_pedidos_id_page",
+      "target": "src_app_conta_pedidos_id_page_statuscolors",
       "confidence_score": 1.0
     },
     {
@@ -11838,5 +11919,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d92b3d9ac6b4c20bb703b86c18822b716104a852"
+  "built_at_commit": "a67378e08bb87e9f219f553ae72ffd76f2df97c4"
 }

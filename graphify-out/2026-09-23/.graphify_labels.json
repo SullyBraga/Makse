@@ -60,5 +60,9 @@
   "58": "{ GET, POST }",
   "59": "page.tsx",
   "60": "page.tsx",
-  "61": "page.tsx"
+  "61": "page.tsx",
+  "62": "route.ts",
+  "63": "proxy.ts",
+  "64": "route.ts",
+  "65": "route.ts"
 }

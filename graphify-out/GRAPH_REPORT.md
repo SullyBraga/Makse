@@ -1,16 +1,16 @@
 # Graph Report - Makse-main  (2026-09-23)
 
 ## Corpus Check
-- 127 files · ~605,809 words
+- 127 files · ~606,626 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 517 nodes · 648 edges · 66 communities (46 shown, 20 thin omitted)
+- 518 nodes · 649 edges · 61 communities (42 shown, 19 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a67378e0`
+- Built from commit: `e26b18fc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,7 +25,6 @@
 - route.ts
 - prisma.ts
 - UserActions.tsx
-- prisma.ts
 - CatalogoClient.tsx
 - route.ts
 - hero-slides.ts
@@ -65,7 +64,6 @@
 - postcss.config.mjs
 - check_hash.js
 - { GET, POST }
-- page.tsx
 - proxy.ts
 
 ## God Nodes (most connected - your core abstractions)
@@ -95,7 +93,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (66 total, 20 thin omitted)
+## Communities (61 total, 19 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -106,8 +104,8 @@ Cohesion: 0.06
 Nodes (32): 1.1 Clonar e Instalar, 1.2 Configurar Banco de Dados Local, 1.3 Setup do Banco de Dados, 1.4 Executar Localmente, 2.1 Preparar o Repositório, 2.2 Configurar Supabase (PostgreSQL Gerenciado), 2.3 Setup Inicial no Supabase, 2.4 Conectar no Vercel (+24 more)
 
 ### Community 2 - "dependencies"
-Cohesion: 0.07
-Nodes (27): dependencies, bcryptjs, framer-motion, http-proxy, lenis, lucide-react, mercadopago, next (+19 more)
+Cohesion: 0.06
+Nodes (28): dependencies, bcryptjs, framer-motion, http-proxy, lenis, lucide-react, mercadopago, next (+20 more)
 
 ### Community 3 - "devDependencies"
 Cohesion: 0.09
@@ -142,8 +140,8 @@ Cohesion: 0.29
 Nodes (11): POST(), requireAdmin(), DELETE(), POST(), requireAdmin(), DELETE(), PATCH(), POST() (+3 more)
 
 ### Community 13 - "hero-slides.ts"
-Cohesion: 0.21
-Nodes (13): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), HomePage(), S (+5 more)
+Cohesion: 0.05
+Nodes (24): DELETE(), GET(), PATCH(), POST(), requireAdmin(), PATCH(), requireAdmin(), GET() (+16 more)
 
 ### Community 14 - "layout.tsx"
 Cohesion: 0.28
@@ -221,29 +219,25 @@ Nodes (3): C, sec(), SobrePage()
 Cohesion: 0.83
 Nodes (3): DELETE(), PATCH(), requireAdmin()
 
-### Community 61 - "page.tsx"
-Cohesion: 0.16
-Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque (+1 more)
-
 ## Knowledge Gaps
-- **185 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+180 more)
+- **186 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+181 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
-  _High betweenness centrality (0.056) - this node is a cross-community bridge._
-- **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+- **Why does `prisma` connect `devDependencies` to `hero-slides.ts`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
-  _188 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _189 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
-  _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06659619450317125 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.06653225806451613 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06439393939393939 - nodes in this community are weakly interconnected._
 - **Should `devDependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._

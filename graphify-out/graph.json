@@ -920,7 +920,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_estoque_page",
-      "community": 10,
+      "community": 13,
       "norm_label": "page.tsx"
     },
     {
@@ -930,7 +930,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_app_admin_estoque_page_stockbar",
-      "community": 10,
+      "community": 13,
       "norm_label": "stockbar()"
     },
     {
@@ -940,7 +940,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_app_admin_estoque_page_adminestoquepage",
-      "community": 10,
+      "community": 13,
       "norm_label": "adminestoquepage()"
     },
     {
@@ -1560,7 +1560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route",
-      "community": 25,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -1570,7 +1570,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_patch",
-      "community": 25,
+      "community": 13,
       "norm_label": "patch()"
     },
     {
@@ -1580,7 +1580,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_delete",
-      "community": 25,
+      "community": 13,
       "norm_label": "delete()"
     },
     {
@@ -2050,7 +2050,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_orders_route",
-      "community": 61,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2060,7 +2060,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_orders_route_requireadmin",
-      "community": 61,
+      "community": 13,
       "norm_label": "requireadmin()"
     },
     {
@@ -2070,7 +2070,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_api_admin_orders_route_patch",
-      "community": 61,
+      "community": 13,
       "norm_label": "patch()"
     },
     {
@@ -2320,7 +2320,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route",
-      "community": 61,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2330,7 +2330,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_requireseller",
-      "community": 61,
+      "community": 13,
       "norm_label": "requireseller()"
     },
     {
@@ -2340,7 +2340,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_post",
-      "community": 61,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2350,7 +2350,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_get",
-      "community": 61,
+      "community": 13,
       "norm_label": "get()"
     },
     {
@@ -2400,7 +2400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route",
-      "community": 6,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2410,7 +2410,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route_get",
-      "community": 6,
+      "community": 13,
       "norm_label": "get()"
     },
     {
@@ -2490,7 +2490,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_auth_register_route",
-      "community": 10,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2500,7 +2500,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_auth_register_route_post",
-      "community": 10,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2510,7 +2510,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_auth_reset_password_route",
-      "community": 10,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2520,7 +2520,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_auth_reset_password_route_post",
-      "community": 10,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2530,7 +2530,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_webhook_route",
-      "community": 61,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2540,7 +2540,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_webhook_route_post",
-      "community": 61,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2550,7 +2550,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_repay_route",
-      "community": 64,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2560,7 +2560,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_repay_route_post",
-      "community": 64,
+      "community": 6,
       "norm_label": "post()"
     },
     {
@@ -2570,7 +2570,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route",
-      "community": 65,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2580,7 +2580,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route_post",
-      "community": 65,
+      "community": 6,
       "norm_label": "post()"
     },
     {
@@ -2610,7 +2610,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_validate_coupon_route",
-      "community": 10,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2620,7 +2620,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_app_api_checkout_validate_coupon_route_post",
-      "community": 10,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2630,7 +2630,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_conta_pedidos_id_route",
-      "community": 6,
+      "community": 10,
       "norm_label": "route.ts"
     },
     {
@@ -2640,7 +2640,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_conta_pedidos_id_route_get",
-      "community": 6,
+      "community": 10,
       "norm_label": "get()"
     },
     {
@@ -2650,7 +2650,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_app_api_conta_pedidos_id_route_patch",
-      "community": 6,
+      "community": 10,
       "norm_label": "patch()"
     },
     {
@@ -2660,7 +2660,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_conta_route",
-      "community": 62,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2670,7 +2670,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_conta_route_get",
-      "community": 62,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2680,7 +2680,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_api_conta_route_patch",
-      "community": 62,
+      "community": 6,
       "norm_label": "patch()"
     },
     {
@@ -2770,7 +2770,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_professional_route",
-      "community": 10,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2780,7 +2780,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_professional_route_post",
-      "community": 10,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2790,7 +2790,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_app_api_professional_route_rationale_29",
-      "community": 10,
+      "community": 13,
       "norm_label": "todo: enviar email de notificacao para o admin"
     },
     {
@@ -2830,7 +2830,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_test_db_route",
-      "community": 10,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2840,7 +2840,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_test_db_route_get",
-      "community": 10,
+      "community": 13,
       "norm_label": "get()"
     },
     {
@@ -2850,7 +2850,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_webhooks_stripe_route",
-      "community": 61,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2860,7 +2860,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_webhooks_stripe_route_post",
-      "community": 61,
+      "community": 13,
       "norm_label": "post()"
     },
     {
@@ -2870,7 +2870,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "src_app_api_webhooks_stripe_route_rationale_80",
-      "community": 61,
+      "community": 13,
       "norm_label": "todo: chamar api do bling para baixa no estoque"
     },
     {
@@ -2880,7 +2880,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "src_app_api_webhooks_stripe_route_rationale_83",
-      "community": 61,
+      "community": 13,
       "norm_label": "todo: enviar email de confirmacao"
     },
     {
@@ -3124,10 +3124,20 @@
       "norm_label": "statuscolors"
     },
     {
-      "label": "OrderDetailsPage()",
+      "label": "CANCELLATION_REASONS",
       "file_type": "code",
       "source_file": "src/app/conta/pedidos/[id]/page.tsx",
       "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_app_conta_pedidos_id_page_cancellation_reasons",
+      "community": 2,
+      "norm_label": "cancellation_reasons"
+    },
+    {
+      "label": "OrderDetailsPage()",
+      "file_type": "code",
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "src_app_conta_pedidos_id_page_orderdetailspage",
       "community": 2,
@@ -3180,7 +3190,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_kit_slug_page",
-      "community": 6,
+      "community": 0,
       "norm_label": "page.tsx"
     },
     {
@@ -3190,7 +3200,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_kit_slug_page_kitpage",
-      "community": 6,
+      "community": 0,
       "norm_label": "kitpage()"
     },
     {
@@ -4430,7 +4440,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_prisma",
-      "community": 10,
+      "community": 13,
       "norm_label": "prisma.ts"
     },
     {
@@ -4440,7 +4450,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_lib_prisma_globalforprisma",
-      "community": 10,
+      "community": 13,
       "norm_label": "globalforprisma"
     },
     {
@@ -4450,7 +4460,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_shipping",
-      "community": 61,
+      "community": 13,
       "norm_label": "shipping.ts"
     },
     {
@@ -4460,7 +4470,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_shipping_generateshippinglabel",
-      "community": 61,
+      "community": 13,
       "norm_label": "generateshippinglabel()"
     },
     {
@@ -5532,7 +5542,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/conta/pedidos/[id]/page.tsx",
-      "source_location": "L17",
+      "source_location": "L25",
       "weight": 1.0,
       "source": "src_app_conta_pedidos_id_page_orderdetailspage",
       "target": "package_dependencies_react"
@@ -9499,6 +9509,16 @@
       "source_location": "L16",
       "weight": 1.0,
       "source": "src_app_conta_pedidos_id_page",
+      "target": "src_app_conta_pedidos_id_page_cancellation_reasons",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/conta/pedidos/[id]/page.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_app_conta_pedidos_id_page",
       "target": "src_app_conta_pedidos_id_page_orderdetailspage",
       "confidence_score": 1.0
     },
@@ -11919,5 +11939,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a67378e08bb87e9f219f553ae72ffd76f2df97c4"
+  "built_at_commit": "e26b18fc7e4ce3e6668bafa25d163a19a20f87ec"
 }

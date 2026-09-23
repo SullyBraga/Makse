@@ -48,7 +48,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const userId = (session.user as any).id
 
   try {
-    const { action } = await req.json()
+    const body = await req.json()
+    const { action, reason } = body
 
     const order = await prisma.order.findUnique({
       where: { id },
@@ -58,7 +59,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       return NextResponse.json({ error: 'Pedido não encontrado' }, { status: 404 })
     }
 
-    if (order.userId !== userId) {
+    if (order.userId !== userId && (session.user as any).role !== 'ADMIN') {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
     }
 
@@ -70,6 +71,35 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       const updated = await prisma.order.update({
         where: { id },
         data: { status: 'ENTREGUE' },
+        include: {
+          address: true,
+          items: {
+            include: {
+              product: { select: { name: true, images: true, price: true } },
+              variant: { select: { label: true, price: true } },
+            },
+          },
+          coupon: true,
+        },
+      })
+
+      return NextResponse.json(updated)
+    }
+
+    if (action === 'CANCEL') {
+      if (order.status === 'ENTREGUE' || order.status === 'ENVIADO' || order.status === 'CANCELADO') {
+        return NextResponse.json({ error: 'Este pedido já foi enviado, entregue ou cancelado e não pode mais ser cancelado.' }, { status: 400 })
+      }
+
+      const noteText = reason ? `[Cancelado pelo cliente] Motivo: ${reason}` : '[Cancelado pelo cliente]'
+      const updatedSellerNote = order.sellerNote ? `${order.sellerNote}\n${noteText}` : noteText
+
+      const updated = await prisma.order.update({
+        where: { id },
+        data: {
+          status: 'CANCELADO',
+          sellerNote: updatedSellerNote,
+        },
         include: {
           address: true,
           items: {

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Package, Truck, ExternalLink, CheckCircle2, CreditCard, RefreshCw, MapPin, AlertCircle, ShoppingBag } from 'lucide-react'
+import { ArrowLeft, Package, Truck, ExternalLink, CheckCircle2, CreditCard, RefreshCw, MapPin, AlertCircle, XCircle, X } from 'lucide-react'
 
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   PAGO:                 { bg: 'var(--cream)', color: 'var(--navy)', label: 'Pago' },
@@ -13,6 +13,14 @@ const statusColors: Record<string, { bg: string; color: string; label: string }>
   AGUARDANDO_PAGAMENTO: { bg: '#ffedd5', color: '#c2410c', label: 'Aguardando Pagamento' },
 }
 
+const CANCELLATION_REASONS = [
+  'Mudei de ideia / Não preciso mais do produto',
+  'Comprei por engano ou selecionei o item errado',
+  'Endereço ou forma de pagamento incorreta',
+  'Prazo de entrega longo ou encontrei preço melhor',
+  'Outro motivo',
+]
+
 export default function OrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = React.use(params)
   const id = resolvedParams.id
@@ -22,6 +30,12 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
   const [error, setError] = useState('')
   const [paying, setPaying] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
+
+  // Cancel Modal States
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [cancelReason, setCancelReason] = useState('')
+  const [customReason, setCustomReason] = useState('')
+  const [cancelling, setCancelling] = useState(false)
 
   useEffect(() => {
     fetch(`/api/conta/pedidos/${id}`)
@@ -82,6 +96,34 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
     }
   }
 
+  const handleCancelOrder = async () => {
+    if (!order) return
+    const finalReason = cancelReason === 'Outro motivo' ? (customReason.trim() || 'Outro motivo') : cancelReason
+    if (!finalReason) {
+      alert('Por favor, selecione ou informe o motivo do cancelamento.')
+      return
+    }
+
+    setCancelling(true)
+    try {
+      const res = await fetch(`/api/conta/pedidos/${order.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'CANCEL', reason: finalReason }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erro ao cancelar o pedido')
+
+      setOrder((prev: any) => prev ? { ...prev, status: 'CANCELADO' } : prev)
+      setShowCancelModal(false)
+      alert('Pedido cancelado com sucesso!')
+    } catch (err: any) {
+      alert(err.message || 'Erro ao cancelar pedido')
+    } finally {
+      setCancelling(false)
+    }
+  }
+
   if (loading) {
     return (
       <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--cream)' }}>
@@ -104,6 +146,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
 
   const st = statusColors[order.status] ?? { bg: 'var(--cream)', color: 'var(--navy)', label: order.status }
   const isPending = order.status === 'AGUARDANDO_PAGAMENTO'
+  const canCancel = order.status !== 'ENVIADO' && order.status !== 'ENTREGUE' && order.status !== 'CANCELADO'
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--cream)', padding: '3rem 1.5rem' }}>
@@ -252,6 +295,8 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
                   ? 'Seu pedido está em separação no nosso centro de distribuição. O código de rastreio será disponibilizado assim que for postado.'
                   : order.status === 'ENTREGUE'
                   ? 'Pedido entregue e finalizado.'
+                  : order.status === 'CANCELADO'
+                  ? 'Pedido cancelado.'
                   : 'Informações de rastreamento pendentes.'}
               </p>
             )}
@@ -394,14 +439,188 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
               <ArrowLeft size={15} /> Voltar para Meus Pedidos
             </Link>
 
-            {isPending && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              {canCancel && (
+                <button
+                  onClick={() => {
+                    setCancelReason('')
+                    setCustomReason('')
+                    setShowCancelModal(true)
+                  }}
+                  style={{
+                    fontSize: '0.78rem',
+                    padding: '0.65rem 1.25rem',
+                    background: '#fff',
+                    color: '#dc2626',
+                    border: '1px solid #fecaca',
+                    borderRadius: '99px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <XCircle size={15} /> Cancelar Compra
+                </button>
+              )}
+
+              {isPending && (
+                <button
+                  onClick={handlePayPending}
+                  disabled={paying}
+                  style={{
+                    fontSize: '0.82rem',
+                    padding: '0.7rem 1.5rem',
+                    background: '#009EE3',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '99px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    boxShadow: '0 4px 14px rgba(0, 158, 227, 0.3)',
+                    opacity: paying ? 0.7 : 1,
+                  }}
+                >
+                  {paying ? (
+                    <>
+                      <RefreshCw size={15} style={{ animation: 'spin 0.7s linear infinite' }} />
+                      Gerando link...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard size={16} /> Efetuar Pagamento
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* MODAL DE CONFIRMAÇÃO DE CANCELAMENTO */}
+      {showCancelModal && (
+        <div
+          onClick={() => !cancelling && setShowCancelModal(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(13, 27, 42, 0.65)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem',
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: '#fff',
+              borderRadius: '20px',
+              maxWidth: '520px',
+              width: '100%',
+              padding: '2rem',
+              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.25rem',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <AlertCircle size={20} style={{ color: '#dc2626' }} />
+                <h3 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.4rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>
+                  Cancelar Compra
+                </h3>
+              </div>
               <button
-                onClick={handlePayPending}
-                disabled={paying}
+                onClick={() => !cancelling && setShowCancelModal(false)}
+                style={{ background: 'none', border: '1px solid var(--border)', borderRadius: '50%', width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)' }}
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
+              Por favor, selecione o motivo do cancelamento do pedido <strong>#{order.id.slice(-8).toUpperCase()}</strong>:
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {CANCELLATION_REASONS.map((reason, idx) => (
+                <label
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '12px',
+                    border: cancelReason === reason ? '1px solid var(--navy)' : '1px solid var(--border)',
+                    background: cancelReason === reason ? '#f8fafc' : '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.82rem',
+                    color: 'var(--navy)',
+                    fontWeight: cancelReason === reason ? 600 : 400,
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="cancelReason"
+                    value={reason}
+                    checked={cancelReason === reason}
+                    onChange={() => setCancelReason(reason)}
+                    style={{ accentColor: 'var(--navy)' }}
+                  />
+                  {reason}
+                </label>
+              ))}
+            </div>
+
+            {cancelReason === 'Outro motivo' && (
+              <div>
+                <label style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.35rem' }}>
+                  Especifique o motivo
+                </label>
+                <textarea
+                  rows={3}
+                  value={customReason}
+                  onChange={e => setCustomReason(e.target.value)}
+                  placeholder="Escreva brevemente o motivo do cancelamento..."
+                  className="input-field"
+                  style={{ width: '100%', padding: '0.75rem', fontSize: '0.82rem', borderRadius: '10px', border: '1px solid var(--border)', outline: 'none' }}
+                />
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border)' }}>
+              <button
+                type="button"
+                onClick={() => setShowCancelModal(false)}
+                disabled={cancelling}
+                className="btn-outline"
+                style={{ fontSize: '0.78rem', padding: '0.6rem 1.25rem' }}
+              >
+                Voltar
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelOrder}
+                disabled={cancelling || !cancelReason || (cancelReason === 'Outro motivo' && !customReason.trim())}
                 style={{
-                  fontSize: '0.82rem',
-                  padding: '0.7rem 1.5rem',
-                  background: '#009EE3',
+                  fontSize: '0.78rem',
+                  padding: '0.6rem 1.4rem',
+                  background: '#dc2626',
                   color: '#fff',
                   border: 'none',
                   borderRadius: '99px',
@@ -409,28 +628,23 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  boxShadow: '0 4px 14px rgba(0, 158, 227, 0.3)',
-                  opacity: paying ? 0.7 : 1,
+                  gap: '0.4rem',
+                  opacity: cancelling || !cancelReason || (cancelReason === 'Outro motivo' && !customReason.trim()) ? 0.5 : 1,
                 }}
               >
-                {paying ? (
+                {cancelling ? (
                   <>
-                    <RefreshCw size={15} style={{ animation: 'spin 0.7s linear infinite' }} />
-                    Gerando link...
+                    <RefreshCw size={14} style={{ animation: 'spin 0.7s linear infinite' }} />
+                    Cancelando...
                   </>
                 ) : (
-                  <>
-                    <CreditCard size={16} /> Efetuar Pagamento
-                  </>
+                  'Confirmar Cancelamento'
                 )}
               </button>
-            )}
+            </div>
           </div>
-
         </div>
-
-      </div>
+      )}
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
