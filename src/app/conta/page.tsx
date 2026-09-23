@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { signOut } from 'next-auth/react'
-import { Package, User, LogOut, Edit3, Check, X, Eye, EyeOff, Scissors, RefreshCw, MapPin, Plus, Trash2, ShoppingCart, ShoppingBag, DollarSign } from 'lucide-react'
+import { Package, User, LogOut, Edit3, Check, X, Eye, EyeOff, Scissors, RefreshCw, MapPin, Plus, Trash2, ShoppingCart, ShoppingBag, DollarSign, CreditCard } from 'lucide-react'
 
 const statusColors: Record<string, { bg: string; color: string; label: string }> = {
   PAGO:                 { bg: 'var(--cream)', color: 'var(--navy)', label: 'Pago' },
@@ -39,6 +39,7 @@ export default function ContaPage() {
   const [success, setSuccess] = useState('')
 
   const [tab, setTab] = useState<'pedidos' | 'vendas' | 'enderecos'>('pedidos')
+  const [payingOrderId, setPayingOrderId] = useState<string | null>(null)
   const [addresses, setAddresses] = useState<any[]>([])
   const [loadingAddresses, setLoadingAddresses] = useState(true)
   const [editingAddress, setEditingAddress] = useState<any | null>(null)
@@ -46,6 +47,26 @@ export default function ContaPage() {
   const [addrForm, setAddrForm] = useState({ street: '', number: '', complement: '', city: '', state: '', zipCode: '', country: 'Brasil' })
   const [addrSaving, setAddrSaving] = useState(false)
   const [addrError, setAddrError] = useState('')
+
+  const handlePayPending = async (orderId: string) => {
+    setPayingOrderId(orderId)
+    try {
+      const res = await fetch('/api/checkout/mp/repay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erro ao gerar link de pagamento')
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (err: any) {
+      alert(err.message || 'Erro ao iniciar pagamento')
+    } finally {
+      setPayingOrderId(null)
+    }
+  }
 
   const fetchAddresses = async () => {
     try {
@@ -378,23 +399,78 @@ export default function ContaPage() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     {user.orders.map(order => {
                       const st = statusColors[order.status] ?? { bg: 'var(--cream)', color: 'var(--navy)', label: order.status }
+                      const isPending = order.status === 'AGUARDANDO_PAGAMENTO'
+
                       return (
                         <div key={order.id} style={{ background: '#fff', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', padding: '1.5rem' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                             <div>
-                              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>#{order.id.slice(-8)}</p>
+                              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace', textTransform: 'uppercase' }}>#{order.id.slice(-8).toUpperCase()}</p>
                               <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                                {new Date(order.createdAt).toLocaleDateString('pt-BR')} · {order.items.length} {order.items.length === 1 ? 'item' : 'itens'}
+                                {new Date(order.createdAt).toLocaleDateString('pt-BR')} · {order.items?.length || 0} {(order.items?.length || 0) === 1 ? 'item' : 'itens'}
                               </p>
                             </div>
-                            <span style={{ fontSize: '0.65rem', padding: '0.3rem 0.75rem', borderRadius: '99px', background: st.bg, color: st.color, fontWeight: 500, letterSpacing: '0.05em' }}>
+                            <span style={{ fontSize: '0.65rem', padding: '0.3rem 0.75rem', borderRadius: '99px', background: st.bg, color: st.color, fontWeight: 600, letterSpacing: '0.05em' }}>
                               {st.label}
                             </span>
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-                            <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--navy)', fontFamily: 'var(--font-cormorant), serif' }}>
-                              R$ {order.total.toFixed(2).replace('.', ',')}
-                            </p>
+
+                          {/* Order items summary */}
+                          {order.items && order.items.length > 0 && (
+                            <div style={{ borderTop: '1px dashed var(--border)', borderBottom: '1px dashed var(--border)', padding: '0.75rem 0', margin: '0.75rem 0', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                              {order.items.map((item: any, idx: number) => {
+                                const name = item.product?.name || item.productId || 'Produto'
+                                const variant = item.variant?.label ? `(${item.variant.label})` : ''
+                                return (
+                                  <div key={idx} style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                                    <span>{item.quantity}x {name} {variant}</span>
+                                    <span>R$ {((item.unitPrice || 0) * item.quantity).toFixed(2).replace('.', ',')}</span>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          )}
+
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                            <div>
+                              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total do pedido</span>
+                              <p style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--navy)', fontFamily: 'var(--font-cormorant), serif', margin: 0 }}>
+                                R$ {order.total.toFixed(2).replace('.', ',')}
+                              </p>
+                            </div>
+
+                            {isPending && (
+                              <button
+                                onClick={() => handlePayPending(order.id)}
+                                disabled={payingOrderId === order.id}
+                                style={{
+                                  fontSize: '0.75rem',
+                                  padding: '0.55rem 1.25rem',
+                                  background: '#009EE3',
+                                  color: '#fff',
+                                  border: 'none',
+                                  borderRadius: '99px',
+                                  fontWeight: 600,
+                                  cursor: 'pointer',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '0.4rem',
+                                  opacity: payingOrderId === order.id ? 0.7 : 1,
+                                  boxShadow: '0 4px 12px rgba(0, 158, 227, 0.25)',
+                                }}
+                              >
+                                {payingOrderId === order.id ? (
+                                  <>
+                                    <RefreshCw size={13} style={{ animation: 'spin 0.7s linear infinite' }} />
+                                    Gerando link...
+                                  </>
+                                ) : (
+                                  <>
+                                    <CreditCard size={14} /> Efetuar Pagamento
+                                  </>
+                                )}
+                              </button>
+                            )}
                           </div>
                         </div>
                       )

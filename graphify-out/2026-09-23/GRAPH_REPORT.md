@@ -1,16 +1,16 @@
-# Graph Report - Makse-main  (2026-09-23)
+# Graph Report - Makse-main  (2026-09-16)
 
 ## Corpus Check
-- 125 files · ~603,482 words
+- 124 files · ~602,734 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 511 nodes · 641 edges · 52 communities (35 shown, 17 thin omitted)
+- 509 nodes · 638 edges · 68 communities (44 shown, 24 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b66c2309`
+- Built from commit: `13f52f26`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,8 +25,10 @@
 - route.ts
 - prisma.ts
 - UserActions.tsx
+- shipping.ts
 - CatalogoClient.tsx
 - route.ts
+- ProductForm.tsx
 - layout.tsx
 - page.tsx
 - page.tsx
@@ -38,6 +40,7 @@
 - page.tsx
 - bling.ts
 - route.ts
+- route.ts
 - page.tsx
 - page.tsx
 - email.ts
@@ -45,6 +48,8 @@
 - check_images.js
 - check_remote_user.js
 - page.tsx
+- page.tsx
+- route.ts
 - page.tsx
 - page.tsx
 - app.js
@@ -54,12 +59,17 @@
 - page.tsx
 - route.ts
 - route.ts
+- route.ts
 - eslint.config.mjs
 - next.config.ts
 - postcss.config.mjs
 - check_hash.js
+- route.ts
 - { GET, POST }
 - page.tsx
+- route.ts
+- route.ts
+- route.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `useCartStore` - 17 edges
@@ -88,11 +98,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (52 total, 17 thin omitted)
+## Communities (68 total, 24 thin omitted)
 
 ### Community 0 - "useCartStore"
-Cohesion: 0.07
-Nodes (25): Address, CheckoutPage(), ShippingOption, KitData, KitItem, KitPageClient(), CartDrawer(), Header() (+17 more)
+Cohesion: 0.08
+Nodes (24): Address, CheckoutPage(), ShippingOption, KitData, KitItem, KitPageClient(), CartDrawer(), Header() (+16 more)
 
 ### Community 1 - "🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js"
 Cohesion: 0.06
@@ -114,21 +124,17 @@ Nodes (15): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, KitFormEdit(), Props, Kit
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
-### Community 6 - "auth.ts"
-Cohesion: 0.05
-Nodes (13): DELETE(), GET(), POST(), requireAdmin(), parseNfeXml(), POST(), requireAdmin(), DELETE() (+5 more)
-
 ### Community 7 - "route.ts"
-Cohesion: 0.15
-Nodes (17): xlsx, GET(), GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug() (+9 more)
-
-### Community 8 - "prisma.ts"
-Cohesion: 0.20
-Nodes (4): Item, Line, Props, Props
+Cohesion: 0.21
+Nodes (15): xlsx, GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug(), COL_MAP (+7 more)
 
 ### Community 9 - "UserActions.tsx"
 Cohesion: 0.13
 Nodes (11): DiscountTable, roleConfig, User, DiscountTable, Props, DiscountTable, Props, ROLE_OPTIONS (+3 more)
+
+### Community 10 - "shipping.ts"
+Cohesion: 0.16
+Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque (+1 more)
 
 ### Community 11 - "CatalogoClient.tsx"
 Cohesion: 0.20
@@ -182,6 +188,10 @@ Nodes (5): blingRequest(), decrementBlingStock(), getBlingStock(), processSaleSt
 Cohesion: 0.60
 Nodes (5): DELETE(), GET(), POST(), PUT(), requireAdmin()
 
+### Community 25 - "route.ts"
+Cohesion: 0.70
+Nodes (4): DELETE(), GET(), POST(), requireAdmin()
+
 ### Community 26 - "page.tsx"
 Cohesion: 0.40
 Nodes (3): AccountType, labelStyle, sectionLabelStyle
@@ -194,30 +204,42 @@ Nodes (3): roleLabel, statusColors, UserData
 Cohesion: 0.46
 Nodes (6): POST(), sendEmail(), sendOrderConfirmationEmail(), sendPasswordResetEmail(), sendProfessionalApprovalEmail(), sendStatusUpdateEmail()
 
+### Community 33 - "page.tsx"
+Cohesion: 0.67
+Nodes (3): AdminDashboard(), getStats(), statusBadge
+
+### Community 34 - "route.ts"
+Cohesion: 0.83
+Nodes (3): DELETE(), PATCH(), requireAdmin()
+
 ### Community 37 - "page.tsx"
 Cohesion: 0.67
 Nodes (3): C, sec(), SobrePage()
 
+### Community 53 - "route.ts"
+Cohesion: 0.83
+Nodes (3): parseNfeXml(), POST(), requireAdmin()
+
 ### Community 61 - "page.tsx"
-Cohesion: 0.06
-Nodes (27): AdminDashboard(), getStats(), statusBadge, DELETE(), GET(), PATCH(), POST(), requireAdmin() (+19 more)
+Cohesion: 0.12
+Nodes (17): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), Item, Line (+9 more)
 
 ## Knowledge Gaps
 - **185 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+180 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **24 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
   _High betweenness centrality (0.049) - this node is a cross-community bridge._
-- **Why does `prisma` connect `devDependencies` to `page.tsx`?**
+- **Why does `prisma` connect `devDependencies` to `prisma.ts`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
   _188 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
-  _Cohesion score 0.06659619450317125 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08258258258258258 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**

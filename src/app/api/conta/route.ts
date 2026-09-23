@@ -14,8 +14,16 @@ export async function GET() {
       discountTable: true,
       orders: {
         orderBy: { createdAt: 'desc' },
-        take: 10,
-        include: { items: true },
+        take: 20,
+        include: {
+          items: {
+            include: {
+              product: { select: { name: true, images: true, price: true } },
+              variant: { select: { label: true, price: true } },
+            },
+          },
+          coupon: true,
+        },
       },
     },
   })
