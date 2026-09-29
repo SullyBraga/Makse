@@ -25,6 +25,9 @@ export async function POST(req: NextRequest) {
       items,
       paymentMethod,
       note,
+      status,
+      deliveryStatus,
+      deliveryDate,
     } = body
 
     if (!items || items.length === 0) {
@@ -40,7 +43,9 @@ export async function POST(req: NextRequest) {
         data: {
           userId,
           sellerId,
-          status: 'PAGO',
+          status: status || 'PAGO',
+          deliveryStatus: deliveryStatus || 'PENDENTE',
+          deliveryDate: deliveryDate ? new Date(deliveryDate) : null,
           total,
           paymentMethod: paymentMethod || 'OUTRO',
           sellerNote: note || null,

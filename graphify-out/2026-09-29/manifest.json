@@ -155,8 +155,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/vendas/page.tsx": {
-    "mtime": 1790693207.6553183,
-    "ast_hash": "7b7a91069812c7b32ed8427290194403",
+    "mtime": 1782445205.78035,
+    "ast_hash": "eca19799fe51baf206053419ba0aa5e0",
     "semantic_hash": ""
   },
   "src/app/api/addresses/[id]/route.ts": {
@@ -220,8 +220,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/sales/route.ts": {
-    "mtime": 1790693139.1819475,
-    "ast_hash": "363b159234e9a81ab97a89edeb7a5d2f",
+    "mtime": 1781027332.107014,
+    "ast_hash": "41e55d5b5103561678270a9f81f1858d",
     "semantic_hash": ""
   },
   "src/app/api/admin/users-list/route.ts": {
@@ -702,11 +702,6 @@
   "src/app/conta/pedidos/[id]/page.tsx": {
     "mtime": 1790173357.6520078,
     "ast_hash": "a8c4492be1b90d8f73f787b67169ed14",
-    "semantic_hash": ""
-  },
-  "src/app/api/admin/sales/[id]/route.ts": {
-    "mtime": 1790693161.5118403,
-    "ast_hash": "3f0d5ebb4eaa812117972f1ceb053d84",
     "semantic_hash": ""
   }
 }

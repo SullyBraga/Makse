@@ -1,16 +1,16 @@
-# Graph Report - Makse-main  (2026-09-29)
+# Graph Report - Makse-main  (2026-09-23)
 
 ## Corpus Check
-- 128 files · ~610,710 words
+- 127 files · ~606,626 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 525 nodes · 661 edges · 63 communities (44 shown, 19 thin omitted)
+- 518 nodes · 649 edges · 61 communities (42 shown, 19 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7872ff36`
+- Built from commit: `e26b18fc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -39,7 +39,6 @@
 - page.tsx
 - bling.ts
 - route.ts
-- route.ts
 - page.tsx
 - page.tsx
 - email.ts
@@ -48,6 +47,7 @@
 - check_remote_user.js
 - page.tsx
 - route.ts
+- page.tsx
 - route.ts
 - page.tsx
 - page.tsx
@@ -93,7 +93,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (63 total, 19 thin omitted)
+## Communities (61 total, 19 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -140,8 +140,8 @@ Cohesion: 0.29
 Nodes (11): POST(), requireAdmin(), DELETE(), POST(), requireAdmin(), DELETE(), PATCH(), POST() (+3 more)
 
 ### Community 13 - "hero-slides.ts"
-Cohesion: 0.06
-Nodes (27): AdminDashboard(), getStats(), statusBadge, DELETE(), GET(), PATCH(), POST(), requireAdmin() (+19 more)
+Cohesion: 0.05
+Nodes (24): DELETE(), GET(), PATCH(), POST(), requireAdmin(), PATCH(), requireAdmin(), GET() (+16 more)
 
 ### Community 14 - "layout.tsx"
 Cohesion: 0.28
@@ -152,8 +152,8 @@ Cohesion: 0.25
 Nodes (4): paymentLabel, statusConfig, Props, STATUS_OPTIONS
 
 ### Community 16 - "page.tsx"
-Cohesion: 0.22
-Nodes (10): CartItem, DELIVERY_STATUSES, Kit, PAYMENT_STATUSES, PAYMENTS, Product, SaleOrder, UserResult (+2 more)
+Cohesion: 0.25
+Nodes (6): CartItem, Kit, PAYMENTS, Product, UserResult, Variant
 
 ### Community 17 - "route.ts"
 Cohesion: 0.46
@@ -187,10 +187,6 @@ Nodes (5): blingRequest(), decrementBlingStock(), getBlingStock(), processSaleSt
 Cohesion: 0.60
 Nodes (5): DELETE(), GET(), POST(), PUT(), requireAdmin()
 
-### Community 25 - "route.ts"
-Cohesion: 0.83
-Nodes (3): GET(), PUT(), requireSeller()
-
 ### Community 26 - "page.tsx"
 Cohesion: 0.40
 Nodes (3): AccountType, labelStyle, sectionLabelStyle
@@ -207,6 +203,10 @@ Nodes (6): POST(), sendEmail(), sendOrderConfirmationEmail(), sendPasswordResetE
 Cohesion: 0.70
 Nodes (4): DELETE(), GET(), POST(), requireAdmin()
 
+### Community 34 - "page.tsx"
+Cohesion: 0.67
+Nodes (3): AdminDashboard(), getStats(), statusBadge
+
 ### Community 35 - "route.ts"
 Cohesion: 0.83
 Nodes (3): parseNfeXml(), POST(), requireAdmin()
@@ -220,7 +220,7 @@ Cohesion: 0.83
 Nodes (3): DELETE(), PATCH(), requireAdmin()
 
 ## Knowledge Gaps
-- **187 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+182 more)
+- **186 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+181 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -228,11 +228,11 @@ Nodes (3): DELETE(), PATCH(), requireAdmin()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
 - **Why does `prisma` connect `devDependencies` to `hero-slides.ts`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
-  _190 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _189 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
   _Cohesion score 0.06659619450317125 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**

@@ -188,6 +188,8 @@ model Order {
   customerCpf      String?
   customerPhone    String?
   customerAddress  String?
+  deliveryStatus   String?     @default("PENDENTE")
+  deliveryDate     DateTime?
   items            OrderItem[]
   coupon           Coupon?     @relation(fields: [couponId], references: [id])
   couponId         String?

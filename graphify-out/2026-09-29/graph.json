@@ -1240,7 +1240,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_page",
-      "community": 13,
+      "community": 34,
       "norm_label": "page.tsx"
     },
     {
@@ -1250,7 +1250,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_admin_page_getstats",
-      "community": 13,
+      "community": 34,
       "norm_label": "getstats()"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_app_admin_page_statusbadge",
-      "community": 13,
+      "community": 34,
       "norm_label": "statusbadge"
     },
     {
@@ -1270,7 +1270,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_admin_page_admindashboard",
-      "community": 13,
+      "community": 34,
       "norm_label": "admindashboard()"
     },
     {
@@ -1487,7 +1487,7 @@
       "label": "Variant",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L7",
+      "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_variant",
       "community": 16,
@@ -1497,7 +1497,7 @@
       "label": "Product",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L8",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_product",
       "community": 16,
@@ -1507,7 +1507,7 @@
       "label": "Kit",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L9",
+      "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_kit",
       "community": 16,
@@ -1517,7 +1517,7 @@
       "label": "CartItem",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L10",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_cartitem",
       "community": 16,
@@ -1527,57 +1527,27 @@
       "label": "UserResult",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L12",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_userresult",
       "community": 16,
       "norm_label": "userresult"
     },
     {
-      "label": "SaleOrder",
-      "file_type": "code",
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L28",
-      "_origin": "ast",
-      "id": "src_app_admin_vendas_page_saleorder",
-      "community": 16,
-      "norm_label": "saleorder"
-    },
-    {
       "label": "PAYMENTS",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L56",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_payments",
       "community": 16,
       "norm_label": "payments"
     },
     {
-      "label": "PAYMENT_STATUSES",
-      "file_type": "code",
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L64",
-      "_origin": "ast",
-      "id": "src_app_admin_vendas_page_payment_statuses",
-      "community": 16,
-      "norm_label": "payment_statuses"
-    },
-    {
-      "label": "DELIVERY_STATUSES",
-      "file_type": "code",
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L70",
-      "_origin": "ast",
-      "id": "src_app_admin_vendas_page_delivery_statuses",
-      "community": 16,
-      "norm_label": "delivery_statuses"
-    },
-    {
       "label": "VendasPage()",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L78",
+      "source_location": "L34",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_vendaspage",
       "community": 16,
@@ -1590,7 +1560,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route",
-      "community": 34,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -1600,7 +1570,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_patch",
-      "community": 34,
+      "community": 13,
       "norm_label": "patch()"
     },
     {
@@ -1610,7 +1580,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_delete",
-      "community": 34,
+      "community": 13,
       "norm_label": "delete()"
     },
     {
@@ -2346,46 +2316,6 @@
     {
       "label": "route.ts",
       "file_type": "code",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_app_api_admin_sales_id_route",
-      "community": 25,
-      "norm_label": "route.ts"
-    },
-    {
-      "label": "requireSeller()",
-      "file_type": "code",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L5",
-      "_origin": "ast",
-      "id": "src_app_api_admin_sales_id_route_requireseller",
-      "community": 25,
-      "norm_label": "requireseller()"
-    },
-    {
-      "label": "GET()",
-      "file_type": "code",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L13",
-      "_origin": "ast",
-      "id": "src_app_api_admin_sales_id_route_get",
-      "community": 25,
-      "norm_label": "get()"
-    },
-    {
-      "label": "PUT()",
-      "file_type": "code",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L49",
-      "_origin": "ast",
-      "id": "src_app_api_admin_sales_id_route_put",
-      "community": 25,
-      "norm_label": "put()"
-    },
-    {
-      "label": "route.ts",
-      "file_type": "code",
       "source_file": "src/app/api/admin/sales/route.ts",
       "source_location": "L1",
       "_origin": "ast",
@@ -2417,7 +2347,7 @@
       "label": "GET()",
       "file_type": "code",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L131",
+      "source_location": "L126",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_get",
       "community": 13,
@@ -2470,7 +2400,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route",
-      "community": 6,
+      "community": 13,
       "norm_label": "route.ts"
     },
     {
@@ -2480,7 +2410,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route_get",
-      "community": 6,
+      "community": 13,
       "norm_label": "get()"
     },
     {
@@ -2730,7 +2660,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_conta_route",
-      "community": 61,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2740,7 +2670,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_conta_route_get",
-      "community": 61,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2750,7 +2680,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_api_conta_route_patch",
-      "community": 61,
+      "community": 6,
       "norm_label": "patch()"
     },
     {
@@ -6840,7 +6770,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L10",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_cartitem",
@@ -6850,17 +6780,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L70",
-      "weight": 1.0,
-      "source": "src_app_admin_vendas_page",
-      "target": "src_app_admin_vendas_page_delivery_statuses",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L9",
+      "source_location": "L8",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_kit",
@@ -6870,17 +6790,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "src_app_admin_vendas_page",
-      "target": "src_app_admin_vendas_page_payment_statuses",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L56",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_payments",
@@ -6890,7 +6800,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L8",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_product",
@@ -6900,17 +6810,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L28",
-      "weight": 1.0,
-      "source": "src_app_admin_vendas_page",
-      "target": "src_app_admin_vendas_page_saleorder",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L12",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_userresult",
@@ -6920,7 +6820,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L7",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_variant",
@@ -6930,33 +6830,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L78",
+      "source_location": "L34",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_vendaspage",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L779",
-      "weight": 1.0,
-      "source": "src_app_admin_vendas_page_vendaspage",
-      "target": "src_app_admin_vendas_page_payment_statuses"
-    },
-    {
-      "relation": "references",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L780",
-      "weight": 1.0,
-      "source": "src_app_admin_vendas_page_vendaspage",
-      "target": "src_app_admin_vendas_page_delivery_statuses"
     },
     {
       "relation": "contains",
@@ -8519,82 +8397,8 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L13",
-      "weight": 1.0,
-      "source": "src_app_api_admin_sales_id_route",
-      "target": "src_app_api_admin_sales_id_route_get",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L49",
-      "weight": 1.0,
-      "source": "src_app_api_admin_sales_id_route",
-      "target": "src_app_api_admin_sales_id_route_put",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "src_app_api_admin_sales_id_route",
-      "target": "src_app_api_admin_sales_id_route_requireseller",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L2",
-      "weight": 1.0,
-      "source": "src_app_api_admin_sales_id_route",
-      "target": "src_lib_auth",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "src_app_api_admin_sales_id_route",
-      "target": "src_lib_prisma",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L17",
-      "weight": 1.0,
-      "source": "src_app_api_admin_sales_id_route_get",
-      "target": "src_app_api_admin_sales_id_route_requireseller",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app/api/admin/sales/[id]/route.ts",
-      "source_location": "L53",
-      "weight": 1.0,
-      "source": "src_app_api_admin_sales_id_route_put",
-      "target": "src_app_api_admin_sales_id_route_requireseller",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L131",
+      "source_location": "L126",
       "weight": 1.0,
       "source": "src_app_api_admin_sales_route",
       "target": "src_app_api_admin_sales_route_get",
@@ -8647,7 +8451,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L132",
+      "source_location": "L127",
       "weight": 1.0,
       "source": "src_app_api_admin_sales_route_get",
       "target": "src_app_api_admin_sales_route_requireseller",
@@ -8670,7 +8474,7 @@
       "deferred": true,
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L117",
+      "source_location": "L112",
       "weight": 1.0,
       "source": "src_app_api_admin_sales_route_post",
       "target": "src_lib_shipping",
@@ -12135,5 +11939,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "7872ff3618e1e07b8e2aee420b076e7f6e592c4f"
+  "built_at_commit": "e26b18fc7e4ce3e6668bafa25d163a19a20f87ec"
 }
