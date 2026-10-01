@@ -1,16 +1,16 @@
-# Graph Report - Makse-main  (2026-10-01)
+# Graph Report - Makse-main  (2026-09-29)
 
 ## Corpus Check
-- 130 files · ~614,202 words
+- 128 files · ~610,710 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 542 nodes · 681 edges · 67 communities (48 shown, 19 thin omitted)
+- 525 nodes · 661 edges · 63 communities (44 shown, 19 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `597e8509`
+- Built from commit: `7872ff36`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,6 +23,7 @@
 - compilerOptions
 - auth.ts
 - route.ts
+- prisma.ts
 - UserActions.tsx
 - CatalogoClient.tsx
 - route.ts
@@ -63,9 +64,7 @@
 - postcss.config.mjs
 - check_hash.js
 - { GET, POST }
-- shipping.ts
 - proxy.ts
-- route.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `useCartStore` - 17 edges
@@ -94,7 +93,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (67 total, 19 thin omitted)
+## Communities (63 total, 19 thin omitted)
 
 ### Community 0 - "useCartStore"
 Cohesion: 0.07
@@ -120,13 +119,13 @@ Nodes (15): AdminHeroPage(), DEVICE_FIELDS, HeroSlide, KitFormEdit(), Props, Kit
 Cohesion: 0.10
 Nodes (19): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+11 more)
 
-### Community 6 - "auth.ts"
-Cohesion: 0.12
-Nodes (4): GET(), { handlers, auth, signIn, signOut }, config, proxy
-
 ### Community 7 - "route.ts"
-Cohesion: 0.21
-Nodes (15): xlsx, GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug(), COL_MAP (+7 more)
+Cohesion: 0.15
+Nodes (17): xlsx, GET(), GET(), parseBool(), parsePrice(), POST(), requireAdmin(), toSlug() (+9 more)
+
+### Community 8 - "prisma.ts"
+Cohesion: 0.20
+Nodes (4): Item, Line, Props, Props
 
 ### Community 9 - "UserActions.tsx"
 Cohesion: 0.13
@@ -141,16 +140,20 @@ Cohesion: 0.29
 Nodes (11): POST(), requireAdmin(), DELETE(), POST(), requireAdmin(), DELETE(), PATCH(), POST() (+3 more)
 
 ### Community 13 - "hero-slides.ts"
-Cohesion: 0.12
-Nodes (17): DELETE(), GET(), PATCH(), POST(), requireAdmin(), GET(), Item, Line (+9 more)
+Cohesion: 0.06
+Nodes (27): AdminDashboard(), getStats(), statusBadge, DELETE(), GET(), PATCH(), POST(), requireAdmin() (+19 more)
 
 ### Community 14 - "layout.tsx"
 Cohesion: 0.28
 Nodes (3): nav, AdminMobileToggle(), AdminSignOut()
 
+### Community 15 - "page.tsx"
+Cohesion: 0.25
+Nodes (4): paymentLabel, statusConfig, Props, STATUS_OPTIONS
+
 ### Community 16 - "page.tsx"
-Cohesion: 0.06
-Nodes (27): CartItem, computeKitPrice(), computeProductPrice(), DELIVERY_STATUSES, Kit, PAYMENT_STATUSES, PAYMENTS, Product (+19 more)
+Cohesion: 0.22
+Nodes (10): CartItem, DELIVERY_STATUSES, Kit, PAYMENT_STATUSES, PAYMENTS, Product, SaleOrder, UserResult (+2 more)
 
 ### Community 17 - "route.ts"
 Cohesion: 0.46
@@ -216,16 +219,8 @@ Nodes (3): C, sec(), SobrePage()
 Cohesion: 0.83
 Nodes (3): DELETE(), PATCH(), requireAdmin()
 
-### Community 62 - "shipping.ts"
-Cohesion: 0.16
-Nodes (9): PATCH(), requireAdmin(), GET(), POST(), requireSeller(), POST(), POST(), TODO: Chamar API do Bling para baixa no estoque (+1 more)
-
-### Community 63 - "proxy.ts"
-Cohesion: 0.67
-Nodes (3): AdminDashboard(), getStats(), statusBadge
-
 ## Knowledge Gaps
-- **199 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+194 more)
+- **187 isolated node(s):** `path`, `dir`, `eslintConfig`, `nextConfig`, `name` (+182 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -233,13 +228,13 @@ Nodes (3): AdminDashboard(), getStats(), statusBadge
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `devDependencies`, `route.ts`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
-- **Why does `prisma` connect `devDependencies` to `page.tsx`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
+  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+- **Why does `prisma` connect `devDependencies` to `hero-slides.ts`?**
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
 - **What connects `path`, `dir`, `eslintConfig` to the rest of the system?**
-  _202 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _190 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `useCartStore` be split into smaller, more focused modules?**
-  _Cohesion score 0.07084785133565621 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06659619450317125 - nodes in this community are weakly interconnected._
 - **Should `🖥️ <a id="servidor-dedicado"></a> 3. Deploy em Servidor Dedicado Node.js` be split into smaller, more focused modules?**
   _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**

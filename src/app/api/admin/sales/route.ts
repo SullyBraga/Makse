@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
       status,
       deliveryStatus,
       deliveryDate,
+      deductStock,
     } = body
 
     if (!items || items.length === 0) {
@@ -38,6 +39,14 @@ export async function POST(req: NextRequest) {
     const total = items.reduce((sum: number, i: any) => sum + (i.unitPrice * i.quantity), 0)
     const userId = customerId || sellerId
 
+    // Separar financeiro de estoque:
+    // Se deductStock for explicitamente informado, respeita.
+    // Senão, só deduz estoque se o status de entrega for ENVIADO ou ENTREGUE.
+    // Pré-venda e entrega pendente NÃO debitam estoque por padrão.
+    const shouldDeduct = deductStock !== undefined
+      ? Boolean(deductStock)
+      : ['ENVIADO', 'ENTREGUE'].includes(deliveryStatus)
+
     const order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
         data: {
@@ -46,6 +55,7 @@ export async function POST(req: NextRequest) {
           status: status || 'PAGO',
           deliveryStatus: deliveryStatus || 'PENDENTE',
           deliveryDate: deliveryDate ? new Date(deliveryDate) : null,
+          stockDeducted: shouldDeduct,
           total,
           paymentMethod: paymentMethod || 'OUTRO',
           sellerNote: note || null,
@@ -66,44 +76,46 @@ export async function POST(req: NextRequest) {
         include: { items: true },
       })
 
-      // Deduct stock for each item
-      for (const item of items) {
-        let targetVariantId = item.variantId
-        if (!targetVariantId && item.productId) {
-          const firstVariant = await tx.productVariant.findFirst({
-            where: { productId: item.productId },
-            orderBy: { id: 'asc' },
-          })
-          if (firstVariant) {
-            targetVariantId = firstVariant.id
-          }
-        }
-
-        if (targetVariantId) {
-          await tx.productVariant.update({
-            where: { id: targetVariantId },
-            data: { stock: { decrement: parseInt(item.quantity) } },
-          })
-        } else if (item.kitId) {
-          // Deduct stock for each product in the kit
-          const kitItems = await tx.kitItem.findMany({ where: { kitId: item.kitId } })
-          for (const ki of kitItems) {
-            let targetKitVariantId = ki.variantId
-            if (!targetKitVariantId && ki.productId) {
-              const firstVar = await tx.productVariant.findFirst({
-                where: { productId: ki.productId },
-                orderBy: { id: 'asc' },
-              })
-              if (firstVar) {
-                targetKitVariantId = firstVar.id
-              }
+      // Deduz estoque APENAS se shouldDeduct for true (separação financeiro x estoque / pré-venda)
+      if (shouldDeduct) {
+        for (const item of items) {
+          let targetVariantId = item.variantId
+          if (!targetVariantId && item.productId) {
+            const firstVariant = await tx.productVariant.findFirst({
+              where: { productId: item.productId },
+              orderBy: { id: 'asc' },
+            })
+            if (firstVariant) {
+              targetVariantId = firstVariant.id
             }
+          }
 
-            if (targetKitVariantId) {
-              await tx.productVariant.update({
-                where: { id: targetKitVariantId },
-                data: { stock: { decrement: ki.quantity * parseInt(item.quantity) } },
-              })
+          if (targetVariantId) {
+            await tx.productVariant.update({
+              where: { id: targetVariantId },
+              data: { stock: { decrement: parseInt(item.quantity) } },
+            })
+          } else if (item.kitId) {
+            // Deduct stock for each product in the kit
+            const kitItems = await tx.kitItem.findMany({ where: { kitId: item.kitId } })
+            for (const ki of kitItems) {
+              let targetKitVariantId = ki.variantId
+              if (!targetKitVariantId && ki.productId) {
+                const firstVar = await tx.productVariant.findFirst({
+                  where: { productId: ki.productId },
+                  orderBy: { id: 'asc' },
+                })
+                if (firstVar) {
+                  targetKitVariantId = firstVar.id
+                }
+              }
+
+              if (targetKitVariantId) {
+                await tx.productVariant.update({
+                  where: { id: targetKitVariantId },
+                  data: { stock: { decrement: ki.quantity * parseInt(item.quantity) } },
+                })
+              }
             }
           }
         }

@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/pedidos/page.tsx": {
-    "mtime": 1790884830.0188422,
-    "ast_hash": "2c99ea2d1ddc4f706b2badb360cea167",
+    "mtime": 1779917473.8505588,
+    "ast_hash": "f3f920663986f04bc7815547b2dea77e",
     "semantic_hash": ""
   },
   "src/app/admin/produtos/[id]/editar/page.tsx": {
@@ -155,8 +155,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/vendas/page.tsx": {
-    "mtime": 1790884881.5141335,
-    "ast_hash": "61c44a188d225e5e2e0e9615cc3e1377",
+    "mtime": 1790693207.6553183,
+    "ast_hash": "7b7a91069812c7b32ed8427290194403",
     "semantic_hash": ""
   },
   "src/app/api/addresses/[id]/route.ts": {
@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/orders/route.ts": {
-    "mtime": 1790884766.568647,
-    "ast_hash": "465ef4a49d735b3e70b8a60f418d93ed",
+    "mtime": 1781543096.2461607,
+    "ast_hash": "453506a154fd6810e4daa0698cfe4167",
     "semantic_hash": ""
   },
   "src/app/api/admin/products/images/route.ts": {
@@ -220,8 +220,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/sales/route.ts": {
-    "mtime": 1790884718.7370946,
-    "ast_hash": "95c3fb6ffa6c3b2c0b10750339bba7d3",
+    "mtime": 1790693139.1819475,
+    "ast_hash": "363b159234e9a81ab97a89edeb7a5d2f",
     "semantic_hash": ""
   },
   "src/app/api/admin/users-list/route.ts": {
@@ -705,18 +705,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/sales/[id]/route.ts": {
-    "mtime": 1790884739.9877267,
-    "ast_hash": "67ffb960dc7a9c5813ef015379bb7abf",
-    "semantic_hash": ""
-  },
-  "src/components/admin/AdminPedidosManager.tsx": {
-    "mtime": 1790884817.8688786,
-    "ast_hash": "fdb0798c9f02814673aa5657d14f9d84",
-    "semantic_hash": ""
-  },
-  "src/components/admin/EditOrderModal.tsx": {
-    "mtime": 1790884798.7786238,
-    "ast_hash": "1b1c7ebfe3eae6f0973f0cfb0d9141c9",
+    "mtime": 1790693161.5118403,
+    "ast_hash": "3f0d5ebb4eaa812117972f1ceb053d84",
     "semantic_hash": ""
   }
 }

@@ -82,6 +82,7 @@ export async function PUT(
       status,
       deliveryStatus,
       deliveryDate,
+      deductStock,
       items,
     } = body
 
@@ -94,12 +95,27 @@ export async function PUT(
     const newDeliveryDate = deliveryDate ? new Date(deliveryDate) : (deliveryDate === null ? null : existingOrder.deliveryDate)
     const newTotal = items.reduce((sum: number, i: any) => sum + (parseFloat(i.unitPrice) * parseInt(i.quantity)), 0)
 
-    const updatedOrder = await prisma.$transaction(async (tx) => {
-      const wasPaid = ['PAGO', 'EM_SEPARACAO', 'ENVIADO', 'ENTREGUE'].includes(existingOrder.status)
-      const isPaid = ['PAGO', 'EM_SEPARACAO', 'ENVIADO', 'ENTREGUE'].includes(newStatus)
+    const wasStockDeducted = existingOrder.stockDeducted ?? false
 
-      // 1. If previous status was paid, restore stock for old items
-      if (wasPaid) {
+    // Decisão de baixa no estoque:
+    // Se deductStock for explicitamente enviado, respeita.
+    // Senão, cancelamentos removem a baixa (false).
+    // Status de entrega ENVIADO ou ENTREGUE baixam o estoque (true).
+    // Status PRE_VENDA ou PENDENTE mantêm sem baixa se não estava baixado.
+    let shouldDeductStock = wasStockDeducted
+    if (deductStock !== undefined) {
+      shouldDeductStock = Boolean(deductStock)
+    } else if (newStatus === 'CANCELADO' || newDeliveryStatus === 'CANCELADO') {
+      shouldDeductStock = false
+    } else if (['ENVIADO', 'ENTREGUE'].includes(newDeliveryStatus)) {
+      shouldDeductStock = true
+    } else if (['PRE_VENDA', 'PENDENTE'].includes(newDeliveryStatus)) {
+      shouldDeductStock = false
+    }
+
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      // 1. Se o estoque já havia sido baixado anteriormente, restaura os itens antigos
+      if (wasStockDeducted) {
         for (const item of existingOrder.items) {
           let targetVariantId = item.variantId
           if (!targetVariantId && item.productId) {
@@ -152,8 +168,8 @@ export async function PUT(
         })),
       })
 
-      // 4. If new status is paid, deduct stock for new items
-      if (isPaid) {
+      // 4. Se o novo estado determina baixa no estoque, deduz os novos itens
+      if (shouldDeductStock) {
         for (const item of items) {
           let targetVariantId = item.variantId
           if (!targetVariantId && item.productId) {
@@ -204,6 +220,7 @@ export async function PUT(
           status: newStatus,
           deliveryStatus: newDeliveryStatus,
           deliveryDate: newDeliveryDate,
+          stockDeducted: shouldDeductStock,
           total: newTotal,
         },
         include: {

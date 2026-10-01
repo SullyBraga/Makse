@@ -190,6 +190,7 @@ model Order {
   customerAddress  String?
   deliveryStatus   String?     @default("PENDENTE")
   deliveryDate     DateTime?
+  stockDeducted    Boolean     @default(false)
   items            OrderItem[]
   coupon           Coupon?     @relation(fields: [couponId], references: [id])
   couponId         String?

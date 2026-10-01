@@ -13,7 +13,7 @@ export async function PATCH(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 403 })
 
   try {
-    const { orderId, status, trackingCode, reverterEstoque } = await req.json()
+    const { orderId, status, trackingCode, deliveryStatus, reverterEstoque, deductStock } = await req.json()
 
     if (!orderId || !status) {
       return NextResponse.json({ error: 'orderId e status são obrigatórios' }, { status: 400 })
@@ -33,17 +33,39 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'Pedido não encontrado' }, { status: 404 })
     }
 
-    const data: Record<string, any> = { status }
+    const wasStockDeducted = orderBefore.stockDeducted ?? false
+    const targetDeliveryStatus = deliveryStatus !== undefined ? deliveryStatus : orderBefore.deliveryStatus
+
+    // Se deductStock for explicitamente informado, respeita.
+    // Senão, se cancelado -> false.
+    // Senão, se entrega for ENVIADO ou ENTREGUE -> true.
+    // Senão, se pré-venda ou entrega pendente -> não deduz por padrão (false).
+    let shouldDeductStock = wasStockDeducted
+    if (deductStock !== undefined) {
+      shouldDeductStock = Boolean(deductStock)
+    } else if (status === 'CANCELADO' || targetDeliveryStatus === 'CANCELADO') {
+      shouldDeductStock = false
+    } else if (['ENVIADO', 'ENTREGUE'].includes(targetDeliveryStatus || '')) {
+      shouldDeductStock = true
+    } else if (['PRE_VENDA', 'PENDENTE'].includes(targetDeliveryStatus || '')) {
+      // Pré-venda ou entrega pendente NÃO deduz estoque na mudança de status financeiro
+      shouldDeductStock = false
+    } else if (['PAGO', 'EM_SEPARACAO'].includes(status) && !wasStockDeducted && !orderBefore.sellerId) {
+      // Pedido online comum (sem vendedor / pré-venda) deduz ao pagar
+      shouldDeductStock = true
+    }
+
+    const data: Record<string, any> = {
+      status,
+      stockDeducted: shouldDeductStock,
+    }
+    if (deliveryStatus !== undefined) data.deliveryStatus = deliveryStatus
     if (trackingCode !== undefined) data.trackingCode = trackingCode || null
 
     const updated = await prisma.order.update({ where: { id: orderId }, data })
 
-    // Controle de estoque baseado nas transições de estado
-    const wasPaid = ['PAGO', 'EM_SEPARACAO', 'ENVIADO', 'ENTREGUE'].includes(orderBefore.status)
-    const isPaid = ['PAGO', 'EM_SEPARACAO', 'ENVIADO', 'ENTREGUE'].includes(status)
-
-    // Caso 1: Passou de não-pago para pago -> Deduzir estoque
-    if (!wasPaid && isPaid) {
+    // Caso 1: Estoque não estava baixado e agora deve ser baixado -> Deduzir estoque
+    if (!wasStockDeducted && shouldDeductStock) {
       for (const item of orderBefore.items) {
         let targetVariantId = item.variantId
         if (!targetVariantId && item.productId) {
@@ -94,8 +116,8 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    // Caso 2: Passou de pago para CANCELADO -> Devolver estoque
-    if (wasPaid && status === 'CANCELADO' && reverterEstoque !== false) {
+    // Caso 2: Estoque estava baixado e agora não deve mais estar baixado (ex: CANCELADO) -> Devolver estoque
+    if (wasStockDeducted && !shouldDeductStock && reverterEstoque !== false) {
       for (const item of orderBefore.items) {
         let targetVariantId = item.variantId
         if (!targetVariantId && item.productId) {
