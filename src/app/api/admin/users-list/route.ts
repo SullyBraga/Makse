@@ -11,15 +11,29 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url)
   const search = searchParams.get('search')?.trim()
+  const roleParam = searchParams.get('role')?.trim()
+  const limitParam = searchParams.get('limit')?.trim()
+  const limit = limitParam ? parseInt(limitParam) : undefined
+
+  const where: any = {}
+
+  if (search) {
+    where.OR = [
+      { name: { contains: search } },
+      { email: { contains: search } },
+      { professionalReq: { salonName: { contains: search } } },
+      { professionalReq: { phone: { contains: search } } },
+      { professionalReq: { cnpj: { contains: search } } },
+    ]
+  }
+
+  if (roleParam && roleParam !== 'ALL') {
+    where.role = roleParam
+  }
 
   const users = await prisma.user.findMany({
-    where: search ? {
-      OR: [
-        { name: { contains: search } },
-        { email: { contains: search } },
-      ],
-    } : undefined,
-    orderBy: { name: 'asc' },
+    where,
+    orderBy: { createdAt: 'desc' },
     select: {
       id: true,
       name: true,
@@ -57,7 +71,8 @@ export async function GET(req: NextRequest) {
         }
       }
     },
-    take: 20,
+    ...(limit ? { take: limit } : {}),
   })
+
   return NextResponse.json(users)
 }

@@ -1,8 +1,8 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import ApproveUserClient from '@/components/admin/ApproveUserClient'
 import UserActions from '@/components/admin/UserActions'
-import { Users, Search, RefreshCw, UserPlus, X, Eye, EyeOff, Percent, Trash2 } from 'lucide-react'
+import { Users, Search, RefreshCw, UserPlus, X, Eye, EyeOff, Percent, Trash2, Filter } from 'lucide-react'
 
 const roleConfig: Record<string, { label: string; bg: string; color: string }> = {
   ADMIN:         { label: 'Admin',         bg: 'var(--cream-dark)', color: 'var(--navy)' },
@@ -36,6 +36,7 @@ export default function AdminUsuariosPage() {
   const [discountTables, setDiscountTables] = useState<DiscountTable[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [roleFilter, setRoleFilter] = useState('ALL')
 
   // Create seller modal
   const [showCreateSeller, setShowCreateSeller] = useState(false)
@@ -53,26 +54,50 @@ export default function AdminUsuariosPage() {
   const [tableActionError, setTableActionError] = useState('')
   const [selectedUserForDetails, setSelectedUserForDetails] = useState<User | null>(null)
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async (searchQuery = '') => {
     setLoading(true)
-    const [usersRes, tablesRes] = await Promise.all([
-      fetch('/api/admin/users-list'),
-      fetch('/api/admin/discount-tables'),
-    ])
-    if (usersRes.ok) setUsers(await usersRes.json())
-    if (tablesRes.ok) {
-      const raw: DiscountTable[] = await tablesRes.json()
-      const seen = new Set<string>()
-      const unique = raw.filter(t => {
-        const key = `${t.name}|${t.percentage}`
-        if (seen.has(key)) return false
-        seen.add(key)
-        return true
-      })
-      setDiscountTables(unique)
+    try {
+      const url = searchQuery.trim()
+        ? `/api/admin/users-list?search=${encodeURIComponent(searchQuery.trim())}`
+        : '/api/admin/users-list'
+
+      const [usersRes, tablesRes] = await Promise.all([
+        fetch(url),
+        fetch('/api/admin/discount-tables'),
+      ])
+      if (usersRes.ok) {
+        setUsers(await usersRes.json())
+      }
+      if (tablesRes.ok) {
+        const raw: DiscountTable[] = await tablesRes.json()
+        const seen = new Set<string>()
+        const unique = raw.filter(t => {
+          const key = `${t.name}|${t.percentage}`
+          if (seen.has(key)) return false
+          seen.add(key)
+          return true
+        })
+        setDiscountTables(unique)
+      }
+    } catch (err) {
+      console.error('Erro ao buscar usuários:', err)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
-  }
+  }, [])
+
+  // Initial load
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  // Debounced search on server if user types
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchData(search)
+    }, 350)
+    return () => clearTimeout(timer)
+  }, [search, fetchData])
 
   const handleCreateDiscountTable = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -90,7 +115,7 @@ export default function AdminUsuariosPage() {
       } else {
         setNewTableName('')
         setNewTablePercentage('')
-        await fetchData()
+        await fetchData(search)
       }
     } catch (err) {
       setTableActionError('Erro ao criar tabela de desconto')
@@ -113,7 +138,7 @@ export default function AdminUsuariosPage() {
         const data = await res.json()
         setTableActionError(data.error || 'Erro ao deletar tabela de desconto')
       } else {
-        await fetchData()
+        await fetchData(search)
       }
     } catch (err) {
       setTableActionError('Erro ao deletar tabela de desconto')
@@ -122,21 +147,44 @@ export default function AdminUsuariosPage() {
     }
   }
 
-  useEffect(() => { fetchData() }, [])
-
-
   const handleAction = (userId: string, action: 'deleted' | 'roleChanged' | 'discountChanged') => {
     if (action === 'deleted') {
       setUsers(prev => prev.filter(u => u.id !== userId))
     } else {
-      fetchData()
+      fetchData(search)
     }
   }
 
-  const filtered = users.filter(u =>
-    u.name.toLowerCase().includes(search.toLowerCase()) ||
-    u.email.toLowerCase().includes(search.toLowerCase())
-  )
+  // Filtragem local complementar por cargo e busca
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim()
+    return users.filter(u => {
+      // Filtro de cargo
+      if (roleFilter !== 'ALL' && u.role !== roleFilter) {
+        return false
+      }
+      // Filtro de texto (nome, email, salão, telefone, cnpj)
+      if (!q) return true
+      const nameMatch = (u.name || '').toLowerCase().includes(q)
+      const emailMatch = (u.email || '').toLowerCase().includes(q)
+      const salonMatch = (u.professionalReq?.salonName || '').toLowerCase().includes(q)
+      const phoneMatch = (u.professionalReq?.phone || '').includes(q)
+      const cnpjMatch = (u.professionalReq?.cnpj || '').includes(q)
+      return nameMatch || emailMatch || salonMatch || phoneMatch || cnpjMatch
+    })
+  }, [users, search, roleFilter])
+
+  // Contadores por cargo
+  const counts = useMemo(() => {
+    return {
+      ALL: users.length,
+      CABELEIREIRA: users.filter(u => u.role === 'CABELEIREIRA').length,
+      VENDEDOR: users.filter(u => u.role === 'VENDEDOR').length,
+      CLIENTE_FINAL: users.filter(u => u.role === 'CLIENTE_FINAL').length,
+      ADMIN: users.filter(u => u.role === 'ADMIN').length,
+      PENDENTE: users.filter(u => u.role === 'PENDENTE').length,
+    }
+  }, [users])
 
   const pending = filtered.filter(u => u.role === 'PENDENTE')
   const others = filtered.filter(u => u.role !== 'PENDENTE')
@@ -155,7 +203,7 @@ export default function AdminUsuariosPage() {
     setTimeout(() => {
       setShowCreateSeller(false); setSellerOk(false)
       setSellerForm({ name: '', email: '', password: '' })
-      fetchData()
+      fetchData(search)
     }, 2000)
     setSellerLoading(false)
   }
@@ -166,9 +214,11 @@ export default function AdminUsuariosPage() {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '2rem', fontWeight: 400, color: 'var(--navy)', marginBottom: '0.2rem' }}>Usuários</h1>
-          <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>Gerencie clientes, profissionais e aprovações</p>
+          <p style={{ fontSize: '0.835rem', color: 'var(--text-muted)' }}>
+            Gerencie todos os clientes, profissionais, vendedores e administradores cadastrados ({users.length} totais)
+          </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.625rem' }}>
+        <div style={{ display: 'flex', gap: '0.625rem', flexWrap: 'wrap' }}>
           <button onClick={() => setShowDiscountTablesModal(true)}
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.125rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', cursor: 'pointer', color: 'var(--navy)', fontWeight: 500, fontFamily: 'var(--font-dm-sans), sans-serif' }}>
             <Percent size={13} style={{ color: 'var(--gold)' }} /> Tabelas de Desconto
@@ -177,8 +227,8 @@ export default function AdminUsuariosPage() {
             style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.125rem', border: 'none', borderRadius: '99px', background: '#7c3aed', color: '#fff', fontSize: '0.72rem', cursor: 'pointer', fontWeight: 500, fontFamily: 'var(--font-dm-sans), sans-serif' }}>
             <UserPlus size={13} /> Criar Vendedor
           </button>
-          <button onClick={fetchData} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', cursor: 'pointer', color: 'var(--text-muted)' }}>
-            <RefreshCw size={13} /> Atualizar
+          <button onClick={() => fetchData(search)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1rem', border: '1px solid var(--border)', borderRadius: '99px', background: '#fff', fontSize: '0.72rem', cursor: 'pointer', color: 'var(--text-muted)' }}>
+            <RefreshCw size={13} style={{ animation: loading ? 'spin 1s linear infinite' : 'none' }} /> Atualizar
           </button>
         </div>
       </div>
@@ -190,7 +240,7 @@ export default function AdminUsuariosPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <div>
                 <h2 style={{ fontFamily: 'var(--font-cormorant), serif', fontSize: '1.4rem', fontWeight: 400, color: 'var(--navy)', margin: 0 }}>Criar Conta Vendedor</h2>
-                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>A conta terá acesso ao painel /vendas e preços de vendedor</p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>A conta terá acesso ao painel /admin/vendas e preços de vendedor</p>
               </div>
               <button onClick={() => setShowCreateSeller(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem' }}><X size={18} /></button>
             </div>
@@ -296,27 +346,78 @@ export default function AdminUsuariosPage() {
         </div>
       )}
 
-      {/* Search */}
-      <div style={{ position: 'relative', marginBottom: '1.5rem', maxWidth: '360px' }}>
+      {/* Role Filter Pills */}
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+        {[
+          { id: 'ALL', label: 'Todos', count: counts.ALL },
+          { id: 'CABELEIREIRA', label: 'Profissionais', count: counts.CABELEIREIRA },
+          { id: 'VENDEDOR', label: 'Vendedores', count: counts.VENDEDOR },
+          { id: 'CLIENTE_FINAL', label: 'Clientes Finais', count: counts.CLIENTE_FINAL },
+          { id: 'ADMIN', label: 'Admins', count: counts.ADMIN },
+          { id: 'PENDENTE', label: 'Pendentes', count: counts.PENDENTE },
+        ].map(pill => (
+          <button
+            key={pill.id}
+            onClick={() => setRoleFilter(pill.id)}
+            style={{
+              padding: '0.4rem 0.9rem',
+              borderRadius: '99px',
+              border: 'none',
+              fontSize: '0.74rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              background: roleFilter === pill.id ? 'var(--navy)' : '#fff',
+              color: roleFilter === pill.id ? '#fff' : 'var(--text-muted)',
+              borderWidth: '1px',
+              borderStyle: 'solid',
+              borderColor: roleFilter === pill.id ? 'var(--navy)' : 'var(--border)',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {pill.label}
+            <span
+              style={{
+                fontSize: '0.65rem',
+                padding: '0.1rem 0.35rem',
+                borderRadius: '99px',
+                background: roleFilter === pill.id ? 'rgba(255,255,255,0.2)' : 'var(--cream)',
+                color: roleFilter === pill.id ? '#fff' : 'var(--navy)',
+              }}
+            >
+              {pill.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Search Input */}
+      <div style={{ position: 'relative', marginBottom: '1.5rem', maxWidth: '420px' }}>
         <Search size={14} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
         <input
           type="text"
-          placeholder="Buscar por nome ou e-mail..."
+          placeholder="Buscar por nome, e-mail, telefone, salão ou CNPJ..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.25rem', border: '1px solid var(--border)', borderRadius: '99px', fontSize: '0.82rem', outline: 'none', fontFamily: 'var(--font-dm-sans), sans-serif', background: '#fff' }}
+          style={{ width: '100%', padding: '0.65rem 1rem 0.65rem 2.25rem', border: '1px solid var(--border)', borderRadius: '99px', fontSize: '0.82rem', outline: 'none', fontFamily: 'var(--font-dm-sans), sans-serif', background: '#fff' }}
         />
+        {loading && (
+          <RefreshCw size={13} style={{ position: 'absolute', right: '0.875rem', top: '50%', transform: 'translateY(-50%)', animation: 'spin 1s linear infinite', color: 'var(--gold)' }} />
+        )}
       </div>
 
-      {loading ? (
+      {loading && users.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
           <RefreshCw size={24} style={{ margin: '0 auto 0.75rem', animation: 'spin 1s linear infinite', display: 'block', color: 'var(--gold)' }} />
-          Carregando...
+          Carregando usuários...
         </div>
       ) : (
         <>
           {/* Pendentes */}
-          {pending.length > 0 && (
+          {pending.length > 0 && roleFilter === 'ALL' && !search && (
             <div style={{ marginBottom: '2rem' }}>
               <h2 style={{ fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: 600, marginBottom: '0.875rem' }}>
                 ⏳ Aguardando Aprovação ({pending.length})
@@ -350,17 +451,27 @@ export default function AdminUsuariosPage() {
 
           {/* All users table */}
           <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden' }}>
-            <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Users size={14} style={{ color: 'var(--gold)' }} />
-              <h2 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--navy)' }}>
-                Todos os Usuários ({filtered.length})
-              </h2>
+            <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Users size={14} style={{ color: 'var(--gold)' }} />
+                <h2 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>
+                  Usuários ({filtered.length})
+                </h2>
+              </div>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                {users.length} cadastrados no sistema
+              </span>
             </div>
 
             {filtered.length === 0 ? (
-              <div style={{ padding: '3rem', textAlign: 'center' }}>
+              <div style={{ padding: '3.5rem 1.5rem', textAlign: 'center' }}>
                 <Search size={28} style={{ color: 'var(--border)', margin: '0 auto 0.75rem' }} />
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Nenhum usuário encontrado.</p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--navy)', fontWeight: 500, margin: '0 0 0.25rem' }}>
+                  Nenhum usuário encontrado
+                </p>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0 }}>
+                  {search ? `Nenhum resultado para "${search}".` : 'Nenhum usuário nesta categoria.'}
+                </p>
               </div>
             ) : (
               <div style={{ overflowX: 'auto' }}>
@@ -373,11 +484,11 @@ export default function AdminUsuariosPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[...pending, ...others].map(user => {
+                    {(roleFilter === 'ALL' && !search ? [...pending, ...others] : filtered).map(user => {
                       const rc = roleConfig[user.role] ?? { label: user.role, bg: 'var(--cream)', color: 'var(--navy)' }
                       return (
                         <tr key={user.id} style={{ borderBottom: '1px solid var(--cream)' }}>
-                           <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.84rem', fontWeight: 500, color: 'var(--navy)' }}>
+                          <td style={{ padding: '0.875rem 1.25rem', fontSize: '0.84rem', fontWeight: 500, color: 'var(--navy)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                               <span>{user.name}</span>
                               <button

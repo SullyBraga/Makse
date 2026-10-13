@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Trash2, RefreshCw, ChevronDown, Check } from 'lucide-react'
 
 type DiscountTable = { id: string; name: string; percentage: number }
@@ -61,6 +61,14 @@ export default function UserActions({
   const [loading, setLoading] = useState<'role' | 'discount' | 'delete' | null>(null)
   const [saved, setSaved] = useState<'role' | 'discount' | null>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
+
+  useEffect(() => {
+    setRole(currentRole)
+  }, [currentRole])
+
+  useEffect(() => {
+    setDiscountTableId(currentDiscountTableId ?? NONE_VALUE)
+  }, [currentDiscountTableId])
 
   const handleRoleChange = async () => {
     if (role === currentRole || loading) return

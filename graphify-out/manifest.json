@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/usuarios/page.tsx": {
-    "mtime": 1782445185.305058,
-    "ast_hash": "d818149bbfb060b584f5be61c15fa1eb",
+    "mtime": 1791850973.94147,
+    "ast_hash": "6ac885648a83e10d088137e92f63d0fe",
     "semantic_hash": ""
   },
   "src/app/admin/vendas/page.tsx": {
@@ -225,8 +225,8 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/users-list/route.ts": {
-    "mtime": 1782445153.7118993,
-    "ast_hash": "973bea27b92bbc2a5542ae159d300dbf",
+    "mtime": 1791850865.214019,
+    "ast_hash": "997afc936be925b955ec5dbcd5c92985",
     "semantic_hash": ""
   },
   "src/app/api/admin/users/route.ts": {
@@ -430,8 +430,8 @@
     "semantic_hash": ""
   },
   "src/components/admin/UserActions.tsx": {
-    "mtime": 1781027126.899931,
-    "ast_hash": "97f4cc6dc473e42fcbfd6e8d26c63890",
+    "mtime": 1791850889.6679401,
+    "ast_hash": "d1c922ef8699719b4ecaf0752b5d2f9c",
     "semantic_hash": ""
   },
   "src/components/cart/CartDrawer.tsx": {
