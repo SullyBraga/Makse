@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import UpdateOrderStatus from '@/components/admin/UpdateOrderStatus'
 import EditOrderModal, { EditOrderTarget } from '@/components/admin/EditOrderModal'
-import { ShoppingBag, User, Store, Search, Filter, Edit3, Truck, Package, Clock, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { ShoppingBag, User, Store, Search, Filter, Edit3, Truck, Package, Clock, CheckCircle2, AlertTriangle, Printer } from 'lucide-react'
 
 const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
   PAGO:                   { label: 'Pago',           bg: '#dbeafe', text: '#1d4ed8' },
@@ -257,7 +258,30 @@ export default function AdminPedidosManager({ initialOrders }: AdminPedidosManag
                     Status atual: <span style={{ fontWeight: 600, color: sc.text }}>{sc.label}</span>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                    {/* Botão de Exportar PDF / Imprimir */}
+                    <Link
+                      href={`/admin/pedidos/${order.id}/imprimir`}
+                      target="_blank"
+                      style={{
+                        padding: '0.45rem 0.85rem',
+                        background: '#faf8f5',
+                        color: '#0d1b2a',
+                        border: '1px solid #e8e2da',
+                        borderRadius: '8px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        transition: 'background 0.15s ease',
+                      }}
+                    >
+                      <Printer size={13} /> Exportar PDF / Imprimir
+                    </Link>
+
                     {/* Botão de Edição Completa */}
                     <button
                       onClick={() => setEditingOrder(order)}

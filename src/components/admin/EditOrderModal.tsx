@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Search, Plus, Minus, Trash2, X, RefreshCw, Layers, Check, AlertCircle, Package, Truck, Calendar, Store, User } from 'lucide-react'
+import Link from 'next/link'
+import { Search, Plus, Minus, Trash2, X, RefreshCw, Layers, Check, AlertCircle, Package, Truck, Calendar, Store, User, Printer } from 'lucide-react'
 import Image from 'next/image'
 
 type Variant = { id: string; label: string; price: number; pricePro?: number | null; priceVendedor: number | null; stock: number }
@@ -320,9 +321,31 @@ export default function EditOrderModal({ order, isOpen, onClose, onSuccess }: Ed
               Modifique itens, produtos, preços, dados do cliente e controle o estoque separadamente.
             </p>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.35rem', borderRadius: '8px' }}>
-            <X size={20} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Link
+              href={`/admin/pedidos/${order.id}/imprimir`}
+              target="_blank"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.4rem 0.75rem',
+                background: '#fff',
+                color: 'var(--navy)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                fontSize: '0.74rem',
+                fontWeight: 600,
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <Printer size={13} /> Exportar PDF / Imprimir
+            </Link>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.35rem', borderRadius: '8px' }}>
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Modal Body */}

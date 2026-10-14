@@ -35,9 +35,9 @@ export default function AdminContainer({
   const [mounted, setMounted] = useState(false)
   const isVendedor = role === 'VENDEDOR'
 
-  // Restringe vendedores à página de vendas
+  // Restringe vendedores à página de vendas (exceto impressão de pedidos)
   useEffect(() => {
-    if (isVendedor && pathname.startsWith('/admin') && pathname !== '/admin/vendas') {
+    if (isVendedor && pathname.startsWith('/admin') && pathname !== '/admin/vendas' && !pathname.includes('/imprimir')) {
       router.replace('/admin/vendas')
     }
   }, [isVendedor, pathname, router])
@@ -80,6 +80,15 @@ export default function AdminContainer({
 
   // Evita layout shift na montagem inicial exibindo a sidebar padrão de 210px
   const sidebarWidth = mounted && isCollapsed ? '70px' : '210px'
+  const isPrintPage = pathname.includes('/imprimir')
+
+  if (isPrintPage) {
+    return (
+      <main className="admin-print-wrapper" style={{ width: '100%', minHeight: '100vh', background: '#f8fafc' }}>
+        {children}
+      </main>
+    )
+  }
 
   return (
     <div style={{ display: 'flex' }}>

@@ -62,6 +62,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             display: block;
           }
         }
+        @media print {
+          .admin-mobile-header {
+            display: none !important;
+          }
+        }
       `}</style>
     </div>
   )

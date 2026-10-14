@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { Search, Plus, Minus, Trash2, ShoppingCart, RefreshCw, X, Check, User, CreditCard, Layers, AlertCircle, Edit3, Calendar, Truck, Package, Clock, Filter, CheckCircle2, Sparkles } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import Link from 'next/link'
+import { Search, Plus, Minus, Trash2, ShoppingCart, RefreshCw, X, Check, User, CreditCard, Layers, AlertCircle, Edit3, Calendar, Truck, Package, Clock, Filter, CheckCircle2, Sparkles, Printer } from 'lucide-react'
 import Image from 'next/image'
 import EditOrderModal, { EditOrderTarget } from '@/components/admin/EditOrderModal'
 
@@ -14,12 +15,16 @@ type UserResult = {
   name: string
   email: string
   role: string
+  isPastOrderCustomer?: boolean
+  rawAddress?: string | null
+  rawPhone?: string | null
+  rawCpf?: string | null
   discountTable?: {
     id: string
     name: string
     percentage: number
   } | null
-  professionalReq?: { phone: string; cnpj?: string | null; salonAddress?: string | null } | null
+  professionalReq?: { phone: string; cnpj?: string | null; salonAddress?: string | null; salonName?: string | null } | null
   addresses?: {
     id: string
     street: string
@@ -180,6 +185,9 @@ export default function VendasPage() {
   const [customerAddress, setCustomerAddress] = useState('')
   const [isManualCustomer, setIsManualCustomer] = useState(false)
   const [discountNotice, setDiscountNotice] = useState<string | null>(null)
+  const [isCustomerDropdownOpen, setIsCustomerDropdownOpen] = useState(false)
+  const [loadingCustomers, setLoadingCustomers] = useState(false)
+  const customerDropdownRef = useRef<HTMLDivElement>(null)
 
   // Payment, Delivery & Stock Separation states
   const [paymentMethod, setPaymentMethod] = useState('PIX')
@@ -239,15 +247,43 @@ export default function VendasPage() {
   }, [search, searchProducts])
 
   const searchCustomers = useCallback(async (q: string) => {
-    if (!q.trim()) { setCustomerResults([]); return }
-    const r = await fetch(`/api/admin/users-list?search=${encodeURIComponent(q)}`)
-    if (r.ok) setCustomerResults(await r.json())
+    setLoadingCustomers(true)
+    try {
+      const url = q.trim()
+        ? `/api/admin/users-list?search=${encodeURIComponent(q.trim())}`
+        : `/api/admin/users-list?limit=60`
+      const r = await fetch(url)
+      if (r.ok) {
+        const data = await r.json()
+        setCustomerResults(data)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoadingCustomers(false)
+    }
   }, [])
+
+  // Carrega clientes recentes imediatamente ao abrir a tela
+  useEffect(() => {
+    searchCustomers('')
+  }, [searchCustomers])
 
   useEffect(() => {
     const t = setTimeout(() => searchCustomers(customerSearch), 300)
     return () => clearTimeout(t)
   }, [customerSearch, searchCustomers])
+
+  // Fecha o dropdown de clientes ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (customerDropdownRef.current && !customerDropdownRef.current.contains(e.target as Node)) {
+        setIsCustomerDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const formatAddress = (addr: any) => {
     if (!addr) return ''
@@ -271,14 +307,18 @@ export default function VendasPage() {
   const handleSelectCustomer = (u: UserResult) => {
     setSelectedCustomer(u)
     setCustomerSearch('')
-    setCustomerResults([])
+    setIsCustomerDropdownOpen(false)
     setCustomerName(u.name)
-    setCustomerPhone(u.professionalReq?.phone || '')
-    setCustomerCpf(u.professionalReq?.cnpj || '')
-    const addresses = u.addresses || []
-    const defaultAddr = addresses.find(a => a.isDefault) || addresses[0]
-    if (defaultAddr) setCustomerAddress(formatAddress(defaultAddr))
-    else setCustomerAddress('')
+    setCustomerPhone(u.rawPhone || u.professionalReq?.phone || '')
+    setCustomerCpf(u.rawCpf || u.professionalReq?.cnpj || '')
+    if (u.rawAddress) {
+      setCustomerAddress(u.rawAddress)
+    } else {
+      const addresses = u.addresses || []
+      const defaultAddr = addresses.find(a => a.isDefault) || addresses[0]
+      if (defaultAddr) setCustomerAddress(formatAddress(defaultAddr))
+      else setCustomerAddress('')
+    }
     setIsManualCustomer(false)
 
     // Recalcula todos os itens do carrinho com os valores da tabela do cliente!
@@ -399,7 +439,7 @@ export default function VendasPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          customerId: selectedCustomer?.id || null,
+          customerId: (selectedCustomer && !selectedCustomer.isPastOrderCustomer && !selectedCustomer.id.startsWith('order-client-')) ? selectedCustomer.id : null,
           customerName: selectedCustomer ? selectedCustomer.name : customerName.trim(),
           customerCpf: customerCpf.trim() || null,
           customerPhone: customerPhone.trim() || null,
@@ -625,46 +665,97 @@ export default function VendasPage() {
                   </div>
                 </div>
               ) : (
-                /* Busca de Cliente Cadastrado */
-                <div style={{ position: 'relative' }}>
+                /* Busca de Cliente Cadastrado & Clientes Anteriores */
+                <div style={{ position: 'relative' }} ref={customerDropdownRef}>
                   <div style={{ position: 'relative' }}>
                     <Search size={14} style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input
                       type="text"
-                      placeholder="Pesquise o salão ou cliente por nome ou e-mail..."
+                      placeholder="Pesquise por nome, telefone, e-mail, salão ou clique para ver lista..."
                       value={customerSearch}
-                      onChange={e => setCustomerSearch(e.target.value)}
-                      style={{ ...s, paddingLeft: '2.25rem', borderRadius: '99px' }}
+                      onFocus={() => setIsCustomerDropdownOpen(true)}
+                      onChange={e => {
+                        setCustomerSearch(e.target.value)
+                        setIsCustomerDropdownOpen(true)
+                      }}
+                      style={{ ...s, paddingLeft: '2.25rem', paddingRight: '2.25rem', borderRadius: '99px' }}
                     />
+                    {loadingCustomers && (
+                      <RefreshCw size={13} className="animate-spin" style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                    )}
                   </div>
 
-                  {customerResults.length > 0 && customerSearch && (
-                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', background: '#fff', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', zIndex: 20, boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}>
-                      {customerResults.map(u => (
-                        <button
-                          key={u.id}
-                          onClick={() => handleSelectCustomer(u)}
-                          style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', background: 'none', border: 'none', borderBottom: '1px solid var(--cream)', cursor: 'pointer', textAlign: 'left' }}
-                        >
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <p style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>{u.name}</p>
-                              <span style={{ fontSize: '0.6rem', padding: '0.1rem 0.4rem', borderRadius: '99px', background: '#f1f5f9', color: '#475569', fontWeight: 600 }}>
-                                {u.role}
-                              </span>
-                            </div>
-                            <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', margin: 0 }}>{u.email}</p>
-                          </div>
+                  {isCustomerDropdownOpen && customerResults.length > 0 && (
+                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', background: '#fff', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', zIndex: 30, boxShadow: '0 10px 25px rgba(0,0,0,0.1)', maxHeight: '340px', overflowY: 'auto' }}>
+                      <div style={{ padding: '0.5rem 1rem', background: '#faf8f5', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          {customerSearch.trim() ? `Resultados (${customerResults.length})` : `Clientes Recentes & Cadastrados (${customerResults.length})`}
+                        </span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>Clique para selecionar</span>
+                      </div>
 
-                          {u.discountTable && u.discountTable.percentage > 0 ? (
-                            <span style={{ fontSize: '0.7rem', background: '#ecfdf5', color: '#065f46', padding: '0.2rem 0.5rem', borderRadius: '6px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                              <Sparkles size={11} /> {u.discountTable.name} ({u.discountTable.percentage}%)
-                            </span>
-                          ) : (
-                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Selecionar</span>
-                          )}
-                        </button>
-                      ))}
+                      {customerResults.map(u => {
+                        const isPast = u.isPastOrderCustomer
+                        const phone = u.rawPhone || u.professionalReq?.phone
+                        const addr = u.rawAddress || (u.addresses?.[0] ? `${u.addresses[0].street}, ${u.addresses[0].city}` : '')
+                        return (
+                          <button
+                            key={u.id}
+                            type="button"
+                            onClick={() => handleSelectCustomer(u)}
+                            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', background: 'none', border: 'none', borderBottom: '1px solid #f1f5f9', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s' }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'none'}
+                          >
+                            <div style={{ flex: 1, minWidth: 0, paddingRight: '0.5rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                <p style={{ fontSize: '0.84rem', fontWeight: 600, color: 'var(--navy)', margin: 0 }}>{u.name}</p>
+                                {isPast ? (
+                                  <span style={{ fontSize: '0.6rem', padding: '0.1rem 0.45rem', borderRadius: '99px', background: '#fef3c7', color: '#b45309', fontWeight: 600 }}>
+                                    Venda Anterior
+                                  </span>
+                                ) : (
+                                  <span style={{ fontSize: '0.6rem', padding: '0.1rem 0.45rem', borderRadius: '99px', background: u.role === 'CABELEIREIRA' ? '#ecfdf5' : '#f1f5f9', color: u.role === 'CABELEIREIRA' ? '#065f46' : '#475569', fontWeight: 600 }}>
+                                    {u.role}
+                                  </span>
+                                )}
+                              </div>
+                              <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem', flexWrap: 'wrap' }}>
+                                {u.email && <span>{u.email}</span>}
+                                {phone && <span>📞 {phone}</span>}
+                                {addr && <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '280px' }}>📍 {addr}</span>}
+                              </div>
+                            </div>
+
+                            {u.discountTable && u.discountTable.percentage > 0 ? (
+                              <span style={{ fontSize: '0.7rem', background: '#ecfdf5', color: '#065f46', padding: '0.2rem 0.5rem', borderRadius: '6px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem', flexShrink: 0 }}>
+                                <Sparkles size={11} /> {u.discountTable.percentage}% OFF
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: '0.72rem', color: 'var(--gold)', fontWeight: 600, flexShrink: 0 }}>Selecionar →</span>
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {isCustomerDropdownOpen && customerSearch.trim() && customerResults.length === 0 && !loadingCustomers && (
+                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', background: '#fff', border: '1px solid var(--border)', borderRadius: '12px', padding: '1rem', zIndex: 30, boxShadow: '0 10px 25px rgba(0,0,0,0.1)', textAlign: 'center' }}>
+                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 0.5rem 0' }}>
+                        Nenhum cliente cadastrado ou anterior encontrado com "<strong>{customerSearch}</strong>"
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCustomerName(customerSearch)
+                          setIsManualCustomer(true)
+                          setIsCustomerDropdownOpen(false)
+                        }}
+                        style={{ fontSize: '0.75rem', color: 'var(--navy)', background: 'var(--cream)', border: '1px solid var(--border)', borderRadius: '99px', padding: '0.4rem 1rem', cursor: 'pointer', fontWeight: 600 }}
+                      >
+                        + Cadastrar como cliente avulso com este nome
+                      </button>
                     </div>
                   )}
                 </div>
@@ -1149,7 +1240,28 @@ export default function VendasPage() {
                     </div>
 
                     {/* Actions Footer */}
-                    <div style={{ padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', background: '#fff' }}>
+                    <div style={{ padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', background: '#fff', flexWrap: 'wrap' }}>
+                      <Link
+                        href={`/admin/pedidos/${sale.id}/imprimir`}
+                        target="_blank"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          padding: '0.5rem 1.15rem',
+                          background: '#faf8f5',
+                          color: 'var(--navy)',
+                          border: '1px solid var(--border)',
+                          borderRadius: '8px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <Printer size={13} /> Exportar PDF / Imprimir
+                      </Link>
+
                       <button
                         onClick={() => setEditingSale(sale as any)}
                         style={{

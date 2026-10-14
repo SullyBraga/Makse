@@ -37,7 +37,8 @@ export async function POST(req: NextRequest) {
 
     const sellerId = (session.user as any)?.id as string
     const total = items.reduce((sum: number, i: any) => sum + (i.unitPrice * i.quantity), 0)
-    const userId = customerId || sellerId
+    const finalCustomerId = (customerId && !customerId.startsWith('order-client-')) ? customerId : null
+    const userId = finalCustomerId || sellerId
 
     // Separar financeiro de estoque:
     // Se deductStock for explicitamente informado, respeita.
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
           total,
           paymentMethod: paymentMethod || 'OUTRO',
           sellerNote: note || null,
-          customerName: customerId ? null : (customerName || null),
+          customerName: customerName ? customerName.trim() : null,
           customerCpf: customerCpf || null,
           customerPhone: customerPhone || null,
           customerAddress: customerAddress || null,

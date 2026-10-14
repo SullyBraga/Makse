@@ -115,8 +115,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/layout.tsx": {
-    "mtime": 1779917444.4027112,
-    "ast_hash": "41f1ee1f86f03af60a22bc0e80dad40f",
+    "mtime": 1791986743.0642848,
+    "ast_hash": "f5721a2ac1e6adb5165c9bb26230bed9",
     "semantic_hash": ""
   },
   "src/app/admin/page.tsx": {
@@ -155,8 +155,8 @@
     "semantic_hash": ""
   },
   "src/app/admin/vendas/page.tsx": {
-    "mtime": 1790884881.5141335,
-    "ast_hash": "61c44a188d225e5e2e0e9615cc3e1377",
+    "mtime": 1791986959.8889065,
+    "ast_hash": "18a49e02e0d200f15a32edd723b8bb62",
     "semantic_hash": ""
   },
   "src/app/api/addresses/[id]/route.ts": {
@@ -220,13 +220,13 @@
     "semantic_hash": ""
   },
   "src/app/api/admin/sales/route.ts": {
-    "mtime": 1790884718.7370946,
-    "ast_hash": "95c3fb6ffa6c3b2c0b10750339bba7d3",
+    "mtime": 1791986800.3692148,
+    "ast_hash": "2a683a1d77be14bb5aa4b2156f2d6af7",
     "semantic_hash": ""
   },
   "src/app/api/admin/users-list/route.ts": {
-    "mtime": 1791850865.214019,
-    "ast_hash": "997afc936be925b955ec5dbcd5c92985",
+    "mtime": 1791986784.669834,
+    "ast_hash": "b0ba1167e1cb178dae09e9857ef95749",
     "semantic_hash": ""
   },
   "src/app/api/admin/users/route.ts": {
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   "src/components/admin/AdminContainer.tsx": {
-    "mtime": 1789133732.744137,
-    "ast_hash": "b794ae53ceac10d1062c4a93e7d6ab4d",
+    "mtime": 1791986733.6020029,
+    "ast_hash": "a11aa19b2e2ab0128e1c29a990fcc2a4",
     "semantic_hash": ""
   },
   "src/components/admin/AdminMobileToggle.tsx": {
@@ -710,13 +710,23 @@
     "semantic_hash": ""
   },
   "src/components/admin/AdminPedidosManager.tsx": {
-    "mtime": 1790884817.8688786,
-    "ast_hash": "fdb0798c9f02814673aa5657d14f9d84",
+    "mtime": 1791987078.0817847,
+    "ast_hash": "b34c4112c2ab1caa36349764f867a8a1",
     "semantic_hash": ""
   },
   "src/components/admin/EditOrderModal.tsx": {
-    "mtime": 1790884798.7786238,
-    "ast_hash": "1b1c7ebfe3eae6f0973f0cfb0d9141c9",
+    "mtime": 1791987112.3806174,
+    "ast_hash": "b4594905217a8fd4032d14af946bfdf3",
+    "semantic_hash": ""
+  },
+  "src/app/admin/pedidos/[id]/imprimir/page.tsx": {
+    "mtime": 1791987034.3924057,
+    "ast_hash": "9578e0f4d968b2f88ab69f9a47683e07",
+    "semantic_hash": ""
+  },
+  "src/components/admin/PrintActions.tsx": {
+    "mtime": 1791986980.7542253,
+    "ast_hash": "61e6e4a625c18deefd021e65d4b51875",
     "semantic_hash": ""
   }
 }

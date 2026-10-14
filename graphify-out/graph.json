@@ -920,7 +920,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_admin_estoque_page",
-      "community": 15,
+      "community": 53,
       "norm_label": "page.tsx"
     },
     {
@@ -930,7 +930,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_app_admin_estoque_page_stockbar",
-      "community": 15,
+      "community": 53,
       "norm_label": "stockbar()"
     },
     {
@@ -940,7 +940,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_app_admin_estoque_page_adminestoquepage",
-      "community": 15,
+      "community": 53,
       "norm_label": "adminestoquepage()"
     },
     {
@@ -1276,6 +1276,56 @@
     {
       "label": "page.tsx",
       "file_type": "code",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_app_admin_pedidos_id_imprimir_page",
+      "community": 10,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "PAYMENT_LABELS",
+      "file_type": "code",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "src_app_admin_pedidos_id_imprimir_page_payment_labels",
+      "community": 10,
+      "norm_label": "payment_labels"
+    },
+    {
+      "label": "PAYMENT_STATUS_LABELS",
+      "file_type": "code",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "src_app_admin_pedidos_id_imprimir_page_payment_status_labels",
+      "community": 10,
+      "norm_label": "payment_status_labels"
+    },
+    {
+      "label": "DELIVERY_STATUS_LABELS",
+      "file_type": "code",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "src_app_admin_pedidos_id_imprimir_page_delivery_status_labels",
+      "community": 10,
+      "norm_label": "delivery_status_labels"
+    },
+    {
+      "label": "OrderPrintPage()",
+      "file_type": "code",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "src_app_admin_pedidos_id_imprimir_page_orderprintpage",
+      "community": 10,
+      "norm_label": "orderprintpage()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
       "source_file": "src/app/admin/pedidos/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
@@ -1467,7 +1517,7 @@
       "label": "Variant",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_variant",
       "community": 16,
@@ -1477,7 +1527,7 @@
       "label": "Product",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_product",
       "community": 16,
@@ -1487,7 +1537,7 @@
       "label": "Kit",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L10",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_kit",
       "community": 16,
@@ -1497,7 +1547,7 @@
       "label": "UserResult",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L12",
+      "source_location": "L13",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_userresult",
       "community": 16,
@@ -1507,7 +1557,7 @@
       "label": "CartItem",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L36",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_cartitem",
       "community": 16,
@@ -1517,7 +1567,7 @@
       "label": "SaleOrder",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L53",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_saleorder",
       "community": 16,
@@ -1527,7 +1577,7 @@
       "label": "PAYMENTS",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L82",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_payments",
       "community": 16,
@@ -1537,7 +1587,7 @@
       "label": "PAYMENT_STATUSES",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L90",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_payment_statuses",
       "community": 16,
@@ -1547,7 +1597,7 @@
       "label": "DELIVERY_STATUSES",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L96",
+      "source_location": "L101",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_delivery_statuses",
       "community": 16,
@@ -1557,7 +1607,7 @@
       "label": "computeProductPrice()",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L106",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_computeproductprice",
       "community": 16,
@@ -1567,7 +1617,7 @@
       "label": "computeKitPrice()",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L137",
+      "source_location": "L142",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_computekitprice",
       "community": 16,
@@ -1577,7 +1627,7 @@
       "label": "VendasPage()",
       "file_type": "code",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L163",
+      "source_location": "L168",
       "_origin": "ast",
       "id": "src_app_admin_vendas_page_vendaspage",
       "community": 16,
@@ -1590,7 +1640,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route",
-      "community": 34,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -1600,7 +1650,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_patch",
-      "community": 34,
+      "community": 6,
       "norm_label": "patch()"
     },
     {
@@ -1610,7 +1660,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_app_api_addresses_id_route_delete",
-      "community": 34,
+      "community": 6,
       "norm_label": "delete()"
     },
     {
@@ -1620,7 +1670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_addresses_route",
-      "community": 53,
+      "community": 15,
       "norm_label": "route.ts"
     },
     {
@@ -1630,7 +1680,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_addresses_route_get",
-      "community": 53,
+      "community": 15,
       "norm_label": "get()"
     },
     {
@@ -1640,7 +1690,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_app_api_addresses_route_post",
-      "community": 53,
+      "community": 15,
       "norm_label": "post()"
     },
     {
@@ -1760,7 +1810,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route",
-      "community": 13,
+      "community": 34,
       "norm_label": "route.ts"
     },
     {
@@ -1770,7 +1820,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_requireadmin",
-      "community": 13,
+      "community": 34,
       "norm_label": "requireadmin()"
     },
     {
@@ -1780,7 +1830,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_get",
-      "community": 13,
+      "community": 34,
       "norm_label": "get()"
     },
     {
@@ -1790,7 +1840,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_post",
-      "community": 13,
+      "community": 34,
       "norm_label": "post()"
     },
     {
@@ -1800,7 +1850,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_patch",
-      "community": 13,
+      "community": 34,
       "norm_label": "patch()"
     },
     {
@@ -1810,7 +1860,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "src_app_api_admin_hero_slides_route_delete",
-      "community": 13,
+      "community": 34,
       "norm_label": "delete()"
     },
     {
@@ -1890,7 +1940,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_kits_export_route",
-      "community": 6,
+      "community": 7,
       "norm_label": "route.ts"
     },
     {
@@ -1900,7 +1950,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_admin_kits_export_route_get",
-      "community": 6,
+      "community": 7,
       "norm_label": "get()"
     },
     {
@@ -2110,7 +2160,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_products_export_route",
-      "community": 15,
+      "community": 7,
       "norm_label": "route.ts"
     },
     {
@@ -2120,7 +2170,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_admin_products_export_route_get",
-      "community": 15,
+      "community": 7,
       "norm_label": "get()"
     },
     {
@@ -2417,7 +2467,7 @@
       "label": "GET()",
       "file_type": "code",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L143",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "src_app_api_admin_sales_route_get",
       "community": 62,
@@ -2470,7 +2520,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route",
-      "community": 65,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2480,7 +2530,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_admin_users_list_route_get",
-      "community": 65,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2620,7 +2670,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_repay_route",
-      "community": 15,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2630,7 +2680,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_repay_route_post",
-      "community": 15,
+      "community": 6,
       "norm_label": "post()"
     },
     {
@@ -2640,7 +2690,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route",
-      "community": 6,
+      "community": 15,
       "norm_label": "route.ts"
     },
     {
@@ -2650,7 +2700,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_app_api_checkout_mp_route_post",
-      "community": 6,
+      "community": 15,
       "norm_label": "post()"
     },
     {
@@ -2700,7 +2750,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_conta_pedidos_id_route",
-      "community": 10,
+      "community": 15,
       "norm_label": "route.ts"
     },
     {
@@ -2710,7 +2760,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_api_conta_pedidos_id_route_get",
-      "community": 10,
+      "community": 15,
       "norm_label": "get()"
     },
     {
@@ -2720,7 +2770,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_app_api_conta_pedidos_id_route_patch",
-      "community": 10,
+      "community": 15,
       "norm_label": "patch()"
     },
     {
@@ -2820,7 +2870,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_api_kits_suggestions_route",
-      "community": 66,
+      "community": 6,
       "norm_label": "route.ts"
     },
     {
@@ -2830,7 +2880,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_api_kits_suggestions_route_get",
-      "community": 66,
+      "community": 6,
       "norm_label": "get()"
     },
     {
@@ -2960,7 +3010,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient",
-      "community": 13,
+      "community": 8,
       "norm_label": "catalogoclient.tsx"
     },
     {
@@ -2970,7 +3020,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_item",
-      "community": 13,
+      "community": 8,
       "norm_label": "item"
     },
     {
@@ -2980,7 +3030,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_line",
-      "community": 13,
+      "community": 8,
       "norm_label": "line"
     },
     {
@@ -2990,7 +3040,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_props",
-      "community": 13,
+      "community": 8,
       "norm_label": "props"
     },
     {
@@ -3000,7 +3050,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_app_catalogo_catalogoclient_catalogoclient",
-      "community": 13,
+      "community": 8,
       "norm_label": "catalogoclient()"
     },
     {
@@ -3260,7 +3310,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_kit_slug_page",
-      "community": 6,
+      "community": 0,
       "norm_label": "page.tsx"
     },
     {
@@ -3270,7 +3320,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_kit_slug_page_kitpage",
-      "community": 6,
+      "community": 0,
       "norm_label": "kitpage()"
     },
     {
@@ -3697,7 +3747,7 @@
       "label": "statusConfig",
       "file_type": "code",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_admin_adminpedidosmanager_statusconfig",
       "community": 16,
@@ -3707,7 +3757,7 @@
       "label": "deliveryConfig",
       "file_type": "code",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "_origin": "ast",
       "id": "src_components_admin_adminpedidosmanager_deliveryconfig",
       "community": 16,
@@ -3717,7 +3767,7 @@
       "label": "paymentLabel",
       "file_type": "code",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "src_components_admin_adminpedidosmanager_paymentlabel",
       "community": 16,
@@ -3727,7 +3777,7 @@
       "label": "AdminPedidosManagerProps",
       "file_type": "code",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L31",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "src_components_admin_adminpedidosmanager_adminpedidosmanagerprops",
       "community": 16,
@@ -3737,7 +3787,7 @@
       "label": "AdminPedidosManager()",
       "file_type": "code",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L35",
+      "source_location": "L36",
       "_origin": "ast",
       "id": "src_components_admin_adminpedidosmanager_adminpedidosmanager",
       "community": 16,
@@ -3817,7 +3867,7 @@
       "label": "Variant",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_variant",
       "community": 16,
@@ -3827,7 +3877,7 @@
       "label": "Product",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_product",
       "community": 16,
@@ -3837,7 +3887,7 @@
       "label": "Kit",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_kit",
       "community": 16,
@@ -3847,7 +3897,7 @@
       "label": "EditOrderItem",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L11",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_editorderitem",
       "community": 16,
@@ -3857,7 +3907,7 @@
       "label": "EditOrderTarget",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_editordertarget",
       "community": 16,
@@ -3867,7 +3917,7 @@
       "label": "EditOrderModalProps",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L53",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_editordermodalprops",
       "community": 16,
@@ -3877,7 +3927,7 @@
       "label": "PAYMENTS",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L60",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_payments",
       "community": 16,
@@ -3887,7 +3937,7 @@
       "label": "PAYMENT_STATUSES",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L68",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_payment_statuses",
       "community": 16,
@@ -3897,7 +3947,7 @@
       "label": "DELIVERY_STATUSES",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L74",
+      "source_location": "L75",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_delivery_statuses",
       "community": 16,
@@ -3907,11 +3957,31 @@
       "label": "EditOrderModal()",
       "file_type": "code",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L83",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "src_components_admin_editordermodal_editordermodal",
       "community": 16,
       "norm_label": "editordermodal()"
+    },
+    {
+      "label": "PrintActions.tsx",
+      "file_type": "code",
+      "source_file": "src/components/admin/PrintActions.tsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_components_admin_printactions",
+      "community": 10,
+      "norm_label": "printactions.tsx"
+    },
+    {
+      "label": "PrintActions()",
+      "file_type": "code",
+      "source_file": "src/components/admin/PrintActions.tsx",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "src_components_admin_printactions_printactions",
+      "community": 10,
+      "norm_label": "printactions()"
     },
     {
       "label": "ProductForm.tsx",
@@ -4400,7 +4470,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_shop_productcard",
-      "community": 13,
+      "community": 8,
       "norm_label": "productcard.tsx"
     },
     {
@@ -4410,7 +4480,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_shop_productcard_props",
-      "community": 13,
+      "community": 8,
       "norm_label": "props"
     },
     {
@@ -4420,7 +4490,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_shop_productcard_productcard",
-      "community": 13,
+      "community": 8,
       "norm_label": "productcard()"
     },
     {
@@ -6759,6 +6829,79 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "src_app_admin_pedidos_id_imprimir_page",
+      "target": "src_app_admin_pedidos_id_imprimir_page_delivery_status_labels",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "src_app_admin_pedidos_id_imprimir_page",
+      "target": "src_app_admin_pedidos_id_imprimir_page_orderprintpage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "src_app_admin_pedidos_id_imprimir_page",
+      "target": "src_app_admin_pedidos_id_imprimir_page_payment_labels",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "src_app_admin_pedidos_id_imprimir_page",
+      "target": "src_app_admin_pedidos_id_imprimir_page_payment_status_labels",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_app_admin_pedidos_id_imprimir_page",
+      "target": "src_components_admin_printactions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_app_admin_pedidos_id_imprimir_page",
+      "target": "src_lib_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app/admin/pedidos/[id]/imprimir/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_app_admin_pedidos_id_imprimir_page",
+      "target": "src_lib_prisma",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src/app/admin/pedidos/page.tsx",
       "source_location": "L4",
       "weight": 1.0,
@@ -6990,7 +7133,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L36",
+      "source_location": "L41",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_cartitem",
@@ -7000,7 +7143,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L137",
+      "source_location": "L142",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_computekitprice",
@@ -7010,7 +7153,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L106",
+      "source_location": "L111",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_computeproductprice",
@@ -7020,7 +7163,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L96",
+      "source_location": "L101",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_delivery_statuses",
@@ -7030,7 +7173,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L10",
+      "source_location": "L11",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_kit",
@@ -7040,7 +7183,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L90",
+      "source_location": "L95",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_payment_statuses",
@@ -7050,7 +7193,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L82",
+      "source_location": "L87",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_payments",
@@ -7060,7 +7203,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_product",
@@ -7070,7 +7213,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L53",
+      "source_location": "L58",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_saleorder",
@@ -7080,7 +7223,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_userresult",
@@ -7090,7 +7233,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_variant",
@@ -7100,7 +7243,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L163",
+      "source_location": "L168",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_app_admin_vendas_page_vendaspage",
@@ -7111,7 +7254,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_components_admin_editordermodal",
@@ -7122,7 +7265,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L6",
+      "source_location": "L7",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page",
       "target": "src_components_admin_editordermodal_editordertarget",
@@ -7133,7 +7276,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L264",
+      "source_location": "L300",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page_vendaspage",
       "target": "src_app_admin_vendas_page_computeproductprice",
@@ -7144,7 +7287,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/admin/vendas/page.tsx",
-      "source_location": "L261",
+      "source_location": "L297",
       "weight": 1.0,
       "source": "src_app_admin_vendas_page_vendaspage",
       "target": "src_app_admin_vendas_page_computekitprice",
@@ -8786,7 +8929,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L143",
+      "source_location": "L144",
       "weight": 1.0,
       "source": "src_app_api_admin_sales_route",
       "target": "src_app_api_admin_sales_route_get",
@@ -8839,7 +8982,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L144",
+      "source_location": "L145",
       "weight": 1.0,
       "source": "src_app_api_admin_sales_route_get",
       "target": "src_app_api_admin_sales_route_requireseller",
@@ -8862,7 +9005,7 @@
       "deferred": true,
       "confidence": "EXTRACTED",
       "source_file": "src/app/api/admin/sales/route.ts",
-      "source_location": "L129",
+      "source_location": "L130",
       "weight": 1.0,
       "source": "src_app_api_admin_sales_route_post",
       "target": "src_lib_shipping",
@@ -10595,7 +10738,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L35",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_adminpedidosmanager_adminpedidosmanager",
@@ -10605,7 +10748,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L31",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_adminpedidosmanager_adminpedidosmanagerprops",
@@ -10615,7 +10758,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_adminpedidosmanager_deliveryconfig",
@@ -10625,7 +10768,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_adminpedidosmanager_paymentlabel",
@@ -10635,7 +10778,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_adminpedidosmanager_statusconfig",
@@ -10646,7 +10789,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_editordermodal",
@@ -10657,7 +10800,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_editordermodal_editordertarget",
@@ -10668,7 +10811,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/AdminPedidosManager.tsx",
-      "source_location": "L4",
+      "source_location": "L5",
       "weight": 1.0,
       "source": "src_components_admin_adminpedidosmanager",
       "target": "src_components_admin_updateorderstatus",
@@ -10718,7 +10861,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L74",
+      "source_location": "L75",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_delivery_statuses",
@@ -10728,7 +10871,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L11",
+      "source_location": "L12",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_editorderitem",
@@ -10738,7 +10881,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L83",
+      "source_location": "L84",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_editordermodal",
@@ -10748,7 +10891,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L53",
+      "source_location": "L54",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_editordermodalprops",
@@ -10758,7 +10901,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_editordertarget",
@@ -10768,7 +10911,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L9",
+      "source_location": "L10",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_kit",
@@ -10778,7 +10921,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L68",
+      "source_location": "L69",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_payment_statuses",
@@ -10788,7 +10931,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L60",
+      "source_location": "L61",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_payments",
@@ -10798,7 +10941,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L8",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_product",
@@ -10808,10 +10951,20 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/admin/EditOrderModal.tsx",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0,
       "source": "src_components_admin_editordermodal",
       "target": "src_components_admin_editordermodal_variant",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/admin/PrintActions.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "src_components_admin_printactions",
+      "target": "src_components_admin_printactions_printactions",
       "confidence_score": 1.0
     },
     {
@@ -12510,5 +12663,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "573ee05eb4c6bfab98adae24d718be71521ff080"
+  "built_at_commit": "8fc67f3cea2f1dedf4b0d74014c5dec86db8db3d"
 }
